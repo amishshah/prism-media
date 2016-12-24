@@ -4,7 +4,8 @@
   "description": "performant voice for discord.js",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint" : "eslint src && eslint test",
+    "test": "npm run lint && node test/main"
   },
   "repository": {
     "type": "git",
