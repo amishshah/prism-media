@@ -1,0 +1,29 @@
+{
+  "name": "discord.js-prism",
+  "version": "0.0.1",
+  "description": "performant voice for discord.js",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hydrabolt/discord.js-prism.git"
+  },
+  "keywords": [
+    "discord.js",
+    "discord",
+    "voice",
+    "audio",
+    "ffmpeg"
+  ],
+  "author": "Amish Shah <amishshah.2k@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/hydrabolt/discord.js-prism/issues"
+  },
+  "homepage": "https://github.com/hydrabolt/discord.js-prism#readme",
+  "devDependencies": {
+    "eslint": "^3.12.2"
+  }
+}
