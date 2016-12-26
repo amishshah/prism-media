@@ -1,7 +1,7 @@
 {
-  "name": "discord.js-prism",
+  "name": "prism-audio",
   "version": "0.0.1",
-  "description": "performant voice for discord.js",
+  "description": "helps with converting your audio into different formats",
   "main": "src/index.js",
   "scripts": {
     "lint" : "eslint src && eslint test",
@@ -9,21 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hydrabolt/discord.js-prism.git"
+    "url": "git+https://github.com/hydrabolt/prism-audio.git"
   },
   "keywords": [
-    "discord.js",
-    "discord",
-    "voice",
     "audio",
     "ffmpeg"
   ],
   "author": "Amish Shah <amishshah.2k@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hydrabolt/discord.js-prism/issues"
+    "url": "https://github.com/hydrabolt/prism-audio/issues"
   },
-  "homepage": "https://github.com/hydrabolt/discord.js-prism#readme",
+  "homepage": "https://github.com/hydrabolt/prism-audio#readme",
   "devDependencies": {
     "eslint": "^3.12.2"
   }

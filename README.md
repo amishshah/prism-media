@@ -1,2 +1,4 @@
-# discord.js-prism
-Performant voice for discord.js
+# prism-audio
+```js
+const Prism = require('prism-audio');
+```
