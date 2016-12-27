@@ -1,5 +1,4 @@
 const ChildProcess = require('child_process');
-const Constants = require('../util/Constants');
 const FfmpegProcess = require('./FfmpegProcess');
 
 const ffmpegSources = [
@@ -11,6 +10,16 @@ const ffmpegSources = [
   'node_modules\\ffmpeg-binaries\\bin\\ffmpeg',
 ];
 
+const defaultArguments = [
+  '-analyzeduration', '0',
+  '-loglevel', '0',
+  '-i', '-',
+  '-f', 's16le',
+  '-ar', '48000',
+  '-ac', '2',
+  'pipe:1',
+];
+
 class FfmpegConverter {
   constructor(audioConverter) {
     this.audioConverter = audioConverter;
@@ -20,12 +29,14 @@ class FfmpegConverter {
 
   convert(options) {
     const inputStream = options.stream;
-    return this.spawnProcess(options.arguments, inputStream).process.stdout;
+    const proc = this.spawnProcess(options.arguments, inputStream);
+    this.processes.push(proc);
+    return proc;
   }
 
   spawnProcess(args = [], stream) {
     if (!this.command) this.command = FfmpegConverter.selectFfmpegCommand();
-    return new FfmpegProcess(this, Constants.Converters.Ffmpeg.defaultArguments.concat(args), stream);
+    return new FfmpegProcess(this, defaultArguments.concat(args), stream);
   }
 
   static selectFfmpegCommand() {

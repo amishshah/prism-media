@@ -1,7 +1,7 @@
 {
-  "name": "prism-audio",
+  "name": "prism-media",
   "version": "0.0.1",
-  "description": "helps with converting your audio into different formats",
+  "description": "Makes transcoding media easier",
   "main": "src/index.js",
   "scripts": {
     "lint" : "eslint src && eslint test",
@@ -9,18 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hydrabolt/prism-audio.git"
+    "url": "git+https://github.com/hydrabolt/prism-media.git"
   },
   "keywords": [
     "audio",
+    "media",
     "ffmpeg"
   ],
   "author": "Amish Shah <amishshah.2k@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hydrabolt/prism-audio/issues"
+    "url": "https://github.com/hydrabolt/prism-media/issues"
   },
-  "homepage": "https://github.com/hydrabolt/prism-audio#readme",
+  "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
     "eslint": "^3.12.2"
   }

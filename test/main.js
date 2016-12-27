@@ -4,9 +4,9 @@ const fs = require('fs');
 
 const prism = new Prism.Prism();
 
-const stream = prism.convert({
+const converter = prism.convert({
   type: 'ffmpeg',
   stream: fs.createReadStream('./test/test.mp3'),
 });
 
-stream.pipe(fs.createWriteStream('./test/test.pcm'));
+converter.stream.pipe(fs.createWriteStream('./test/test.pcm'));
