@@ -1,7 +1,6 @@
 const Prism = require('./Prism');
 const MediaTranscoder = require('./transcoders/MediaTranscoder');
 
-module.exports = {
-  Prism,
-  MediaTranscoder,
-};
+Prism.MediaTranscoder = MediaTranscoder;
+
+module.exports = Prism;

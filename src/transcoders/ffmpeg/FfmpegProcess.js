@@ -5,27 +5,32 @@ const ChildProcess = require('child_process');
  * A spawned FFMPEG process
  */
 class FfmpegProcess extends EventEmitter {
-  constructor(transcoder, args, inputStream) {
+  constructor(ffmpegTranscoder, options) {
     super();
     /**
      * The ffmpeg process
      * @type {ChildProcess}
      */
-    this.process = ChildProcess.spawn(transcoder.command, args);
+    this.process = ChildProcess.spawn(ffmpegTranscoder.command, options.ffmpegArguments);
     /**
-     * The transcoder that created this process
+     * The FFMPEG transcoder that created this process
      * @type {FfmpegTranscoder}
      */
-    this.transcoder = transcoder;
+    this.transcoder = ffmpegTranscoder;
     /**
-     * The input stream
-     * @type {?ReadableStream}
+     * The input media
+     * @type {?ReadableStream|string}
      */
-    this.inputStream = null;
-    try {
-      this.connectStream(inputStream);
-    } catch (e) {
-      this.emit('error', e, 'instantiation');
+    this.inputMedia = options.media;
+
+    if (typeof this.inputMedia !== 'string') {
+      try {
+        this.connectStream(this.inputMedia);
+      } catch (e) {
+        this.emit('error', e, 'instantiation');
+      }
+    } else {
+      this.attachErrorHandlers();
     }
 
     this.once('error', this.kill.bind(this));
@@ -35,25 +40,11 @@ class FfmpegProcess extends EventEmitter {
    * The ffmpeg output stream
    * @type {?ReadableStream}
    */
-  get stream() {
+  get output() {
     return this.process ? this.process.stdout : null;
   }
 
-  /**
-   * Connects an input stream to the ffmpeg process
-   * @param {ReadableStream} inputStream the stream to pass to ffmpeg
-   * @returns {ReadableStream} the ffmpeg output stream
-   */
-  connectStream(inputStream) {
-    if (this.inputStream) throw new Error('Input stream is already connected!');
-    if (!this.process) throw new Error('No FFMPEG process available');
-    this.inputStream = inputStream;
-    this.inputStream.pipe(this.process.stdin);
-
-    this.process.stdin.on('error', e => {
-      this.emit('error', e, 'ffmpegProcess.stdin');
-    });
-
+  attachErrorHandlers() {
     this.process.stdout.on('error', e => {
       this.emit('error', e, 'ffmpegProcess.stdout');
     });
@@ -62,9 +53,26 @@ class FfmpegProcess extends EventEmitter {
       this.emit('error', e, 'ffmpegProcess');
     });
 
-    this.process.stdout.on('end', () => {
-      return 'do something';
+    this.process.stdout.on('end', e => {
+      return e;
     });
+  }
+
+  /**
+   * Connects an input stream to the ffmpeg process
+   * @param {ReadableStream} inputMedia the stream to pass to ffmpeg
+   * @returns {ReadableStream} the ffmpeg output stream
+   */
+  connectStream(inputMedia) {
+    if (!this.process) throw new Error('No FFMPEG process available');
+    this.inputMedia = inputMedia;
+    this.inputMedia.pipe(this.process.stdin);
+
+    this.process.stdin.on('error', e => {
+      this.emit('error', e, 'ffmpegProcess.stdin');
+    });
+
+    this.attachErrorHandlers();
 
     return this.process.stdout;
   }
@@ -74,8 +82,8 @@ class FfmpegProcess extends EventEmitter {
    */
   kill() {
     if (!this.process) return;
-    if (this.inputStream) {
-      this.inputStream.unpipe(this.process.stdin);
+    if (this.inputMedia && this.inputMedia.unpipe) {
+      this.inputMedia.unpipe(this.process.stdin);
     }
     this.process.kill('SIGKILL');
     this.process = null;

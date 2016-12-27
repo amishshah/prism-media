@@ -13,7 +13,6 @@ class MediaTranscoder {
   static verifyOptions(options) {
     if (!options) throw new Error('Options must be passed to MediaTranscoder.transcode()');
     if (!options.type) throw new Error('Options.type must be passed to MediaTranscoder.transcode()');
-    if (!options.stream) throw new Error('Options.stream must be passed to MediaTranscoder.transcode()');
     if (!transcoders.includes(options.type)) throw new Error(`Options.type must be: ${transcoders.join(' ')}`);
     return options;
   }

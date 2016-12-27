@@ -5,6 +5,10 @@ class Prism {
     this.transcoder = new MediaTranscoder(this);
   }
 
+  createTranscoder(...args) {
+    return this.transcode(...args);
+  }
+
   transcode(...args) {
     return this.transcoder.transcode(...args);
   }

@@ -10,16 +10,6 @@ const ffmpegSources = [
   'node_modules\\ffmpeg-binaries\\bin\\ffmpeg',
 ];
 
-const defaultArguments = [
-  '-analyzeduration', '0',
-  '-loglevel', '0',
-  '-i', '-',
-  '-f', 's16le',
-  '-ar', '48000',
-  '-ac', '2',
-  'pipe:1',
-];
-
 class FfmpegTranscoder {
   constructor(mediaTranscoder) {
     this.mediaTranscoder = mediaTranscoder;
@@ -27,16 +17,32 @@ class FfmpegTranscoder {
     this.processes = [];
   }
 
-  transcode(options) {
-    const inputStream = options.stream;
-    const proc = this.spawnProcess(options.arguments, inputStream);
-    this.processes.push(proc);
-    return proc;
+  static verifyOptions(options) {
+    if (!options) throw new Error('Options not provided!');
+    if (!options.media) throw new Error('Media must be provided');
+    if (!options.ffmpegArguments || !(options.ffmpegArguments instanceof Array)) {
+      throw new Error('FFMPEG Arguments must be an array');
+    }
+    if (options.ffmpegArguments.includes('-i')) return options;
+    if (typeof options.media === 'string') {
+      options.ffmpegArguments = ['-i', `${options.media}`].concat(options.ffmpegArguments).concat(['pipe:1']);
+    } else {
+      options.ffmpegArguments = ['-i', '-'].concat(options.ffmpegArguments).concat(['pipe:1']);
+    }
+    return options;
   }
 
-  spawnProcess(args = [], stream) {
+  /**
+   * Transcodes an input using FFMPEG
+   * @param {FfmpegTranscoderOptions} options the options to use
+   * @returns {FfmpegProcess} the created FFMPEG process
+   * @throws {FFMPEGOptionsError}
+   */
+  transcode(options) {
     if (!this.command) this.command = FfmpegTranscoder.selectFfmpegCommand();
-    return new FfmpegProcess(this, defaultArguments.concat(args), stream);
+    const proc = new FfmpegProcess(this, FfmpegTranscoder.verifyOptions(options));
+    this.processes.push(proc);
+    return proc;
   }
 
   static selectFfmpegCommand() {
