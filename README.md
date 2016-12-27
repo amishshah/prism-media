@@ -10,7 +10,7 @@ const fs = require('fs');
 
 const prism = new Prism();
 
-prism.convert({
+prism.transcode({
   type: 'ffmpeg',
   stream: fs.createReadStream('input.mp3'),
 }).stream.pipe(fs.createWriteStream('pcm output'));

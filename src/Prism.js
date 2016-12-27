@@ -1,12 +1,12 @@
-const AudioConverter = require('./converters/AudioConverter');
+const MediaTranscoder = require('./transcoders/MediaTranscoder');
 
 class Prism {
   constructor() {
-    this.audioConverter = new AudioConverter(this);
+    this.transcoder = new MediaTranscoder(this);
   }
 
-  convert(options) {
-    return this.audioConverter.convert(options);
+  transcode(...args) {
+    return this.transcoder.transcode(...args);
   }
 }
 

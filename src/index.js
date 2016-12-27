@@ -1,7 +1,7 @@
 const Prism = require('./Prism');
-const AudioConverter = require('./converters/AudioConverter');
+const MediaTranscoder = require('./transcoders/MediaTranscoder');
 
 module.exports = {
   Prism,
-  AudioConverter,
+  MediaTranscoder,
 };

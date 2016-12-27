@@ -5,18 +5,18 @@ const ChildProcess = require('child_process');
  * A spawned FFMPEG process
  */
 class FfmpegProcess extends EventEmitter {
-  constructor(converter, args, inputStream) {
+  constructor(transcoder, args, inputStream) {
     super();
     /**
      * The ffmpeg process
      * @type {ChildProcess}
      */
-    this.process = ChildProcess.spawn(converter.command, args);
+    this.process = ChildProcess.spawn(transcoder.command, args);
     /**
-     * The converter that created this process
-     * @type {FfmpegConverter}
+     * The transcoder that created this process
+     * @type {FfmpegTranscoder}
      */
-    this.converter = converter;
+    this.transcoder = transcoder;
     /**
      * The input stream
      * @type {?ReadableStream}

@@ -20,14 +20,14 @@ const defaultArguments = [
   'pipe:1',
 ];
 
-class FfmpegConverter {
-  constructor(audioConverter) {
-    this.audioConverter = audioConverter;
-    this.command = FfmpegConverter.selectFfmpegCommand();
+class FfmpegTranscoder {
+  constructor(mediaTranscoder) {
+    this.mediaTranscoder = mediaTranscoder;
+    this.command = FfmpegTranscoder.selectFfmpegCommand();
     this.processes = [];
   }
 
-  convert(options) {
+  transcode(options) {
     const inputStream = options.stream;
     const proc = this.spawnProcess(options.arguments, inputStream);
     this.processes.push(proc);
@@ -35,7 +35,7 @@ class FfmpegConverter {
   }
 
   spawnProcess(args = [], stream) {
-    if (!this.command) this.command = FfmpegConverter.selectFfmpegCommand();
+    if (!this.command) this.command = FfmpegTranscoder.selectFfmpegCommand();
     return new FfmpegProcess(this, defaultArguments.concat(args), stream);
   }
 
@@ -47,4 +47,4 @@ class FfmpegConverter {
   }
 }
 
-module.exports = FfmpegConverter;
+module.exports = FfmpegTranscoder;
