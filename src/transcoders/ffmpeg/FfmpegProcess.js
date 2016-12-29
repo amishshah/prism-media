@@ -33,7 +33,8 @@ class FfmpegProcess extends EventEmitter {
       this.attachErrorHandlers();
     }
 
-    this.once('error', this.kill.bind(this));
+    this.on('error', this.kill.bind(this));
+    this.once('end', this.kill.bind(this));
   }
 
   /**
@@ -45,17 +46,9 @@ class FfmpegProcess extends EventEmitter {
   }
 
   attachErrorHandlers() {
-    this.process.stdout.on('error', e => {
-      this.emit('error', e, 'ffmpegProcess.stdout');
-    });
-
-    this.process.on('error', e => {
-      this.emit('error', e, 'ffmpegProcess');
-    });
-
-    this.process.stdout.on('end', e => {
-      return e;
-    });
+    this.process.stdout.on('error', e => this.emit('error', e, 'ffmpegProcess.stdout'));
+    this.process.on('error', e => this.emit('error', e, 'ffmpegProcess'));
+    this.process.stdout.on('end', () => this.emit('end'));
   }
 
   /**
@@ -68,9 +61,9 @@ class FfmpegProcess extends EventEmitter {
     this.inputMedia = inputMedia;
     this.inputMedia.pipe(this.process.stdin);
 
-    this.process.stdin.on('error', e => {
-      this.emit('error', e, 'ffmpegProcess.stdin');
-    });
+    inputMedia.on('error', e => this.emit('error', e, 'inputstream', inputMedia));
+
+    this.process.stdin.on('error', e => this.emit('error', e, 'ffmpegProcess.stdin'));
 
     this.attachErrorHandlers();
 

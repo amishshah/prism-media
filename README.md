@@ -1,8 +1,7 @@
-<div align="center">
-  <p>
-    <img src="http://i.imgur.com/XSlu8in.png" width="546" alt="prism audio"/>
-  </p>
-</div>
+# prism-media
+[![Build Status](https://travis-ci.org/hydrabolt/prism-media.svg?branch=master)](https://travis-ci.org/hydrabolt/prism-media)
+[![dependencies](https://david-dm.org/hydrabolt/prism-media/status.svg)](https://david-dm.org/hydrabolt/prism-media)
+[![devDependencies](https://david-dm.org/hydrabolt/prism-media/dev-status.svg)](https://david-dm.org/hydrabolt/prism-media?type=dev)
 
 Makes programmatically transcoding media easier
 
