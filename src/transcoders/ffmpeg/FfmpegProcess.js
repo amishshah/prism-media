@@ -59,7 +59,7 @@ class FfmpegProcess extends EventEmitter {
   connectStream(inputMedia) {
     if (!this.process) throw new Error('No FFMPEG process available');
     this.inputMedia = inputMedia;
-    this.inputMedia.pipe(this.process.stdin);
+    this.inputMedia.pipe(this.process.stdin, { end: false });
 
     inputMedia.on('error', e => this.emit('error', e, 'inputstream', inputMedia));
 
