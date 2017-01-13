@@ -1,15 +1,6 @@
 const ChildProcess = require('child_process');
 const FfmpegProcess = require('./FfmpegProcess');
 
-const ffmpegSources = [
-  'ffmpeg',
-  'avconv',
-  './ffmpeg',
-  './avconv',
-  'node_modules/ffmpeg-binaries/bin/ffmpeg',
-  'node_modules\\ffmpeg-binaries\\bin\\ffmpeg',
-];
-
 class FfmpegTranscoder {
   constructor(mediaTranscoder) {
     this.mediaTranscoder = mediaTranscoder;
@@ -46,10 +37,14 @@ class FfmpegTranscoder {
   }
 
   static selectFfmpegCommand() {
-    for (const command of ffmpegSources) {
-      if (!ChildProcess.spawnSync(command, ['-h']).error) return command;
+    try {
+      return require('ffmpeg-binaries').ffmpegPath();
+    } catch (err) {
+      for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
+        if (!ChildProcess.spawnSync(command, ['-h']).error) return command;
+      }
+      throw new Error('FFMPEG not found');
     }
-    throw new Error('FFMPEG not found');
   }
 }
 
