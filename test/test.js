@@ -1,5 +1,5 @@
 const fs = require('fs');
-const OggOpusTransform = require('./OggOpus');
+const OggOpusTransform = require('../src/opus/OggOpus');
 const opus = require('node-opus');
 
 const decoder = new opus.Decoder(48000, 2, 1920);

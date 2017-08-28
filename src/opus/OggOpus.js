@@ -21,9 +21,13 @@ class OggOpusTransform extends Transform {
     }
 
     while (chunk) {
-      const result = this.readPage(chunk);
-      if (result) chunk = result;
-      else break;
+      try {
+        const result = this.readPage(chunk);
+        if (result) chunk = result;
+        else break;
+      } catch (err) {
+        this.emit('error', err);
+      }
     }
     this._remainder = chunk;
     done();
