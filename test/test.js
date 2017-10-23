@@ -20,13 +20,7 @@ test('FFmpeg transcoder to PCM is sane', async done => {
   
   const chunks = await streamToBuffer(output);
   const file = await readFile('./test/audio/speech_orig.pcm');
-  expect(chunks.equals(file)).toEqual(true);
-
-  for (let i = 0; i < file.length; i++) {
-    if (chunks.readUInt8(i) !== file.readUInt8(i)) {
-      console.log(i, chunks.readUint8(i), file.readUInt8(i))
-    }
-  }
+  expect(file.toString() === chunks.toString()).toEqual(true);
 
   done();
 });
@@ -36,15 +30,15 @@ test('OggOpus demuxer is sane', async done => {
   const output = fs.createReadStream('./test/audio/speech_orig.ogg').pipe(new prism.demuxers.OggOpus());
   const chunks = await streamToBuffer(output);
   const file = await readFile('./test/audio/speech_orig.opusdump');
-  expect(chunks.equals(file)).toEqual(true);
+  expect(file.toString() === chunks).toEqual(true);
   done();
 });
 
 function streamToBuffer(stream) {
   return new Promise((resolve, reject) => {
     let chunks = '';
-    stream.on('data', chunk => chunks.push += chunk);
+    stream.on('data', chunk => chunks += chunk);
     stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('end', () => resolve(chunks));
   });
 }
