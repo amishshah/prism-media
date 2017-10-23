@@ -4,8 +4,8 @@
   "description": "Makes transcoding media easier",
   "main": "src/index.js",
   "scripts": {
-    "lint" : "eslint src && eslint test",
-    "test": "npm run lint"
+    "lint": "eslint src",
+    "test": "npm run lint && jest"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
-    "eslint": "^3.12.2"
+    "eslint": "^3.12.2",
+    "ffmpeg-binaries": "^3.2.2-3",
+    "jest": "^21.2.1"
   }
 }

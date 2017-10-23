@@ -1,6 +1,7 @@
-const Prism = require('./Prism');
-const MediaTranscoder = require('./transcoders/MediaTranscoder');
+exports.demuxers = {
+  OggOpus: require('./demuxers/OggOpus'),
+};
 
-Prism.MediaTranscoder = MediaTranscoder;
-
-module.exports = Prism;
+exports.transcoders = {
+  Ffmpeg: require('./transcoders/Ffmpeg'),
+};
