@@ -42,8 +42,8 @@ test('OggOpus demuxer is sane', async done => {
 
 function streamToBuffer(stream) {
   return new Promise((resolve, reject) => {
-    let chunks = [];
-    stream.on('data', chunk => chunks.push(chunk));
+    let chunks = '';
+    stream.on('data', chunk => chunks.push += chunk);
     stream.on('error', reject);
     stream.on('end', () => resolve(Buffer.concat(chunks)));
   });
