@@ -4,8 +4,10 @@ const fs = require('fs');
 const prism = require('../');
 const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
+const { spawn } = require('child_process');
 
 test('FFmpeg transcoder to PCM is sane', async done => {
+
   expect.assertions(1);
   const output = fs.createReadStream('./test/audio/speech_orig.ogg')
     .pipe(new prism.transcoders.Ffmpeg({
@@ -17,7 +19,8 @@ test('FFmpeg transcoder to PCM is sane', async done => {
         '-ac', '2',
       ],
     }));
-
+  const ff = spawn(require('ffmpeg-binaries').ffmpegPath());
+  ff.stdin.on('data', d => console.log(d.toString()));
   const chunks = await streamToBuffer(output);
   const file = await readFile('./test/audio/speech_orig.pcm');
   let x = [];
