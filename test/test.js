@@ -22,7 +22,7 @@ test('FFmpeg transcoder to PCM is sane', async done => {
   const file = await readFile('./test/audio/speech_orig.pcm');
   expect(chunks.equals(file)).toEqual(true);
 
-  for (let i = 0; i < 2074848; i++) {
+  for (let i = 0; i < file.length; i++) {
     if (chunks.readUInt8(i) !== file.readUInt8(i)) {
       console.log(i, chunks.readUint8(i), file.readUInt8(i))
     }
