@@ -21,6 +21,8 @@ test('FFmpeg transcoder to PCM is sane', async done => {
     }));
   const ff = spawn(require('ffmpeg-binaries').ffmpegPath());
   ff.stdin.on('data', d => console.log(d.toString()));
+  ff.stdout.on('data', d => console.log(d.toString()));
+  ff.stderr.on('data', d => console.log(d.toString()));
   const chunks = await streamToBuffer(output);
   const file = await readFile('./test/audio/speech_orig.pcm');
   let x = [];
