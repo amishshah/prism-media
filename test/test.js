@@ -20,6 +20,9 @@ test('FFmpeg transcoder to PCM is sane', async done => {
   
   const chunks = await streamToBuffer(output);
   const file = await readFile('./test/audio/speech_orig.pcm');
+  console.log(file.length, output.length);
+  console.log(file);
+  console.log(output);
   expect(chunks.equals(file)).toEqual(true);
   done();
 });
