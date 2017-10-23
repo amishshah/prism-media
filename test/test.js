@@ -4,7 +4,6 @@ const fs = require('fs');
 const prism = require('../');
 const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
-const { spawn } = require('child_process');
 
 test('FFmpeg transcoder to PCM is sane', async done => {
 
