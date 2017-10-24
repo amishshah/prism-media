@@ -3,30 +3,31 @@
 [![dependencies](https://david-dm.org/hydrabolt/prism-media/status.svg)](https://david-dm.org/hydrabolt/prism-media)
 [![devDependencies](https://david-dm.org/hydrabolt/prism-media/dev-status.svg)](https://david-dm.org/hydrabolt/prism-media?type=dev)
 
-Pleasant abstractions that make transcoding media easy. Provides behind-the-scenes voice support for [discord.js](https://discord.js.org/).
+Intuitive abstractions that make transcoding media easy. Provides behind-the-scenes voice support for [discord.js](https://discord.js.org/).
 
 - Stream-based
-- Intuitive
 - Fast and Lightweight
 
-`npm install --save hydrabolt/prism-media`
+`npm i hydrabolt/prism-media`
 
 ## FFmpeg Transform
 ```js
-const prism = require('prism-media');
 const fs = require('fs');
+const prism = require('prism-media');
 
-fs.createReadStream('./audio.ogg')
-  .pipe(new prism.transcoders.FFmpeg({
-      args: [
-        '-analyzeduration', '0',
-        '-loglevel', '0',
-        '-f', 's16le',
-        '-ar', '48000',
-        '-ac', '2',
-      ],
-    }))
-  .pipe(fs.createWriteStream('./audio.pcm'))
+const input = fs.createReadStream('./file.mp3');
+const output = fs.createWriteStream('./output.pcm');
+const transcoder = new prism.transcoders.FFmpeg({
+  args: [
+    '-analyzeduration', '0',
+    '-loglevel', '0',
+    '-f', 's16le',
+    '-ar', '48000',
+    '-ac', '2',
+  ],
+});
+
+input.pipe(transcoder).pipe(output);
 ```
 
 ## OggOpus Demuxer
