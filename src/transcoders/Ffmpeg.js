@@ -44,12 +44,8 @@ module.exports = FfmpegTransform;
 
 function createFfmpeg(options) {
   let args = options.args || [];
-  if (!options.input || options.input instanceof Readable) {
-    args = ['-i', '-'].concat(args).concat(['pipe:1']);
-  } else {
-    args = ['-i', options.input].concat(args).concat(['pipe:1']);
-  }
-  return ChildProcess.spawn(selectFfmpegCommand(), args);
+  if (!options.args.includes('-i')) args = ['-i', '-'].concat(args);
+  return ChildProcess.spawn(selectFfmpegCommand(), args.concat(['pipe:1']));
 }
 
 function selectFfmpegCommand() {
