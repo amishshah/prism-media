@@ -17,7 +17,7 @@ const prism = require('prism-media');
 const fs = require('fs');
 
 fs.createReadStream('./audio.ogg')
-  .pipe(new prism.transcoders.Ffmpeg({
+  .pipe(new prism.transcoders.FFmpeg({
       args: [
         '-analyzeduration', '0',
         '-loglevel', '0',

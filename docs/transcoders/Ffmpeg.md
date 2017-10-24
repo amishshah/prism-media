@@ -1,12 +1,12 @@
-# `prism.transcoders.Ffmpeg`
+# `prism.transcoders.FFmpeg`
 
-The Ffmpeg transcoder is designed to take any media stream and pipe it into a spawned ffmpeg process.
+The FFmpeg transcoder is designed to take any media stream and pipe it into a spawned ffmpeg process.
 
 Make sure you have ffmpeg available on your system if you want to use it. Try installing [ffmpeg-binaries](https://www.npmjs.com/package/ffmpeg-binaries) if ffmpeg isn't already available in your path.
 
 ## Usage
 ```js
-new prism.transcoders.Ffmpeg(options);
+new prism.transcoders.FFmpeg(options);
 ```
 
 Where options is an object containing the `args` property, an array of arguments to pass through to ffmpeg when spawning the process.
@@ -20,7 +20,7 @@ const prism = require('prism-media');
 
 const input = fs.createReadStream('./file.mp3');
 const output = fs.createWriteStream('./output.pcm');
-const transcoder = new prism.transcoders.Ffmpeg({
+const transcoder = new prism.transcoders.FFmpeg({
   args: [
     '-analyzeduration', '0',
     '-loglevel', '0',
@@ -42,7 +42,7 @@ const fs = require('fs');
 const prism = require('prism-media');
 
 const output = fs.createWriteStream('./output.pcm');
-const transcoder = new prism.transcoders.Ffmpeg({
+const transcoder = new prism.transcoders.FFmpeg({
   args: [
     '-i', 'file.mp3',
     '-analyzeduration', '0',

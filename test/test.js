@@ -9,7 +9,7 @@ test('FFmpeg transcoder to PCM is sane', async done => {
 
   expect.assertions(1);
   const output = fs.createReadStream('./test/audio/speech_orig.ogg')
-    .pipe(new prism.transcoders.Ffmpeg({
+    .pipe(new prism.transcoders.FFmpeg({
       args: [
         '-analyzeduration', '0',
         '-loglevel', '0',

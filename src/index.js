@@ -3,5 +3,5 @@ exports.demuxers = {
 };
 
 exports.transcoders = {
-  Ffmpeg: require('./transcoders/Ffmpeg'),
+  FFmpeg: require('./transcoders/FFmpeg'),
 };

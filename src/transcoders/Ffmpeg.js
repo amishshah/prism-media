@@ -2,10 +2,10 @@ const ChildProcess = require('child_process');
 const { Duplex } = require('stream');
 let FFMPEG_COMMAND = null;
 
-class FfmpegTransform extends Duplex {
+class FFmpegTransform extends Duplex {
   constructor(options) {
     super();
-    this.process = createFfmpeg(options);
+    this.process = createFFmpeg(options);
     const EVENTS = {
       readable: this._reader,
       data: this._reader,
@@ -40,15 +40,15 @@ class FfmpegTransform extends Duplex {
   }
 }
 
-module.exports = FfmpegTransform;
+module.exports = FFmpegTransform;
 
-function createFfmpeg(options) {
+function createFFmpeg(options) {
   let args = options.args || [];
   if (!options.args.includes('-i')) args = ['-i', '-'].concat(args);
-  return ChildProcess.spawn(selectFfmpegCommand(), args.concat(['pipe:1']));
+  return ChildProcess.spawn(selectFFmpegCommand(), args.concat(['pipe:1']));
 }
 
-function selectFfmpegCommand() {
+function selectFFmpegCommand() {
   if (FFMPEG_COMMAND) return FFMPEG_COMMAND;
   try {
     FFMPEG_COMMAND = require('ffmpeg-binaries').ffmpegPath();

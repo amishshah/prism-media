@@ -1,4 +1,4 @@
-const Ffmpeg = require('./ffmpeg/Ffmpeg');
+const FFmpeg = require('./ffmpeg/FFmpeg');
 
 const transcoders = [
   'ffmpeg',
@@ -7,7 +7,7 @@ const transcoders = [
 class MediaTranscoder {
   constructor(prism) {
     this.prism = prism;
-    this.ffmpeg = new Ffmpeg(this);
+    this.ffmpeg = new FFmpeg(this);
   }
 
   static verifyOptions(options) {
