@@ -2,18 +2,36 @@ const ChildProcess = require('child_process');
 const { Duplex, Readable } = require('stream');
 let FFMPEG_COMMAND = null;
 
-// Need to improve using passthroughs
-
 class FfmpegTransform extends Duplex {
   constructor(options) {
     super();
     this.process = createFfmpeg(options);
-    this.process.stdout.on('data', this.push.bind(this));
-    this.copy(['_write', 'end'], this.process.stdin);
-    this.copy(['_read'], this.process.stdout);
-    // Obviously this is bad, I'll change it later
-    this.process.stdout.on('end', () => this.emit('end'));
+    const EVENTS = {
+      readable: this._reader,
+      data: this._reader,
+      end: this._reader,
+      unpipe: this._reader,
+      finish: this._writer,
+      drain: this._writer,
+    };
+
+    this._readableState = this._reader._readableState;
+    this._writableState = this._writer._writableState;
+
+    this.copy(['write', 'end'], this._writer);
+    this.copy(['read', 'setEncoding', 'pipe', 'unpipe'], this._reader);
+
+    for (const method of ['on', 'once', 'removeListener', 'removeListeners', 'listeners']) {
+      this[method] = (ev, fn) => EVENTS[ev] ? EVENTS[ev][method](ev, fn) : Duplex.prototype[method].call(this, ev, fn);
+    }
+
+    const processError = error => this.emit('error', error);
+    this._reader.on('error', processError);
+    this._writer.on('error', processError);
   }
+
+  get _reader() { return this.process.stdout; }
+  get _writer() { return this.process.stdin; }
 
   copy(methods, target) {
     for (const method of methods) {
