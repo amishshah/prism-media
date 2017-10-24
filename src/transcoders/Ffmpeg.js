@@ -1,5 +1,5 @@
 const ChildProcess = require('child_process');
-const { Duplex, Readable } = require('stream');
+const { Duplex } = require('stream');
 let FFMPEG_COMMAND = null;
 
 class FfmpegTransform extends Duplex {
