@@ -38,6 +38,11 @@ class FFmpegTransform extends Duplex {
       this[method] = target[method].bind(target);
     }
   }
+
+  destroy(err) {
+    super.destroy(err);
+    this.process.kill('SIGKILL');
+  }
 }
 
 module.exports = FFmpegTransform;
