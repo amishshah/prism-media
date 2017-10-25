@@ -1,7 +1,5 @@
-exports.demuxers = {
-  OggOpus: require('./demuxers/OggOpus'),
-};
-
-exports.transcoders = {
+module.exports = {
+  opus: require('./transcoders/Opus.js'),
   FFmpeg: require('./transcoders/FFmpeg'),
+  OggOpusDemuxer: require('./demuxers/OggOpus'),
 };

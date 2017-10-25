@@ -17,7 +17,7 @@ const prism = require('prism-media');
 
 const input = fs.createReadStream('./file.mp3');
 const output = fs.createWriteStream('./output.pcm');
-const transcoder = new prism.transcoders.FFmpeg({
+const transcoder = new prism.FFmpeg({
   args: [
     '-analyzeduration', '0',
     '-loglevel', '0',
@@ -39,7 +39,7 @@ const opus = require('node-opus');
 const decoder = new opus.Decoder(48000, 2, 1920);
 
 fs.createReadStream('./audio.ogg')
-  .pipe(new prism.demuxers.OggOpus())
+  .pipe(new prism.OggOpusDemuxer())
   .pipe(decoder)
   .pipe(fs.createWriteStream('./audio.pcm'))
 ```

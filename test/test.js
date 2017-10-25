@@ -9,7 +9,7 @@ test('FFmpeg transcoder to PCM is sane', async done => {
 
   expect.assertions(1);
   const output = fs.createReadStream('./test/audio/speech_orig.ogg')
-    .pipe(new prism.transcoders.FFmpeg({
+    .pipe(new prism.FFmpeg({
       args: [
         '-analyzeduration', '0',
         '-loglevel', '0',
@@ -26,7 +26,7 @@ test('FFmpeg transcoder to PCM is sane', async done => {
 
 test('OggOpus demuxer is sane', async done => {
   expect.assertions(1);
-  const output = fs.createReadStream('./test/audio/speech_orig.ogg').pipe(new prism.demuxers.OggOpus());
+  const output = fs.createReadStream('./test/audio/speech_orig.ogg').pipe(new prism.OggOpusDemuxer());
   const chunks = await streamToBuffer(output);
   const file = await readFile('./test/audio/speech_orig.opusdump');
   expect(roughlyEquals(file, chunks)).toEqual(true);

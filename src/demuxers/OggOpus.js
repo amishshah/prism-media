@@ -3,13 +3,16 @@ const { Transform } = require('stream');
 const OGG_PAGE_HEADER_SIZE = 26;
 const STREAM_STRUCTURE_VERSION = 0;
 
-const OGGS_HEADER = Buffer.from('OggS'.split('').map(x => x.charCodeAt(0)));
-const OPUS_HEAD = Buffer.from('OpusHead'.split('').map(x => x.charCodeAt(0)));
-const OPUS_TAGS = Buffer.from('OpusTags'.split('').map(x => x.charCodeAt(0)));
+const charCode = x => x.charCodeAt(0);
+const OGGS_HEADER = Buffer.from([...'OggS'].map(charCode));
+const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
+const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
 class OggOpusTransform extends Transform {
   constructor() {
-    super();
+    super({
+      readableObjectMode: true,
+    });
     this._remainder = null;
     this._head = null;
   }

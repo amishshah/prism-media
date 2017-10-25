@@ -59,6 +59,7 @@
     "no-warning-comments": "warn",
     "wrap-iife": "error",
     "yoda": "error",
+    "no-empty": "off",
 
     "no-label-var": "error",
     "no-shadow": "error",
