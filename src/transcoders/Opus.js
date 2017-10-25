@@ -39,7 +39,7 @@ class OpusStream extends Transform {
 
   setBitrate(bitrate) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
-      .apply(this.encoder, [CTL.BITRATE, Math.min(128, Math.max(16, bitrate))]);
+      .apply(this.encoder, [CTL.BITRATE, Math.min(128e3, Math.max(16e3, bitrate))]);
   }
 
   setFEC(enabled) {
