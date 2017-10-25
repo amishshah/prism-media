@@ -60,6 +60,7 @@ class OggOpusTransform extends Transform {
     for (let i = 0; i < pageSegments;) {
       let size = 0, x = 255;
       while (x === 255) {
+        if (i >= table.length) return false;
         x = table.readUInt8(i);
         i++;
         size += x;
