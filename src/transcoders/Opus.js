@@ -63,7 +63,7 @@ class Encoder extends OpusStream {
 
   _transform(chunk, encoding, done) {
     this._buffer = Buffer.concat([this._buffer, chunk]);
-    const required = this.options.frameSize * this.options.channels * 2;
+    const required = this.options.frameSize * this.options.channels;
     let n = 0;
     while (this._buffer.length >= required * (n + 1)) {
       this.push(this.encoder.encode(this._buffer.slice(n * required, (n + 1) * required), this.options.frameSize));
