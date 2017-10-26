@@ -34,7 +34,12 @@ class VolumeTransformer extends Transform {
     }
     this._chunk = chunk.slice(complete);
     this.push(transformed);
-    done();
+    return done();
+  }
+
+  _destroy(err, cb) {
+    super._destroy(err, cb);
+    this._chunk = null;
   }
 
   setVolume(volume) {
