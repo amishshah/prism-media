@@ -5,6 +5,27 @@ const prism = require('../');
 const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 
+test('FFmpeg transcoder available', () => {
+  expect(prism.FFmpeg).toBeTruthy();
+});
+
+test('OggOpus Demuxer available', () => {
+  expect(prism.OggOpusDemuxer).toBeTruthy();
+});
+
+test('Opus encoders/decoders available', () => {
+  expect(prism.opus).toBeTruthy();
+  expect(prism.opus.Encoder).toBeTruthy();
+  expect(prism.opus.Decoder).toBeTruthy();
+});
+
+test('Volume Transformers available', () => {
+  expect(prism.VolumeTransformer16LE).toBeTruthy();
+  expect(prism.VolumeTransformer16BE).toBeTruthy();
+  expect(prism.VolumeTransformer32LE).toBeTruthy();
+  expect(prism.VolumeTransformer32BE).toBeTruthy();
+});
+
 test('FFmpeg transcoder to PCM is sane', async done => {
 
   expect.assertions(1);
