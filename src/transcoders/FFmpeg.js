@@ -39,8 +39,8 @@ class FFmpegTransform extends Duplex {
     }
   }
 
-  destroy(err) {
-    super.destroy(err);
+  _destroy(err, cb) {
+    super._destroy(err, cb);
     this.process.kill('SIGKILL');
   }
 }

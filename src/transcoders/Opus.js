@@ -70,6 +70,11 @@ class Encoder extends OpusStream {
     if (n > 0) this._buffer = this._buffer.slice(n * required);
     return done();
   }
+
+  _destroy(err, cb) {
+    super._destroy(err, cb);
+    this._buffer = null;
+  }
 }
 
 class Decoder extends OpusStream {
