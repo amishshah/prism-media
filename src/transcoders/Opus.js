@@ -20,7 +20,7 @@ const charCode = x => x.charCodeAt(0);
 const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
 const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
-// frame size = rate * frame_duration / 1000
+// frame size = (channels * rate * frame_duration) / 1000
 
 class OpusStream extends Transform {
   constructor(options) {
