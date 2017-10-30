@@ -5,15 +5,15 @@ const { Transform } = require('stream');
 class VolumeTransformer extends Transform {
   constructor(options, { bits = 16, volume = 1 } = {}) {
     super(options);
-    this.bits = bits;
-    this.bytes = this.bits / 8;
-    this.extremum = Math.pow(2, this.bits - 1) - 1;
+    this._bits = bits;
+    this._bytes = this._bits / 8;
+    this._extremum = Math.pow(2, this._bits - 1) - 1;
     this.volume = volume;
     this._chunk = Buffer.alloc(0);
   }
 
-  readInt(buffer, index) { return index; }
-  writeInt(buffer, int, index) { return index; }
+  _readInt(buffer, index) { return index; }
+  _writeInt(buffer, int, index) { return index; }
 
   _transform(chunk, encoding, done) {
     // If the volume is 1, act like a passthrough stream
@@ -22,17 +22,17 @@ class VolumeTransformer extends Transform {
       return done();
     }
 
-    const { bytes, extremum } = this;
+    const { _bytes, _extremum } = this;
 
     chunk = this._chunk = Buffer.concat([this._chunk, chunk]);
-    if (chunk.length < bytes) return done();
+    if (chunk.length < _bytes) return done();
 
     const transformed = Buffer.alloc(chunk.length);
-    const complete = Math.floor(chunk.length / bytes) * bytes;
+    const complete = Math.floor(chunk.length / _bytes) * _bytes;
     let i = 0;
-    for (; i < complete; i += bytes) {
-      const int = Math.min(extremum, Math.max(-extremum, Math.floor(this.volume * this.readInt(chunk, i))));
-      this.writeInt(transformed, int, i);
+    for (; i < complete; i += _bytes) {
+      const int = Math.min(_extremum, Math.max(-_extremum, Math.floor(this.volume * this._readInt(chunk, i))));
+      this._writeInt(transformed, int, i);
     }
     this._chunk = chunk.slice(complete);
     this.push(transformed);
@@ -67,26 +67,26 @@ class VolumeTransformer extends Transform {
 
 class VolumeTransformer16LE extends VolumeTransformer {
   constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 16 }); }
-  readInt(buffer, index) { return buffer.readInt16LE(index); }
-  writeInt(buffer, int, index) { return buffer.writeInt16LE(int, index); }
+  _readInt(buffer, index) { return buffer._readInt16LE(index); }
+  _writeInt(buffer, int, index) { return buffer._writeInt16LE(int, index); }
 }
 
 class VolumeTransformer16BE extends VolumeTransformer {
   constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 16 }); }
-  readInt(buffer, index) { return buffer.readInt16BE(index); }
-  writeInt(buffer, int, index) { return buffer.writeInt16BE(int, index); }
+  _readInt(buffer, index) { return buffer._readInt16BE(index); }
+  _writeInt(buffer, int, index) { return buffer._writeInt16BE(int, index); }
 }
 
 class VolumeTransformer32LE extends VolumeTransformer {
   constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 32 }); }
-  readInt(buffer, index) { return buffer.readInt32LE(index); }
-  writeInt(buffer, int, index) { return buffer.writeInt32LE(int, index); }
+  _readInt(buffer, index) { return buffer._readInt32LE(index); }
+  _writeInt(buffer, int, index) { return buffer._writeInt32LE(int, index); }
 }
 
 class VolumeTransformer32BE extends VolumeTransformer {
   constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 32 }); }
-  readInt(buffer, index) { return buffer.readInt32BE(index); }
-  writeInt(buffer, int, index) { return buffer.writeInt32BE(int, index); }
+  _readInt(buffer, index) { return buffer._readInt32BE(index); }
+  _writeInt(buffer, int, index) { return buffer._writeInt32BE(int, index); }
 }
 
 module.exports = {
