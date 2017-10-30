@@ -12,7 +12,7 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
  * Demuxes an Ogg stream (containing Opus audio) to output an Opus stream.
  * @extends {TransformStream}
  */
-class OggOpusTransform extends Transform {
+class OggOpusDemuxer extends Transform {
   /**
    * Creates a new OggOpus demuxer.
    * @param {Object} [options] options that you would pass to a regular Transform stream.
@@ -78,10 +78,10 @@ class OggOpusTransform extends Transform {
       const segment = chunk.slice(start, start + size);
       const header = segment.slice(0, 8);
       if (this._head) {
-        if (header.equals(OPUS_TAGS)) this.emit('opusTags', segment);
+        if (header.equals(OPUS_TAGS)) this.emit('tags', segment);
         else this.push(segment);
       } else if (header.equals(OPUS_HEAD)) {
-        this.emit('opusHead', segment);
+        this.emit('head', segment);
         this._head = segment;
       } else {
         throw Error(`Invalid segment ${segment}`);
@@ -94,14 +94,14 @@ class OggOpusTransform extends Transform {
 
 /**
  * Emitted when the demuxer encounters the opus head.
- * @event OggOpusDemuxer#opusHead
+ * @event OggOpusDemuxer#head
  * @param {Buffer} segment a buffer containing the opus head data.
  */
 
 /**
  * Emitted when the demuxer encounters opus tags.
- * @event OggOpusDemuxer#opusTags
+ * @event OggOpusDemuxer#tags
  * @param {Buffer} segment a buffer containing the opus tags.
  */
 
-module.exports = OggOpusTransform;
+module.exports = OggOpusDemuxer;

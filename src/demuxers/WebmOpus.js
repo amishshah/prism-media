@@ -4,7 +4,7 @@ const { Transform } = require('stream');
  * Demuxes a Webm stream (containing Opus audio) to output an Opus stream.
  * @extends {TransformStream}
  */
-class WebmOpusTransform extends Transform {
+class WebmOpusDemuxer extends Transform {
   /**
    * Creates a new WebmOpus demuxer.
    * @param {Object} [options] options that you would pass to a regular Transform stream.
@@ -136,18 +136,18 @@ class WebmOpusTransform extends Transform {
 /**
  * A symbol that is returned by some functions that indicates the buffer it has been provided is not large enough
  * to facilitate a request.
- * @name WebmOpusTransform#TOO_SHORT
+ * @name WebmOpusDemuxer#TOO_SHORT
  * @type {Symbol} 
  */
-const TOO_SHORT = WebmOpusTransform.TOO_SHORT = Symbol('TOO_SHORT');
+const TOO_SHORT = WebmOpusDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
 
 /**
  * A map that takes a value of an EBML ID in hex string form, with the value being a boolean that indicates whether
  * this tag has children.
- * @name WebmOpusTransform#TAGS
+ * @name WebmOpusDemuxer#TAGS
  * @type {Object}
  */
-const TAGS = WebmOpusTransform.TAGS = { // value is true if the element has children
+const TAGS = WebmOpusDemuxer.TAGS = { // value is true if the element has children
   '1a45dfa3': true, // EBML
   '18538067': true, // Segment
   '1f43b675': true, // Cluster
@@ -158,7 +158,7 @@ const TAGS = WebmOpusTransform.TAGS = { // value is true if the element has chil
   'a3': false, // Simple Block
 };
 
-module.exports = WebmOpusTransform;
+module.exports = WebmOpusDemuxer;
 
 function vintLength(buffer, index) {
   let i = 0;

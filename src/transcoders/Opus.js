@@ -1,3 +1,5 @@
+// Partly based on https://github.com/Rantanen/node-opus/blob/master/lib/Encoder.js
+
 const { Transform } = require('stream');
 
 var OpusEncoder;
@@ -22,12 +24,19 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
 // frame size = (channels * rate * frame_duration) / 1000
 
+/**
+ * Takes a stream of Opus data and outputs a stream of PCM data, or the inverse.
+ */
 class OpusStream extends Transform {
-  constructor(options) {
+  /**
+   * Creates a new Opus transformer.
+   * @param {Object} [options] options that you would pass to a regular Transform stream.
+   */
+  constructor(options = {}) {
     if (!OpusEncoder) {
       throw Error('Could not find an Opus module! Please install node-opus or opusscript.');
     }
-    super({ readableObjectMode: true });
+    super(Object.assign({ readableObjectMode: true }, options));
     if (OpusEncoder.Application) {
       options.application = OpusEncoder.Application[options.application];
     }
@@ -35,27 +44,53 @@ class OpusStream extends Transform {
     this.options = options;
   }
 
+  /**
+   * Returns the Opus module being used - `opusscript` or `node-opus`.
+   */
   static get type() {
     return OpusEncoder.Application ? 'opusscript' : 'node-opus';
   }
 
+  /**
+   * Sets the bitrate of the stream.
+   * @param {number} bitrate the bitrate to use use, e.g. 48000
+   */
   setBitrate(bitrate) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
       .apply(this.encoder, [CTL.BITRATE, Math.min(128e3, Math.max(16e3, bitrate))]);
   }
 
+  /**
+   * Enables or disables forward error correction.
+   * @param {boolean} enabled whether or not to enable FEC.
+   */
   setFEC(enabled) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
       .apply(this.encoder, [CTL.FEC, enabled ? 1 : 0]);
   }
 
+  /**
+   * Sets the expected packet loss over network transmission.
+   * @param {number} [percentage] a percentage (represented between 0 and 1)
+   */
   setPLP(percentage) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
       .apply(this.encoder, [CTL.FEC, Math.min(100, Math.max(0, percentage * 100))]);
   }
 }
 
+/**
+ * Represents an Opus encoder stream.
+ * @extends {OpusStream}
+ */
 class Encoder extends OpusStream {
+  /**
+   * Creates a new Opus encoder stream.
+   * @param {Object} options options that you would pass to a regular OpusStream, plus a few more:
+   * @param {number} options.frameSize the frame size to use (e.g. 1920 for stereo audio at 48KHz with a frame
+   * duration of 20ms)
+   * @param {number} options.channels the number of channels to use
+   */
   constructor(options) {
     super(options);
     this._buffer = Buffer.alloc(0);
@@ -79,6 +114,10 @@ class Encoder extends OpusStream {
   }
 }
 
+/**
+ * Represents an Opus decoder stream.
+ * @extends {OpusStream}
+ */
 class Decoder extends OpusStream {
   _transform(chunk, encoding, done) {
     const signature = chunk.slice(0, 8);
