@@ -16,7 +16,7 @@ class WebmOpusDemuxer extends Transform {
     this._count = 0;
     this._skipUntil = null;
     this._track = null;
-    this._incomplete_track = {};
+    this._incompleteTrack = {};
   }
 
   _transform(chunk, encoding, done) {
@@ -115,11 +115,11 @@ class WebmOpusDemuxer extends Transform {
     if (offset + dataLength > chunk.length) return TOO_SHORT;
     const data = chunk.slice(offset, offset + dataLength);
     if (!this._track) {
-      if (ebmlID === 'ae') this._incomplete_track = {};
-      if (ebmlID === 'd7') this._incomplete_track.number = data[0];
-      if (ebmlID === '83') this._incomplete_track.type = data[0];
-      if (this._incomplete_track.type === 2 && typeof this._incomplete_track.number !== 'undefined') {
-        this._track = this._incomplete_track;
+      if (ebmlID === 'ae') this._incompleteTrack = {};
+      if (ebmlID === 'd7') this._incompleteTrack.number = data[0];
+      if (ebmlID === '83') this._incompleteTrack.type = data[0];
+      if (this._incompleteTrack.type === 2 && typeof this._incompleteTrack.number !== 'undefined') {
+        this._track = this._incompleteTrack;
       }
     }
     if (ebmlID === 'a3') {
