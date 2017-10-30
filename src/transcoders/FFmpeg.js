@@ -18,8 +18,8 @@ class FFmpegTransform extends Duplex {
     this._readableState = this._reader._readableState;
     this._writableState = this._writer._writableState;
 
-    this.copy(['write', 'end'], this._writer);
-    this.copy(['read', 'setEncoding', 'pipe', 'unpipe'], this._reader);
+    this._copy(['write', 'end'], this._writer);
+    this._copy(['read', 'setEncoding', 'pipe', 'unpipe'], this._reader);
 
     for (const method of ['on', 'once', 'removeListener', 'removeListeners', 'listeners']) {
       this[method] = (ev, fn) => EVENTS[ev] ? EVENTS[ev][method](ev, fn) : Duplex.prototype[method].call(this, ev, fn);
@@ -33,7 +33,7 @@ class FFmpegTransform extends Duplex {
   get _reader() { return this.process.stdout; }
   get _writer() { return this.process.stdin; }
 
-  copy(methods, target) {
+  _copy(methods, target) {
     for (const method of methods) {
       this[method] = target[method].bind(target);
     }

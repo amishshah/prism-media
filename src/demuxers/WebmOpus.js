@@ -12,41 +12,41 @@ class WebmOpusDemuxer extends Transform {
   constructor(options = {}) {
     super(Object.assign({ readableObjectMode: true }, options));
     this._remainder = null;
-    this.offset = 0;
-    this.length = 0;
-    this.count = 0;
-    this.skipUntil = null;
-    this.track = null;
-    this._incompleteTrack = {};
+    this._offset = 0;
+    this._length = 0;
+    this._count = 0;
+    this._skipUntil = null;
+    this._track = null;
+    this._incomplete_track = {};
   }
 
   _transform(chunk, encoding, done) {
-    this.length += chunk.length;
+    this._length += chunk.length;
     if (this._remainder) {
       chunk = Buffer.concat([this._remainder, chunk]);
       this._remainder = null;
     }
-    this.offset = 0;
-    if (this.skipUntil && this.length > this.skipUntil) {
-      this.offset = this.skipUntil - this.count;
-      this.skipUntil = null;
-    } else if (this.skipUntil) {
-      this.count += chunk.length;
+    this._offset = 0;
+    if (this._skipUntil && this._length > this._skipUntil) {
+      this._offset = this._skipUntil - this._count;
+      this._skipUntil = null;
+    } else if (this._skipUntil) {
+      this._count += chunk.length;
       return done();
     }
     let result;
     while (result !== TOO_SHORT) {
-      result = this.readTag(chunk, this.offset);
+      result = this._readTag(chunk, this._offset);
       if (result === TOO_SHORT) break;
-      if (result.skipUntil) {
-        this.skipUntil = result.skipUntil;
+      if (result._skipUntil) {
+        this._skipUntil = result._skipUntil;
         break;
       }
-      if (result.offset) this.offset = result.offset;
+      if (result.offset) this._offset = result.offset;
       else break;
     }
-    this.count += this.offset;
-    this._remainder = chunk.slice(this.offset);
+    this._count += this._offset;
+    this._remainder = chunk.slice(this._offset);
     return done();
   }
 
@@ -58,7 +58,7 @@ class WebmOpusDemuxer extends Transform {
    * @returns {Object|Symbol} contains an `id` property (buffer) and the new `offset` (number).
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
    */
-  readEBMLID(chunk, offset = this.offset) {
+  _readEBMLId(chunk, offset = this._offset) {
     const idLength = vintLength(chunk, offset);
     if (idLength === TOO_SHORT) return TOO_SHORT;
     return {
@@ -75,7 +75,7 @@ class WebmOpusDemuxer extends Transform {
    * @returns {Object|Symbol} contains property `offset` (number), `dataLength` (number) and `sizeLength` (number).
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
    */
-  readTagDataSize(chunk, offset = this.offset) {
+  _readTagDataSize(chunk, offset = this._offset) {
     const sizeLength = vintLength(chunk, offset);
     if (sizeLength === TOO_SHORT) return TOO_SHORT;
     const dataLength = expandVint(chunk, offset, offset + sizeLength);
@@ -87,16 +87,16 @@ class WebmOpusDemuxer extends Transform {
    * @private
    * @param {Buffer} chunk the buffer to read from. 
    * @param {number} offset the offset in the buffer.
-   * @returns {Object|Symbol} contains the new `offset` (number) and optionally the `skipUntil` property,
+   * @returns {Object|Symbol} contains the new `offset` (number) and optionally the `_skipUntil` property,
    * indicating that the stream should ignore any data until a certain length is reached.
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
    */
-  readTag(chunk, offset = this.offset) {
-    const idData = this.readEBMLID(chunk, offset);
+  _readTag(chunk, offset = this._offset) {
+    const idData = this._readEBMLId(chunk, offset);
     if (idData === TOO_SHORT) return TOO_SHORT;
     const ebmlID = idData.id.toString('hex');
     offset = idData.offset;
-    const sizeData = this.readTagDataSize(chunk, offset);
+    const sizeData = this._readTagDataSize(chunk, offset);
     if (sizeData === TOO_SHORT) return TOO_SHORT;
     const { dataLength } = sizeData;
     offset = sizeData.offset;
@@ -105,7 +105,7 @@ class WebmOpusDemuxer extends Transform {
       if (chunk.length > offset + dataLength) {
         return { offset: offset + dataLength };
       }
-      return { offset, skipUntil: this.count + offset + dataLength };
+      return { offset, _skipUntil: this._count + offset + dataLength };
     }
 
     const tagHasChildren = TAGS[ebmlID];
@@ -115,17 +115,17 @@ class WebmOpusDemuxer extends Transform {
 
     if (offset + dataLength > chunk.length) return TOO_SHORT;
     const data = chunk.slice(offset, offset + dataLength);
-    if (!this.track) {
-      if (ebmlID === 'ae') this._incompleteTrack = {};
-      if (ebmlID === 'd7') this._incompleteTrack.number = data[0];
-      if (ebmlID === '83') this._incompleteTrack.type = data[0];
-      if (this._incompleteTrack.type === 2 && typeof this._incompleteTrack.number !== 'undefined') {
-        this.track = this._incompleteTrack;
+    if (!this._track) {
+      if (ebmlID === 'ae') this._incomplete_track = {};
+      if (ebmlID === 'd7') this._incomplete_track.number = data[0];
+      if (ebmlID === '83') this._incomplete_track.type = data[0];
+      if (this._incomplete_track.type === 2 && typeof this._incomplete_track.number !== 'undefined') {
+        this._track = this._incomplete_track;
       }
     }
     if (ebmlID === 'a3') {
-      if (!this.track) throw Error('No audio track in this webm!');
-      if ((data[0] & 0xF) === this.track.number) {
+      if (!this._track) throw Error('No audio _track in this webm!');
+      if ((data[0] & 0xF) === this._track.number) {
         this.push(data.slice(4));
       }
     }
@@ -151,10 +151,10 @@ const TAGS = WebmOpusDemuxer.TAGS = { // value is true if the element has childr
   '1a45dfa3': true, // EBML
   '18538067': true, // Segment
   '1f43b675': true, // Cluster
-  '1654ae6b': true, // Tracks
-  'ae': true, // TrackEntry
-  'd7': false, // TrackNumber
-  '83': false, // TrackType
+  '1654ae6b': true, // _tracks
+  'ae': true, // _trackEntry
+  'd7': false, // _trackNumber
+  '83': false, // _trackType
   'a3': false, // Simple Block
 };
 

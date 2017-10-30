@@ -30,7 +30,7 @@ class OggOpusDemuxer extends Transform {
     }
 
     while (chunk) {
-      const result = this.readPage(chunk);
+      const result = this._readPage(chunk);
       if (result) chunk = result;
       else break;
     }
@@ -45,7 +45,7 @@ class OggOpusDemuxer extends Transform {
    * @returns {boolean|Buffer} if a buffer, it will be a slice of the excess data of the original, otherwise it will be
    * false and would indicate that there is not enough data to go ahead with reading this page.
    */
-  readPage(chunk) {
+  _readPage(chunk) {
     if (chunk.length < OGG_PAGE_HEADER_SIZE) {
       return false;
     }

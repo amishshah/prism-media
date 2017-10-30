@@ -41,7 +41,7 @@ class OpusStream extends Transform {
       options.application = OpusEncoder.Application[options.application];
     }
     this.encoder = new OpusEncoder(options.rate, options.channels, options.application);
-    this.options = options;
+    this._options = options;
   }
 
   /**
@@ -98,10 +98,10 @@ class Encoder extends OpusStream {
 
   _transform(chunk, encoding, done) {
     this._buffer = Buffer.concat([this._buffer, chunk]);
-    const required = this.options.frameSize * this.options.channels;
+    const required = this._options.frameSize * this._options.channels;
     let n = 0;
     while (this._buffer.length >= required * (n + 1)) {
-      this.push(this.encoder.encode(this._buffer.slice(n * required, (n + 1) * required), this.options.frameSize));
+      this.push(this.encoder.encode(this._buffer.slice(n * required, (n + 1) * required), this._options.frameSize));
       n++;
     }
     if (n > 0) this._buffer = this._buffer.slice(n * required);
@@ -123,8 +123,8 @@ class Decoder extends OpusStream {
     const signature = chunk.slice(0, 8);
     if (signature.equals(OPUS_HEAD)) {
       this.emit('format', {
-        channels: this.options.channels,
-        sampleRate: this.options.rate,
+        channels: this._options.channels,
+        sampleRate: this._options.rate,
         bitDepth: 16,
         float: false,
         signed: true,
@@ -138,7 +138,7 @@ class Decoder extends OpusStream {
       this.emit('tags', chunk);
       return done();
     }
-    this.push(this.encoder.decode(chunk, this.options.frameSize));
+    this.push(this.encoder.decode(chunk, this._options.frameSize));
     return done();
   }
 }
