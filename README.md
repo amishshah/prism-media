@@ -36,16 +36,10 @@ const prism = require('prism-media');
 const fs = require('fs');
 const opus = require('node-opus');
 
-const decoder = new opus.Decoder(48000, 2, 1920);
+const decoder = new opus.Decoder({ rate: 48000, channels: 2, frameSize: 1920 });
 
 fs.createReadStream('./audio.ogg')
   .pipe(new prism.OggOpusDemuxer())
   .pipe(decoder)
   .pipe(fs.createWriteStream('./audio.pcm'))
 ```
-
-## Roadmap
-- Volume transform stream
-- Page support for OggOpus
-- Tidy up FFmpeg transform
-- More Opus demuxers
