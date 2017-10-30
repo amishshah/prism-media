@@ -12,7 +12,6 @@ class WebmOpusDemuxer extends Transform {
   constructor(options = {}) {
     super(Object.assign({ readableObjectMode: true }, options));
     this._remainder = null;
-    this._offset = 0;
     this._length = 0;
     this._count = 0;
     this._skipUntil = null;
@@ -26,9 +25,9 @@ class WebmOpusDemuxer extends Transform {
       chunk = Buffer.concat([this._remainder, chunk]);
       this._remainder = null;
     }
-    this._offset = 0;
+    let offset = 0;
     if (this._skipUntil && this._length > this._skipUntil) {
-      this._offset = this._skipUntil - this._count;
+      offset = this._skipUntil - this._count;
       this._skipUntil = null;
     } else if (this._skipUntil) {
       this._count += chunk.length;
@@ -36,17 +35,17 @@ class WebmOpusDemuxer extends Transform {
     }
     let result;
     while (result !== TOO_SHORT) {
-      result = this._readTag(chunk, this._offset);
+      result = this._readTag(chunk, offset);
       if (result === TOO_SHORT) break;
       if (result._skipUntil) {
         this._skipUntil = result._skipUntil;
         break;
       }
-      if (result.offset) this._offset = result.offset;
+      if (result.offset) offset = result.offset;
       else break;
     }
-    this._count += this._offset;
-    this._remainder = chunk.slice(this._offset);
+    this._count += offset;
+    this._remainder = chunk.slice(offset);
     return done();
   }
 
@@ -58,7 +57,7 @@ class WebmOpusDemuxer extends Transform {
    * @returns {Object|Symbol} contains an `id` property (buffer) and the new `offset` (number).
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
    */
-  _readEBMLId(chunk, offset = this._offset) {
+  _readEBMLId(chunk, offset) {
     const idLength = vintLength(chunk, offset);
     if (idLength === TOO_SHORT) return TOO_SHORT;
     return {
@@ -75,7 +74,7 @@ class WebmOpusDemuxer extends Transform {
    * @returns {Object|Symbol} contains property `offset` (number), `dataLength` (number) and `sizeLength` (number).
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
    */
-  _readTagDataSize(chunk, offset = this._offset) {
+  _readTagDataSize(chunk, offset) {
     const sizeLength = vintLength(chunk, offset);
     if (sizeLength === TOO_SHORT) return TOO_SHORT;
     const dataLength = expandVint(chunk, offset, offset + sizeLength);
@@ -91,7 +90,7 @@ class WebmOpusDemuxer extends Transform {
    * indicating that the stream should ignore any data until a certain length is reached.
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
    */
-  _readTag(chunk, offset = this._offset) {
+  _readTag(chunk, offset) {
     const idData = this._readEBMLId(chunk, offset);
     if (idData === TOO_SHORT) return TOO_SHORT;
     const ebmlID = idData.id.toString('hex');
