@@ -70,7 +70,7 @@ class WebmOpusDemuxer extends Transform {
   /**
    * Reads a size variable-integer to calculate the length of the data of a tag.
    * @private
-   * @param {Buffer} chunk the buffer to read from. 
+   * @param {Buffer} chunk the buffer to read from.
    * @param {number} offset the offset in the buffer.
    * @returns {Object|Symbol} contains property `offset` (number), `dataLength` (number) and `sizeLength` (number).
    * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
@@ -85,7 +85,7 @@ class WebmOpusDemuxer extends Transform {
   /**
    * Takes a buffer and attempts to read and process a tag.
    * @private
-   * @param {Buffer} chunk the buffer to read from. 
+   * @param {Buffer} chunk the buffer to read from.
    * @param {number} offset the offset in the buffer.
    * @returns {Object|Symbol} contains the new `offset` (number) and optionally the `_skipUntil` property,
    * indicating that the stream should ignore any data until a certain length is reached.
@@ -137,7 +137,7 @@ class WebmOpusDemuxer extends Transform {
  * A symbol that is returned by some functions that indicates the buffer it has been provided is not large enough
  * to facilitate a request.
  * @name WebmOpusDemuxer#TOO_SHORT
- * @type {Symbol} 
+ * @type {Symbol}
  */
 const TOO_SHORT = WebmOpusDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
 

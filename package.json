@@ -23,14 +23,12 @@
   },
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
-    "eslint": "^4.9.0",
+    "eslint": "^4.10.0",
     "ffmpeg-binaries": "^3.2.2-3",
     "jest": "^21.2.1"
   },
-  "dependencies": {
-    "opusscript": "0.0.4"
-  },
-  "optionalDependencies": {
+  "peerDependencies": {
+    "opusscript": "^0.0.4",
     "node-opus": "^0.2.7"
   }
 }
