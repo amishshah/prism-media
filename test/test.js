@@ -13,6 +13,12 @@ test('OggOpus Demuxer available', () => {
   expect(prism.OggOpusDemuxer).toBeTruthy();
 });
 
+test('WebmOpus Demuxer available', () => {
+  expect(prism.WebmOpusDemuxer).toBeTruthy();
+  expect(prism.WebmOpusDemuxer.TOO_SHORT).toBeTruthy();
+  expect(prism.WebmOpusDemuxer.TAGS).toBeTruthy();
+});
+
 test('Opus encoders/decoders available', () => {
   expect(prism.opus).toBeTruthy();
   expect(prism.opus.Encoder).toBeTruthy();

@@ -1,10 +1,16 @@
 const { Transform } = require('stream');
 
+/**
+ * Demuxes a Webm stream to output an Opus stream.
+ * @extends {TransformStream}
+ */
 class WebmOpusTransform extends Transform {
-  constructor() {
-    super({
-      readableObjectMode: true,
-    });
+  /**
+   * Creates a new WebmOpus demuxer.
+   * @param {Object} [options] options that you would pass to a regular Transform stream.
+   */
+  constructor(options = {}) {
+    super(Object.assign({ readableObjectMode: true }, options));
     this._remainder = null;
     this.offset = 0;
     this.length = 0;
@@ -30,24 +36,28 @@ class WebmOpusTransform extends Transform {
     }
     let result;
     while (result !== TOO_SHORT) {
-      try {
-        result = this.readTag(chunk, this.offset);
-        if (result === TOO_SHORT) break;
-        if (result.skipUntil) {
-          this.skipUntil = result.skipUntil;
-          break;
-        }
-        if (result.offset) this.offset = result.offset;
-        else break;
-      } catch (err) {
-        this.emit('error', err);
+      result = this.readTag(chunk, this.offset);
+      if (result === TOO_SHORT) break;
+      if (result.skipUntil) {
+        this.skipUntil = result.skipUntil;
+        break;
       }
+      if (result.offset) this.offset = result.offset;
+      else break;
     }
     this.count += this.offset;
     this._remainder = chunk.slice(this.offset);
     return done();
   }
 
+  /**
+   * Reads an EBML ID from a buffer.
+   * @private
+   * @param {Buffer} chunk the buffer to read from.
+   * @param {number} offset the offset in the buffer.
+   * @returns {Object|Symbol} contains an `id` property (buffer) and the new `offset` (number).
+   * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
+   */
   readEBMLID(chunk, offset = this.offset) {
     const idLength = vintLength(chunk, offset);
     if (idLength === TOO_SHORT) return TOO_SHORT;
@@ -57,6 +67,14 @@ class WebmOpusTransform extends Transform {
     };
   }
 
+  /**
+   * Reads a size variable-integer to calculate the length of the data of a tag.
+   * @private
+   * @param {Buffer} chunk the buffer to read from. 
+   * @param {number} offset the offset in the buffer.
+   * @returns {Object|Symbol} contains property `offset` (number), `dataLength` (number) and `sizeLength` (number).
+   * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
+   */
   readTagDataSize(chunk, offset = this.offset) {
     const sizeLength = vintLength(chunk, offset);
     if (sizeLength === TOO_SHORT) return TOO_SHORT;
@@ -64,6 +82,15 @@ class WebmOpusTransform extends Transform {
     return { offset: offset + sizeLength, dataLength, sizeLength };
   }
 
+  /**
+   * Takes a buffer and attempts to read and process a tag.
+   * @private
+   * @param {Buffer} chunk the buffer to read from. 
+   * @param {number} offset the offset in the buffer.
+   * @returns {Object|Symbol} contains the new `offset` (number) and optionally the `skipUntil` property,
+   * indicating that the stream should ignore any data until a certain length is reached.
+   * Returns the TOO_SHORT symbol if the data wasn't big enough to facilitate the request.
+   */
   readTag(chunk, offset = this.offset) {
     const idData = this.readEBMLID(chunk, offset);
     if (idData === TOO_SHORT) return TOO_SHORT;
@@ -106,11 +133,21 @@ class WebmOpusTransform extends Transform {
   }
 }
 
-module.exports = WebmOpusTransform;
+/**
+ * A symbol that is returned by some functions that indicates the buffer it has been provided is not large enough
+ * to facilitate a request.
+ * @name WebmOpusTransform#TOO_SHORT
+ * @type {Symbol} 
+ */
+const TOO_SHORT = WebmOpusTransform.TOO_SHORT = Symbol('TOO_SHORT');
 
-const TOO_SHORT = Symbol('TOO_SHORT');
-
-const TAGS = { // value is true if the element has children
+/**
+ * A map that takes a value of an EBML ID in hex string form, with the value being a boolean that indicates whether
+ * this tag has children.
+ * @name WebmOpusTransform#TAGS
+ * @type {Object}
+ */
+const TAGS = WebmOpusTransform.TAGS = { // value is true if the element has children
   '1a45dfa3': true, // EBML
   '18538067': true, // Segment
   '1f43b675': true, // Cluster
@@ -120,6 +157,8 @@ const TAGS = { // value is true if the element has children
   '83': false, // TrackType
   'a3': false, // Simple Block
 };
+
+module.exports = WebmOpusTransform;
 
 function vintLength(buffer, index) {
   let i = 0;
