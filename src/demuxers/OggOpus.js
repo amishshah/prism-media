@@ -8,11 +8,17 @@ const OGGS_HEADER = Buffer.from([...'OggS'].map(charCode));
 const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
 const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
+/**
+ * Demuxes an Ogg stream (containing Opus audio) to output an Opus stream.
+ * @extends {TransformStream}
+ */
 class OggOpusTransform extends Transform {
-  constructor() {
-    super({
-      readableObjectMode: true,
-    });
+  /**
+   * Creates a new OggOpus demuxer.
+   * @param {Object} [options] options that you would pass to a regular Transform stream.
+   */
+  constructor(options = {}) {
+    super(Object.assign({ readableObjectMode: true }, options));
     this._remainder = null;
     this._head = null;
   }
@@ -24,13 +30,9 @@ class OggOpusTransform extends Transform {
     }
 
     while (chunk) {
-      try {
-        const result = this.readPage(chunk);
-        if (result) chunk = result;
-        else break;
-      } catch (err) {
-        this.emit('error', err);
-      }
+      const result = this.readPage(chunk);
+      if (result) chunk = result;
+      else break;
     }
     this._remainder = chunk;
     done();
@@ -38,8 +40,10 @@ class OggOpusTransform extends Transform {
 
   /**
    * Reads a page from a buffer
-   * @param {Buffer} chunk The chunk containing the page
-   * @returns {boolean|Buffer}
+   * @private
+   * @param {Buffer} chunk the chunk containing the page
+   * @returns {boolean|Buffer} if a buffer, it will be a slice of the excess data of the original, otherwise it will be
+   * false and would indicate that there is not enough data to go ahead with reading this page.
    */
   readPage(chunk) {
     if (chunk.length < OGG_PAGE_HEADER_SIZE) {
@@ -52,9 +56,7 @@ class OggOpusTransform extends Transform {
       throw Error(`stream_structure_version is not ${STREAM_STRUCTURE_VERSION}`);
     }
 
-    const pageSegments = chunk.readUInt8(26),
-      table = chunk.slice(27, 27 + pageSegments);
-
+    const pageSegments = chunk.readUInt8(26), table = chunk.slice(27, 27 + pageSegments);
     let sizes = [], totalSize = 0;
 
     for (let i = 0; i < pageSegments;) {
@@ -69,9 +71,7 @@ class OggOpusTransform extends Transform {
       totalSize += size;
     }
 
-    if (chunk.length < 27 + pageSegments + totalSize) {
-      return false;
-    }
+    if (chunk.length < 27 + pageSegments + totalSize) return false;
 
     let start = 27 + pageSegments;
     for (const size of sizes) {
@@ -81,6 +81,7 @@ class OggOpusTransform extends Transform {
         if (header.equals(OPUS_TAGS)) this.emit('opusTags', segment);
         else this.push(segment);
       } else if (header.equals(OPUS_HEAD)) {
+        this.emit('opusHead', segment);
         this._head = segment;
       } else {
         throw Error(`Invalid segment ${segment}`);
@@ -90,5 +91,17 @@ class OggOpusTransform extends Transform {
     return chunk.slice(start);
   }
 }
+
+/**
+ * Emitted when the demuxer encounters the opus head.
+ * @event OggOpusDemuxer#opusHead
+ * @param {Buffer} segment a buffer containing the opus head data.
+ */
+
+/**
+ * Emitted when the demuxer encounters opus tags.
+ * @event OggOpusDemuxer#opusTags
+ * @param {Buffer} segment a buffer containing the opus tags.
+ */
 
 module.exports = OggOpusTransform;

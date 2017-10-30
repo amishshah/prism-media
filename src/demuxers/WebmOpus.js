@@ -1,7 +1,7 @@
 const { Transform } = require('stream');
 
 /**
- * Demuxes a Webm stream to output an Opus stream.
+ * Demuxes a Webm stream (containing Opus audio) to output an Opus stream.
  * @extends {TransformStream}
  */
 class WebmOpusTransform extends Transform {
