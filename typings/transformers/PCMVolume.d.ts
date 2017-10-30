@@ -3,14 +3,9 @@ import { Transform } from 'stream';
 export interface VolumeOptions {}
 
 export class VolumeTransformer {
-  public bits: number;
-  public bytes: number;
-  public extremum: number;
   public volume: number;
 
   constructor(options: VolumeOptions, spec?: { bits: number, volume: number });
-  public readInt(buffer: Buffer, index: number): number;
-  public writeInt(buffer: Buffer, int: number, index: number): number;
   public setVolume(volume: number): void;
   public setVolumeDecibels(db: number): void;
   public setVolumeLogarithmic(value: number): void;
