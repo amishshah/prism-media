@@ -1,3 +1,5 @@
+// Based on discord.js' old volume system
+
 const { Transform } = require('stream');
 
 class VolumeTransformer extends Transform {
