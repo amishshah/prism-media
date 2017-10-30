@@ -46,6 +46,7 @@ class OpusStream extends Transform {
 
   /**
    * Returns the Opus module being used - `opusscript` or `node-opus`.
+   * @type {string}
    */
   static get type() {
     return OpusEncoder.Application ? 'opusscript' : 'node-opus';
