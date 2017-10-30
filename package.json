@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Makes transcoding media easier",
   "main": "src/index.js",
+  "types": "typings/index.d.ts",
   "scripts": {
     "lint": "eslint src",
     "test": "npm run lint && jest"
