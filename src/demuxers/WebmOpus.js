@@ -17,6 +17,7 @@ class WebmOpusDemuxer extends Transform {
     this._skipUntil = null;
     this._track = null;
     this._incompleteTrack = {};
+    this._ebmlFound = false;
   }
 
   _transform(chunk, encoding, done) {
@@ -94,6 +95,10 @@ class WebmOpusDemuxer extends Transform {
     const idData = this._readEBMLId(chunk, offset);
     if (idData === TOO_SHORT) return TOO_SHORT;
     const ebmlID = idData.id.toString('hex');
+    if (!this._ebmlFound) {
+      if (ebmlID === '1a45dfa3') this._ebmlFound = true;
+      else throw Error('Did not find the EBML tag at the start of the stream');
+    }
     offset = idData.offset;
     const sizeData = this._readTagDataSize(chunk, offset);
     if (sizeData === TOO_SHORT) return TOO_SHORT;
@@ -123,7 +128,7 @@ class WebmOpusDemuxer extends Transform {
       }
     }
     if (ebmlID === 'a3') {
-      if (!this._track) throw Error('No audio _track in this webm!');
+      if (!this._track) throw Error('No audio track in this webm!');
       if ((data[0] & 0xF) === this._track.number) {
         this.push(data.slice(4));
       }
@@ -150,11 +155,11 @@ const TAGS = WebmOpusDemuxer.TAGS = { // value is true if the element has childr
   '1a45dfa3': true, // EBML
   '18538067': true, // Segment
   '1f43b675': true, // Cluster
-  '1654ae6b': true, // _tracks
-  'ae': true, // _trackEntry
-  'd7': false, // _trackNumber
-  '83': false, // _trackType
-  'a3': false, // Simple Block
+  '1654ae6b': true, // Tracks
+  'ae': true, // TrackEntry
+  'd7': false, // TrackNumber
+  '83': false, // TrackType
+  'a3': false, // SimpleBlock
 };
 
 module.exports = WebmOpusDemuxer;
