@@ -7,5 +7,5 @@ export interface FFmpegOptions {
 
 export default class FFmpegTransform extends Duplex {
   public process: ChildProcess;
-  constructor(options: FFmpegOptions);
+  constructor(options?: FFmpegOptions);
 }
