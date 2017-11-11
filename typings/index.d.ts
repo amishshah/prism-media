@@ -1,21 +1,18 @@
-import OpusTranscoder from './transcoders/Opus';
-import FFmpegTranscoder from './transcoders/FFmpeg';
+import opus from './transcoders/Opus';
+import FFmpeg from './transcoders/FFmpeg';
 import OggOpusDemuxer from './demuxers/OggOpus';
 import WebmOpusDemuxer from './demuxers/WebmOpus';
-import {
+
+export {
   VolumeTransformer16LE,
   VolumeTransformer16BE,
   VolumeTransformer32LE,
   VolumeTransformer32BE,
 } from './transformers/PCMVolume';
 
-export = {
-  opus: OpusTranscoder,
-  FFmpeg: FFmpegTranscoder,
+export {
+  opus,
+  FFmpeg,
   OggOpusDemuxer,
   WebmOpusDemuxer,
-  VolumeTransformer16LE,
-  VolumeTransformer16BE,
-  VolumeTransformer32LE,
-  VolumeTransformer32BE,
 }
