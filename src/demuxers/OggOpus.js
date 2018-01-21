@@ -88,7 +88,7 @@ class OggOpusDemuxer extends Transform {
         this.emit('head', segment);
         this._head = segment;
       } else {
-        throw Error(`Invalid segment ${segment}`);
+        this.emit('unknownSegment', segment);
       }
       start += size;
     }
