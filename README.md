@@ -1,14 +1,21 @@
-# prism-media
+
+<div align="center">
+  <br />
+  <p>
+    <a href="https://discord.js.org"><img src="https://i.imgur.com/ubpDp4r.png" width="546" /></a>
+  </p>
+
 [![Build Status](https://travis-ci.org/hydrabolt/prism-media.svg?branch=master)](https://travis-ci.org/hydrabolt/prism-media)
 [![dependencies](https://david-dm.org/hydrabolt/prism-media/status.svg)](https://david-dm.org/hydrabolt/prism-media)
 [![devDependencies](https://david-dm.org/hydrabolt/prism-media/dev-status.svg)](https://david-dm.org/hydrabolt/prism-media?type=dev)
 
-Intuitive abstractions that make transcoding media easy. Provides behind-the-scenes voice support for [discord.js](https://discord.js.org/).
+<p><b>Intuitive abstractions that make transcoding media easy. Provides behind-the-scenes voice support for <a href="discord.js">discord.js</a></b></p>
 
-- Stream-based
-- Fast and Lightweight
+`npm install prism-media`
 
-`npm i hydrabolt/prism-media`
+</div>
+
+------
 
 ## FFmpeg Transform
 ```js
