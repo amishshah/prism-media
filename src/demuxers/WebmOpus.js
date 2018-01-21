@@ -1,5 +1,7 @@
 const { Transform } = require('stream');
 
+const OPUS_HEAD = Buffer.from([...'OpusHead'].map(x => x.charCodeAt(0)));
+
 /**
  * Demuxes a Webm stream (containing Opus audio) to output an Opus stream.
  * @extends {TransformStream}
@@ -127,7 +129,11 @@ class WebmOpusDemuxer extends Transform {
         this._track = this._incompleteTrack;
       }
     }
-    if (ebmlID === 'a3') {
+    if (ebmlID === '63a2') {
+      if (!data.slice(0, 8).equals(OPUS_HEAD)) {
+        throw Error('Audio codec is not Opus!');
+      }
+    } else if (ebmlID === 'a3') {
       if (!this._track) throw Error('No audio track in this webm!');
       if ((data[0] & 0xF) === this._track.number) {
         this.push(data.slice(4));
@@ -160,6 +166,7 @@ const TAGS = WebmOpusDemuxer.TAGS = { // value is true if the element has childr
   'd7': false, // TrackNumber
   '83': false, // TrackType
   'a3': false, // SimpleBlock
+  '63a2': false,
 };
 
 module.exports = WebmOpusDemuxer;
