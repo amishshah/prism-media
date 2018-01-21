@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
-    "eslint": "^4.10.0",
+    "eslint": "^4.16.0",
     "ffmpeg-binaries": "^3.2.2-3",
     "jest": "^21.2.1"
   },
