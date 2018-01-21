@@ -6,7 +6,7 @@ Make sure you have ffmpeg available on your system if you want to use it. Try in
 
 ## Usage
 ```js
-new prism.transcoders.FFmpeg(options);
+new prism.FFmpeg(options);
 ```
 
 Where options is an object containing the `args` property, an array of arguments to pass through to ffmpeg when spawning the process.
