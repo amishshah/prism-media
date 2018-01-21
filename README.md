@@ -2,7 +2,7 @@
 <div align="center">
   <br />
   <p>
-    <a href="https://discord.js.org"><img src="https://i.imgur.com/ubpDp4r.png" width="546" /></a>
+    <img src="https://i.imgur.com/ubpDp4r.png" width="546" />
   </p>
 
 [![Build Status](https://travis-ci.org/hydrabolt/prism-media.svg?branch=master)](https://travis-ci.org/hydrabolt/prism-media)
