@@ -56,7 +56,11 @@ class OggOpusDemuxer extends Transform {
       throw Error(`stream_structure_version is not ${STREAM_STRUCTURE_VERSION}`);
     }
 
-    const pageSegments = chunk.readUInt8(26), table = chunk.slice(27, 27 + pageSegments);
+    if (chunk.length < 27) return false;
+    const pageSegments = chunk.readUInt8(26);
+    if (chunk.length < 27 + pageSegments) return false;
+    const table = chunk.slice(27, 27 + pageSegments);
+
     let sizes = [], totalSize = 0;
 
     for (let i = 0; i < pageSegments;) {
