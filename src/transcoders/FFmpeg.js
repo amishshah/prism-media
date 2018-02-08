@@ -61,7 +61,7 @@ function selectFFmpegCommand() {
   } catch (err) {
     const ffmpeg = process.env.ffmpeg ? process.env.ffmpeg : './ffmpeg';
     const avconv = process.env.avconv ? process.env.avconv : './avconv';
-    for (const command of ['ffmpeg', 'avconv', ffmpeg, avconv)] {
+    for (const command of ['ffmpeg', 'avconv', ffmpeg, avconv] {
       if (!ChildProcess.spawnSync(command, ['-h']).error) {
         FFMPEG_COMMAND = command;
         return FFMPEG_COMMAND;
