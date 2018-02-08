@@ -59,7 +59,9 @@ function selectFFmpegCommand() {
     FFMPEG_COMMAND = require('ffmpeg-binaries').ffmpegPath();
     return FFMPEG_COMMAND;
   } catch (err) {
-    for (const command of ['ffmpeg', 'avconv', process.env.ffmpeg ? process.env.ffmpeg : './ffmpeg', process.env.avconv ? process.env.avconv : './avconv']) {
+    const ffmpeg = process.env.ffmpeg ? process.env.ffmpeg : './ffmpeg';
+    const avconv = process.env.avconv ? process.env.avconv : './avconv';
+    for (const command of ['ffmpeg', 'avconv', ffmpeg, avconv)] {
       if (!ChildProcess.spawnSync(command, ['-h']).error) {
         FFMPEG_COMMAND = command;
         return FFMPEG_COMMAND;
