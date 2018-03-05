@@ -42,6 +42,15 @@ class OpusStream extends Transform {
     }
     this.encoder = new OpusEncoder(options.rate, options.channels, options.application);
     this._options = options;
+    this._required = this._options.frameSize * this._options.channels * 2;
+  }
+
+  _encode(buffer) {
+    return this.encoder.encode(buffer, OpusEncoder.Application ? this._options.frameSize : null);
+  }
+
+  _decode(buffer) {
+    return this.encoder.decode(buffer, OpusEncoder.Application ? this._options.frameSize : null);
   }
 
   /**
@@ -88,7 +97,7 @@ class Encoder extends OpusStream {
   /**
    * Creates a new Opus encoder stream.
    * @param {Object} options options that you would pass to a regular OpusStream, plus a few more:
-   * @param {number} options.frameSize the frame size to use (e.g. 1920 for stereo audio at 48KHz with a frame
+   * @param {number} options.frameSize the frame size to use (e.g. 960 for stereo audio at 48KHz with a frame
    * duration of 20ms)
    * @param {number} options.channels the number of channels to use
    */
@@ -99,13 +108,12 @@ class Encoder extends OpusStream {
 
   _transform(chunk, encoding, done) {
     this._buffer = Buffer.concat([this._buffer, chunk]);
-    const required = this._options.frameSize * this._options.channels;
     let n = 0;
-    while (this._buffer.length >= required * (n + 1)) {
-      this.push(this.encoder.encode(this._buffer.slice(n * required, (n + 1) * required), this._options.frameSize));
+    while (this._buffer.length >= this._required * (n + 1)) {
+      this.push(this._encode(this._buffer.slice(n * this._required, (n + 1) * this._required)));
       n++;
     }
-    if (n > 0) this._buffer = this._buffer.slice(n * required);
+    if (n > 0) this._buffer = this._buffer.slice(n * this._required);
     return done();
   }
 
@@ -139,7 +147,7 @@ class Decoder extends OpusStream {
       this.emit('tags', chunk);
       return done();
     }
-    this.push(this.encoder.decode(chunk, this._options.frameSize));
+    this.push(this.encoder._decode(chunk));
     return done();
   }
 }
