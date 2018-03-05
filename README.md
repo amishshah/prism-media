@@ -10,7 +10,7 @@
 [![devDependencies](https://david-dm.org/hydrabolt/prism-media/dev-status.svg)](https://david-dm.org/hydrabolt/prism-media?type=dev)
 [![npm](https://img.shields.io/npm/dt/prism-media.svg)](https://www.npmjs.com/package/prism-media)
 
-<p><b>Intuitive abstractions that make transcoding media easy. Provides behind-the-scenes audio support for <a href="discord.js">discord.js</a></b></p>
+<p><b>Intuitive abstractions that make transcoding media easy. Provides behind-the-scenes audio support for <a href="https://discord.js.org">discord.js</a></b></p>
 
 `npm install prism-media`
 
