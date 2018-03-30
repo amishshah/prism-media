@@ -147,7 +147,7 @@ class Decoder extends OpusStream {
       this.emit('tags', chunk);
       return done();
     }
-    this.push(this.encoder._decode(chunk));
+    this.push(this._decode(chunk));
     return done();
   }
 }
