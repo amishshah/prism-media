@@ -56,7 +56,7 @@ function createFFmpeg(options) {
 function selectFFmpegCommand() {
   if (FFMPEG_COMMAND) return FFMPEG_COMMAND;
   try {
-    FFMPEG_COMMAND = require('ffmpeg-binaries').ffmpegPath();
+    FFMPEG_COMMAND = require('ffmpeg-binaries');
     return FFMPEG_COMMAND;
   } catch (err) {
     for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
