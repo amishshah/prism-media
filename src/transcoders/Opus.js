@@ -51,6 +51,7 @@ class OpusStream extends Transform {
     if (OpusEncoderName === 'krypton') {
       BaseOpus.count++;
       this._encode = async buffer => await BaseOpus.do(this.encoder.encode(buffer)).run();
+      this._decode = async buffer => await BaseOpus.do(this.encoder.decode(buffer)).run();
     }
     this._options = options;
     this._required = this._options.frameSize * this._options.channels * 2;
