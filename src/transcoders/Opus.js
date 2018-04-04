@@ -2,7 +2,7 @@
 
 const { Transform } = require('stream');
 
-var OpusEncoder;
+var BaseOpus, OpusEncoder, OpusEncoderName;
 
 const CTL = {
   BITRATE: 4002,
@@ -10,12 +10,19 @@ const CTL = {
   PLP: 4014,
 };
 
-try {
-  OpusEncoder = require('node-opus').OpusEncoder;
-} catch (e) {
+for (const requireData of [
+  ['krypton', o => o.opus.OpusEncoder],
+  ['node-opus', o => o.OpusEncoder],
+  ['opusscript', o => o],
+]) {
+  const [name, fn] = requireData;
   try {
-    OpusEncoder = require('opusscript');
-  } catch (x) {}
+    BaseOpus = require(name);
+    OpusEncoder = fn(BaseOpus);
+    OpusEncoderName = name;
+    break;
+  } catch (e) {
+  }
 }
 
 const charCode = x => x.charCodeAt(0);
@@ -37,28 +44,32 @@ class OpusStream extends Transform {
       throw Error('Could not find an Opus module! Please install node-opus or opusscript.');
     }
     super(Object.assign({ readableObjectMode: true }, options));
-    if (OpusEncoder.Application) {
+    if (OpusEncoderName === 'opusscript') {
       options.application = OpusEncoder.Application[options.application];
     }
     this.encoder = new OpusEncoder(options.rate, options.channels, options.application);
+    if (OpusEncoderName === 'krypton') {
+      BaseOpus.count++;
+      this._encode = async buffer => await BaseOpus.do(this.encoder.encode(buffer)).run();
+    }
     this._options = options;
     this._required = this._options.frameSize * this._options.channels * 2;
   }
 
   _encode(buffer) {
-    return this.encoder.encode(buffer, OpusEncoder.Application ? this._options.frameSize : null);
+    return this.encoder.encode(buffer, OpusEncoderName !== 'node-opus' ? this._options.frameSize : null);
   }
 
   _decode(buffer) {
-    return this.encoder.decode(buffer, OpusEncoder.Application ? this._options.frameSize : null);
+    return this.encoder.decode(buffer, OpusEncoderName !== 'node-opus' ? this._options.frameSize : null);
   }
 
   /**
-   * Returns the Opus module being used - `opusscript` or `node-opus`.
+   * Returns the Opus module being used - `krypton`, `opusscript` or `node-opus`.
    * @type {string}
    */
   static get type() {
-    return OpusEncoder.Application ? 'opusscript' : 'node-opus';
+    return OpusEncoderName;
   }
 
   /**
@@ -106,11 +117,12 @@ class Encoder extends OpusStream {
     this._buffer = Buffer.alloc(0);
   }
 
-  _transform(chunk, encoding, done) {
+  async _transform(chunk, encoding, done) {
     this._buffer = Buffer.concat([this._buffer, chunk]);
     let n = 0;
     while (this._buffer.length >= this._required * (n + 1)) {
-      this.push(this._encode(this._buffer.slice(n * this._required, (n + 1) * this._required)));
+      const buf = await this._encode(this._buffer.slice(n * this._required, (n + 1) * this._required));
+      this.push(buf);
       n++;
     }
     if (n > 0) this._buffer = this._buffer.slice(n * this._required);
