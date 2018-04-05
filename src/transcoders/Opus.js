@@ -40,9 +40,10 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 class OpusStream extends Transform {
   /**
    * Creates a new Opus transformer.
-   * @param {Object} [options] options that you would pass to a regular Transform stream.
+   * @param {Object} [options] options that you would pass to a regular Transform stream, plus more:
+   * @param {boolean} [options.parallel=true] If true and Krypton is installed, multiple threads will be used.
    */
-  constructor(options = {}) {
+  constructor(options = { parallel: true }) {
     if (!OpusEncoder) {
       throw Error('Could not find an Opus module! Please install node-opus or opusscript.');
     }
@@ -52,10 +53,12 @@ class OpusStream extends Transform {
     }
     this.encoder = new OpusEncoder(options.rate, options.channels, options.application);
     if (OpusEncoderName === 'krypton') {
-      BaseOpus.count++;
+      if (options.parallel) {
+        BaseOpus.count++;
+        this.once('end', () => BaseOpus.count--);
+      }
       this._encode = async buffer => await BaseOpus.do(this.encoder.encode(buffer)).run();
       this._decode = async buffer => await BaseOpus.do(this.encoder.decode(buffer)).run();
-      this.once('end', () => BaseOpus.count--);
     }
     this._options = options;
     this._required = this._options.frameSize * this._options.channels * 2;
