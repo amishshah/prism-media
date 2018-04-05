@@ -11,7 +11,10 @@ const CTL = {
 };
 
 for (const requireData of [
-  ['krypton', o => o.opus.OpusEncoder],
+  ['krypton', o => {
+    if (!o.opus.version) throw Error('Krypton found, but Opus is not available');
+    return o.opus.OpusEncoder;
+  }],
   ['node-opus', o => o.OpusEncoder],
   ['opusscript', o => o],
 ]) {
@@ -105,6 +108,7 @@ class OpusStream extends Transform {
 /**
  * Represents an Opus encoder stream.
  * @extends {OpusStream}
+ * @inheritdoc
  */
 class Encoder extends OpusStream {
   /**
