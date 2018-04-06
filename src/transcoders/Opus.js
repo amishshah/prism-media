@@ -57,8 +57,8 @@ class OpusStream extends Transform {
         BaseOpus.count++;
         this.once('end', () => BaseOpus.count--);
       }
-      this._encode = async buffer => BaseOpus.do(this.encoder.encode(buffer)).run(options.parallel ? undefined : false);
-      this._decode = async buffer => BaseOpus.do(this.encoder.decode(buffer)).run(options.parallel ? undefined : false);
+      this._encode = buffer => BaseOpus.do(this.encoder.encode(buffer)).run(options.parallel ? undefined : false);
+      this._decode = buffer => BaseOpus.do(this.encoder.decode(buffer)).run(options.parallel ? undefined : false);
     }
     this._options = options;
     this._required = this._options.frameSize * this._options.channels * 2;
