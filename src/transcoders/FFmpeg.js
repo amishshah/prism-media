@@ -59,7 +59,7 @@ function selectFFmpegCommand() {
     FFMPEG_COMMAND = require('ffmpeg-binaries').ffmpegPath();
     return FFMPEG_COMMAND;
   } catch (err) {
-    for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
+    for (const command of ['ffmpeg', 'avconv', process.env.ffmpeg || './ffmpeg', process.env.avconv || './avconv']) {
       if (!ChildProcess.spawnSync(command, ['-h']).error) {
         FFMPEG_COMMAND = command;
         return FFMPEG_COMMAND;
