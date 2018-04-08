@@ -2,6 +2,13 @@
 
 const { Transform } = require('stream');
 
+let krypton;
+try {
+  krypton = require('krypton');
+} catch (err) {
+  krypton = null;
+}
+
 class VolumeTransformer extends Transform {
   constructor(options, { bits = 16, volume = 1 } = {}) {
     super(options);
@@ -27,13 +34,23 @@ class VolumeTransformer extends Transform {
     chunk = this._chunk = Buffer.concat([this._chunk, chunk]);
     if (chunk.length < _bytes) return done();
 
-    const transformed = Buffer.alloc(chunk.length);
-    const complete = Math.floor(chunk.length / _bytes) * _bytes;
-    let i = 0;
-    for (; i < complete; i += _bytes) {
-      const int = Math.min(_extremum, Math.max(-_extremum, Math.floor(this.volume * this._readInt(chunk, i))));
-      this._writeInt(transformed, int, i);
+    let transformed;
+    let complete;
+
+    if (krypton && krypton.pcm.simd && this._krypton) {
+      if (chunk.length < 64) return done();
+      transformed = this._krypton(chunk, this.volume);
+      complete = transformed.length;
+    } else {
+      transformed = Buffer.alloc(chunk.length);
+      complete = Math.floor(chunk.length / _bytes) * _bytes;
+
+      for (let i = 0; i < complete; i += _bytes) {
+        const int = Math.min(_extremum, Math.max(-_extremum, Math.floor(this.volume * this._readInt(chunk, i))));
+        this._writeInt(transformed, int, i);
+      }
     }
+
     this._chunk = chunk.slice(complete);
     this.push(transformed);
     return done();
@@ -69,6 +86,10 @@ class VolumeTransformer16LE extends VolumeTransformer {
   constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 16 }); }
   _readInt(buffer, index) { return buffer.readInt16LE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt16LE(int, index); }
+  
+  _krypton(buffer, volume) {
+    return krypton.do(krypton.pcm.volume16(buffer, volume)).run(false);
+  }
 }
 
 class VolumeTransformer16BE extends VolumeTransformer {
