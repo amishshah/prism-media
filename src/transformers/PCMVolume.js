@@ -86,7 +86,7 @@ class VolumeTransformer16LE extends VolumeTransformer {
   constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 16 }); }
   _readInt(buffer, index) { return buffer.readInt16LE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt16LE(int, index); }
-  
+
   _krypton(buffer, volume) {
     return krypton.do(krypton.pcm.volume16(buffer, volume)).run(false);
   }
