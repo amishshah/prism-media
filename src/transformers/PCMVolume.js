@@ -10,12 +10,12 @@ try {
 }
 
 class VolumeTransformer extends Transform {
-  constructor(options, { bits = 16, volume = 1 } = {}) {
+  constructor(options = {}) {
     super(options);
-    this._bits = bits;
+    this._bits = options.bits;
     this._bytes = this._bits / 8;
     this._extremum = Math.pow(2, this._bits - 1) - 1;
-    this.volume = volume;
+    this.volume = options.volume || 1;
     this._chunk = Buffer.alloc(0);
   }
 
@@ -83,7 +83,7 @@ class VolumeTransformer extends Transform {
 }
 
 class VolumeTransformer16LE extends VolumeTransformer {
-  constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 16 }); }
+  constructor(options) { super({ ...options, bits: 16 }); }
   _readInt(buffer, index) { return buffer.readInt16LE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt16LE(int, index); }
 
@@ -93,19 +93,19 @@ class VolumeTransformer16LE extends VolumeTransformer {
 }
 
 class VolumeTransformer16BE extends VolumeTransformer {
-  constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 16 }); }
+  constructor(options) { super({ ...options, bits: 16 }); }
   _readInt(buffer, index) { return buffer.readInt16BE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt16BE(int, index); }
 }
 
 class VolumeTransformer32LE extends VolumeTransformer {
-  constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 32 }); }
+  constructor(options) { super({ ...options, bits: 32 }); }
   _readInt(buffer, index) { return buffer.readInt32LE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt32LE(int, index); }
 }
 
 class VolumeTransformer32BE extends VolumeTransformer {
-  constructor(options, { volume = 1 } = {}) { super(options, { volume, bits: 32 }); }
+  constructor(options) { super({ ...options, bits: 32 }); }
   _readInt(buffer, index) { return buffer.readInt32BE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt32BE(int, index); }
 }
