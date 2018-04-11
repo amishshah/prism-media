@@ -3,7 +3,7 @@
 const { Transform } = require('stream');
 const loader = require('../util/loader');
 
-const krypton = loader.require(['krypton']).fn;
+const krypton = loader.require([['krypton']]).fn;
 class VolumeTransformer extends Transform {
   constructor(options = {}) {
     super(options);

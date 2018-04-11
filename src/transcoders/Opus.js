@@ -10,7 +10,7 @@ const CTL = {
 };
 
 const Opus = loader.require([
-  ['kryptona', o => {
+  ['krypton', o => {
     if (!o.opus.version) throw Error('Krypton found, but Opus is not available');
     return o.opus.OpusEncoder;
   }],
