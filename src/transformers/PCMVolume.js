@@ -1,14 +1,9 @@
 // Based on discord.js' old volume system
 
 const { Transform } = require('stream');
+const loader = require('../util/loader');
 
-let krypton;
-try {
-  krypton = require('krypton');
-} catch (err) {
-  krypton = null;
-}
-
+const krypton = loader.require(['krypton']).fn;
 class VolumeTransformer extends Transform {
   constructor(options = {}) {
     super(options);

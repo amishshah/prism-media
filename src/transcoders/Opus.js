@@ -1,8 +1,7 @@
 // Partly based on https://github.com/Rantanen/node-opus/blob/master/lib/Encoder.js
 
 const { Transform } = require('stream');
-
-var BaseOpus, OpusEncoder, OpusEncoderName;
+const loader = require('../util/loader');
 
 const CTL = {
   BITRATE: 4002,
@@ -10,23 +9,16 @@ const CTL = {
   PLP: 4014,
 };
 
-for (const requireData of [
-  ['krypton', o => {
+const Opus = loader.require([
+  ['kryptona', o => {
     if (!o.opus.version) throw Error('Krypton found, but Opus is not available');
     return o.opus.OpusEncoder;
   }],
   ['node-opus', o => o.OpusEncoder],
   ['opusscript', o => o],
-]) {
-  const [name, fn] = requireData;
-  try {
-    BaseOpus = require(name);
-    OpusEncoder = fn(BaseOpus);
-    OpusEncoderName = name;
-    break;
-  } catch (e) {
-  }
-}
+], {
+  fn: 'Encoder',
+});
 
 const charCode = x => x.charCodeAt(0);
 const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
@@ -44,32 +36,32 @@ class OpusStream extends Transform {
    * @param {boolean} [options.parallel=true] If true and Krypton is installed, multiple threads will be used.
    */
   constructor(options = { parallel: true }) {
-    if (!OpusEncoder) {
+    if (!Opus.Encoder) {
       throw Error('Could not find an Opus module! Please install node-opus or opusscript.');
     }
     super(Object.assign({ readableObjectMode: true }, options));
-    if (OpusEncoderName === 'opusscript') {
-      options.application = OpusEncoder.Application[options.application];
+    if (Opus.name === 'opusscript') {
+      options.application = Opus.Encoder.Application[options.application];
     }
-    this.encoder = new OpusEncoder(options.rate, options.channels, options.application);
-    if (OpusEncoderName === 'krypton') {
+    this.encoder = new Opus.Encoder(options.rate, options.channels, options.application);
+    if (Opus.name === 'krypton') {
       if (options.parallel) {
-        BaseOpus.count++;
-        this.once('end', () => BaseOpus.count--);
+        Opus.module.count++;
+        this.once('end', () => Opus.module.count--);
       }
-      this._encode = buffer => BaseOpus.do(this.encoder.encode(buffer)).run(options.parallel ? undefined : false);
-      this._decode = buffer => BaseOpus.do(this.encoder.decode(buffer)).run(options.parallel ? undefined : false);
+      this._encode = buffer => Opus.module.do(this.encoder.encode(buffer)).run(options.parallel ? undefined : false);
+      this._decode = buffer => Opus.module.do(this.encoder.decode(buffer)).run(options.parallel ? undefined : false);
     }
     this._options = options;
     this._required = this._options.frameSize * this._options.channels * 2;
   }
 
   _encode(buffer) {
-    return this.encoder.encode(buffer, OpusEncoderName !== 'node-opus' ? this._options.frameSize : null);
+    return this.encoder.encode(buffer, Opus.name !== 'node-opus' ? this._options.frameSize : null);
   }
 
   _decode(buffer) {
-    return this.encoder.decode(buffer, OpusEncoderName !== 'node-opus' ? this._options.frameSize : null);
+    return this.encoder.decode(buffer, Opus.name !== 'node-opus' ? this._options.frameSize : null);
   }
 
   /**
@@ -77,7 +69,7 @@ class OpusStream extends Transform {
    * @type {string}
    */
   static get type() {
-    return OpusEncoderName;
+    return Opus.name;
   }
 
   /**
