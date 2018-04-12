@@ -21,6 +21,7 @@ class OggOpusDemuxer extends Transform {
     super(Object.assign({ readableObjectMode: true }, options));
     this._remainder = null;
     this._head = null;
+    this._bitstream = null;
   }
 
   _transform(chunk, encoding, done) {
@@ -60,6 +61,7 @@ class OggOpusDemuxer extends Transform {
     const pageSegments = chunk.readUInt8(26);
     if (chunk.length < 27 + pageSegments) return false;
     const table = chunk.slice(27, 27 + pageSegments);
+    const bitstream = chunk.readUInt32BE(14);
 
     let sizes = [], totalSize = 0;
 
@@ -83,10 +85,11 @@ class OggOpusDemuxer extends Transform {
       const header = segment.slice(0, 8);
       if (this._head) {
         if (header.equals(OPUS_TAGS)) this.emit('tags', segment);
-        else this.push(segment);
+        else if (this._bitstream === bitstream) this.push(segment);
       } else if (header.equals(OPUS_HEAD)) {
         this.emit('head', segment);
         this._head = segment;
+        this._bitstream = bitstream;
       } else {
         this.emit('unknownSegment', segment);
       }
