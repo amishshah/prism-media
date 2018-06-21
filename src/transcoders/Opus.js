@@ -99,8 +99,9 @@ class OpusStream extends Transform {
       .apply(this.encoder, [CTL.FEC, Math.min(100, Math.max(0, percentage * 100))]);
   }
 
-  _final() {
+  _final(cb) {
     if (Opus.name === 'opusscript' && this.encoder) this.encoder.delete();
+    cb();
   }
 }
 
