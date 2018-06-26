@@ -16,6 +16,12 @@ test('WebmOpus Demuxer available', () => {
   expect(prism.WebmOpusDemuxer.TAGS).toBeTruthy();
 });
 
+test('WebmVorbis Demuxer available', () => {
+  expect(prism.WebmVorbisDemuxer).toBeTruthy();
+  expect(prism.WebmVorbisDemuxer.TOO_SHORT).toBeTruthy();
+  expect(prism.WebmVorbisDemuxer.TAGS).toBeTruthy();
+});
+
 test('Opus encoders/decoders available', () => {
   expect(prism.opus).toBeTruthy();
   expect(prism.opus.Encoder).toBeTruthy();
