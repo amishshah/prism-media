@@ -9,6 +9,7 @@ module.exports = {
   FFmpeg: require('./transcoders/FFmpeg'),
   OggOpusDemuxer: require('./demuxers/OggOpus'),
   WebmOpusDemuxer: require('./demuxers/WebmOpus'),
+  WebmVorbisDemuxer: require('./demuxers/WebmVorbis'),
 };
 
 exp(require('./transformers/PCMVolume'));
