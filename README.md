@@ -17,6 +17,13 @@
 </div>
 
 ------
+## Dependencies
+- Opus
+  - [`krypton`](https://hackzzila.com/krypton/) (development)
+  - [`node-opus`](https://github.com/Rantanen/node-opus) (^0.2.7)
+  - [`opusscript`](https://github.com/abalabahaha/opusscript) (^0.0.4)
+- Other
+  - [`ffmpeg-binaries`](http://npmjs.com/ffmpeg-binaries) (^3.2.2-3)
 
 ## FFmpeg Transform
 ```js
