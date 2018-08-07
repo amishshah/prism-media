@@ -38,7 +38,7 @@ class FfmpegTranscoder {
 
   static selectFfmpegCommand() {
     try {
-      return require('ffmpeg-binaries').ffmpegPath();
+      return require('ffmpeg-binaries');
     } catch (err) {
       for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
         if (!ChildProcess.spawnSync(command, ['-h']).error) return command;
