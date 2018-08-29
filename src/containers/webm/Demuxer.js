@@ -1,16 +1,37 @@
+const stringToBuffer = require('../../util/stringToBuffer');
 const { Transform } = require('stream');
+const { OPUS_HEAD } = require('../../opus/Constants');
+const VORBIS_HEAD = stringToBuffer('vorbis');
+
+const TYPES = {
+  opus(data) {
+    if (!data.slice(0, 8).equals(OPUS_HEAD)) {
+      throw Error('Audio codec is not Opus!');
+    }
+  },
+  vorbis(data) {
+    if (data.readUInt8(0) !== 2 || !data.slice(4, 10).equals(VORBIS_HEAD)) {
+      throw Error('Audio codec is not Vorbis!');
+    }
+    this.push(data.slice(3, 3 + data.readUInt8(1)));
+    this.push(data.slice(3 + data.readUInt8(1), 3 + data.readUInt8(1) + data.readUInt8(2)));
+    this.push(data.slice(3 + data.readUInt8(1) + data.readUInt8(2)));
+  },
+};
 
 /**
- * Base class for WebmOpusDemuxer and WebmVorbisDemuxer.
+ * Demuxes WebM streams
  * @extends {TransformStream}
  */
-class WebmBaseDemuxer extends Transform {
+class WebmDemuxer extends Transform {
   /**
    * Creates a new Webm demuxer.
    * @param {Object} [options] options that you would pass to a regular Transform stream.
    */
   constructor(options = {}) {
     super(Object.assign({ readableObjectMode: true }, options));
+    if (!TYPES[options.type]) throw new Error('You need to provide a type to a Webm Demuxer (i.e. opus or vorbis)');
+    this._checkHead = TYPES[options.type].bind(this);
     this._remainder = null;
     this._length = 0;
     this._count = 0;
@@ -145,7 +166,7 @@ class WebmBaseDemuxer extends Transform {
  * @name WebmBaseDemuxer#TOO_SHORT
  * @type {Symbol}
  */
-const TOO_SHORT = WebmBaseDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
+const TOO_SHORT = WebmDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
 
 /**
  * A map that takes a value of an EBML ID in hex string form, with the value being a boolean that indicates whether
@@ -153,7 +174,7 @@ const TOO_SHORT = WebmBaseDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
  * @name WebmBaseDemuxer#TAGS
  * @type {Object}
  */
-const TAGS = WebmBaseDemuxer.TAGS = { // value is true if the element has children
+const TAGS = WebmDemuxer.TAGS = { // value is true if the element has children
   '1a45dfa3': true, // EBML
   '18538067': true, // Segment
   '1f43b675': true, // Cluster
@@ -165,7 +186,7 @@ const TAGS = WebmBaseDemuxer.TAGS = { // value is true if the element has childr
   '63a2': false,
 };
 
-module.exports = WebmBaseDemuxer;
+module.exports = WebmDemuxer;
 
 function vintLength(buffer, index) {
   let i = 0;

@@ -1,12 +1,6 @@
 const { Transform } = require('stream');
-
-const OGG_PAGE_HEADER_SIZE = 26;
-const STREAM_STRUCTURE_VERSION = 0;
-
-const charCode = x => x.charCodeAt(0);
-const OGGS_HEADER = Buffer.from([...'OggS'].map(charCode));
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
-const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
+const { OPUS_HEAD, OPUS_TAGS } = require('../../opus/Constants');
+const { OGGS_HEADER, OGG_PAGE_HEADER_SIZE, STREAM_STRUCTURE_VERSION } = require('./Constants');
 
 /**
  * Demuxes an Ogg stream (containing Opus audio) to output an Opus stream.

@@ -1,6 +1,7 @@
 // Partly based on https://github.com/Rantanen/node-opus/blob/master/lib/Encoder.js
 
 const { Transform } = require('stream');
+const { OPUS_HEAD, OPUS_TAGS } = require('./Constants');
 const loader = require('../util/loader');
 
 const CTL = {
@@ -10,19 +11,11 @@ const CTL = {
 };
 
 const Opus = loader.require([
-  ['krypton', o => {
-    if (!o.opus.version) throw Error('Krypton found, but Opus is not available');
-    return o.opus.OpusEncoder;
-  }],
   ['node-opus', o => o.OpusEncoder],
   ['opusscript', o => o],
 ], {
   fn: 'Encoder',
 });
-
-const charCode = x => x.charCodeAt(0);
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
-const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
 // frame size = (channels * rate * frame_duration) / 1000
 
@@ -33,7 +26,6 @@ class OpusStream extends Transform {
   /**
    * Creates a new Opus transformer.
    * @param {Object} [options] options that you would pass to a regular Transform stream, plus more:
-   * @param {boolean} [options.parallel=true] If true and Krypton is installed, multiple threads will be used.
    */
   constructor(options = { parallel: true }) {
     if (!Opus.Encoder) {
@@ -44,14 +36,6 @@ class OpusStream extends Transform {
       options.application = Opus.Encoder.Application[options.application];
     }
     this.encoder = new Opus.Encoder(options.rate, options.channels, options.application);
-    if (Opus.name === 'krypton') {
-      if (options.parallel) {
-        Opus.module.count++;
-        this.once('end', () => Opus.module.count--);
-      }
-      this._encode = buffer => Opus.module.do(this.encoder.encode(buffer)).run(options.parallel ? undefined : false);
-      this._decode = buffer => Opus.module.do(this.encoder.decode(buffer)).run(options.parallel ? undefined : false);
-    }
     this._options = options;
     this._required = this._options.frameSize * this._options.channels * 2;
   }
@@ -65,7 +49,7 @@ class OpusStream extends Transform {
   }
 
   /**
-   * Returns the Opus module being used - `krypton`, `opusscript` or `node-opus`.
+   * Returns the Opus module being used - `opusscript` or `node-opus`.
    * @type {string}
    */
   static get type() {
@@ -127,7 +111,7 @@ class Encoder extends OpusStream {
     this._buffer = Buffer.concat([this._buffer, chunk]);
     let n = 0;
     while (this._buffer.length >= this._required * (n + 1)) {
-      const buf = await this._encode(this._buffer.slice(n * this._required, (n + 1) * this._required));
+      const buf = this._encode(this._buffer.slice(n * this._required, (n + 1) * this._required));
       this.push(buf);
       n++;
     }
