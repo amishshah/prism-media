@@ -4,6 +4,5 @@
 module.exports = {
   opus: require('./opus'),
   ffmpeg: require('./ffmpeg'),
-  ...require('./core/'),
-  ...require('./containers'),
+  ...require('./core'),
 };

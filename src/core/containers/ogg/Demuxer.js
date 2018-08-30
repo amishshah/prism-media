@@ -1,5 +1,5 @@
 const { Transform } = require('stream');
-const { OPUS_HEAD, OPUS_TAGS } = require('../../opus/Constants');
+const { OPUS_HEAD, OPUS_TAGS } = require('../../../opus/Constants');
 const { OGGS_HEADER, OGG_PAGE_HEADER_SIZE, STREAM_STRUCTURE_VERSION } = require('./Constants');
 
 /**

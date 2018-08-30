@@ -1,4 +1,4 @@
-const stringToBuffer = require('../../util/stringToBuffer');
+const stringToBuffer = require('../../../util/stringToBuffer');
 
 module.exports = {
   OGGS_HEADER: stringToBuffer('OggS'),
