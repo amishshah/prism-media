@@ -14,7 +14,13 @@ function floatBytes(n) {
 }
 
 module.exports = {
-  ascii(str) { return Buffer.from(str, 'ascii'); },
+  ascii(str) {
+    if (![...str].every(char => {
+      const code = char.charCodeAt(0);
+      return code >= 0x20 && code <= 0x7E;
+    })) throw new Error(`'${str}' is not valid Matroska ASCII`);
+    return Buffer.from(str, 'ascii');
+  },
   unicode(str) { return Buffer.from(str, 'utf8'); },
   uintBE(n) {
     if (typeof n !== 'number' || n < 0) throw new Error(`${n} is not an unsigned number!`);
