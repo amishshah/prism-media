@@ -11,7 +11,7 @@ class VINT {
     let data = buffer.slice(0, length);
     if (data.equals(VINT.LIVE_STREAM)) return { length: Infinity, data, value: Infinity };
     data[0] &= 0xFF >> length;
-    return { length, data, value: data.readUIntBE(0, data.length) };
+    return { length, data, value: data.length <= 6 ? data.readUIntBE(0, data.length) : null };
   }
 
   static encode(n) {
