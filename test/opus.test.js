@@ -11,8 +11,8 @@ test('OggOpus Demuxer available', () => {
 });
 
 test('Webm Demuxer available', () => {
-  expect(new prism.webm.Demuxer({ type: 'opus' })).toBeTruthy();
-  expect(new prism.webm.Demuxer({ type: 'vorbis' })).toBeTruthy();
+  expect(new prism.webm.Demuxer('opus')).toBeTruthy();
+  expect(new prism.webm.Demuxer('vorbis')).toBeTruthy();
   expect(prism.webm.Demuxer.TOO_SHORT).toBeTruthy();
   expect(prism.webm.Demuxer.TAGS).toBeTruthy();
 });

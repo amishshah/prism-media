@@ -33,15 +33,13 @@ const TYPES = {
 class PCMTransformer extends Transform {
   /**
    * Creates a new PCMTransformer
-   * @param {Object} options In addition to the regular options of a TransformStream, the following properties
-   * are required:
-   * @param {string} options.type The type of the transformer, one of `s16le`, `s32le`, `s16be`, `s32be`
+   * @param {string} type The type of the transformer, one of `s16le`, `s32le`, `s16be`, `s32be`
+   * @param {Object} [options] The regular properties of a TransformStream
    */
-  constructor(options) {
-    if (!TYPES[options.type]) throw new Error(`Volume Transformer type '${options.type}' is invalid!`);
+  constructor(type, options = {}) {
+    if (!TYPES[type]) throw new Error(`Volume Transformer type '${type}' is invalid!`);
     super(options);
-
-    const type = TYPES[options.type];
+    const typeData = TYPES[type];
     /**
      * The number of bits that each frame uses
      * @readonly
@@ -67,8 +65,8 @@ class PCMTransformer extends Transform {
      */
     this.volume = options.volume || 1;
 
-    this._readInt = type.read.bind(this);
-    this._writeInt = type.write.bind(this);
+    this._readInt = typeData.read.bind(this);
+    this._writeInt = typeData.write.bind(this);
 
     this._chunk = Buffer.alloc(0);
   }

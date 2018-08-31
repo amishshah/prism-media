@@ -26,12 +26,13 @@ const TYPES = {
 class WebmDemuxer extends Transform {
   /**
    * Creates a new Webm demuxer.
+   * @param {string} type The type of the Demuxer, `opus` or `vorbis`.
    * @param {Object} [options] options that you would pass to a regular Transform stream.
    */
-  constructor(options = {}) {
+  constructor(type, options = {}) {
     super(Object.assign({ readableObjectMode: true }, options));
-    if (!TYPES[options.type]) throw new Error('You need to provide a type to a Webm Demuxer (i.e. opus or vorbis)');
-    this._checkHead = TYPES[options.type].bind(this);
+    if (!TYPES[type]) throw new Error('You need to provide a type to a Webm Demuxer (i.e. opus or vorbis)');
+    this._checkHead = TYPES[type].bind(this);
     this._remainder = null;
     this._length = 0;
     this._count = 0;
