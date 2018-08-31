@@ -1,8 +1,13 @@
 // https://github.com/Matroska-Org/matroska-specification/blob/master/ebml_matroska.xml
 const elements = module.exports = {
   EBML: { type: 'master', id: [26, 69, 223, 163] },
+  EBMLVersion: { type: 'uinteger', id: [66, 134] },
+  EBMLReadVersion: { type: 'uinteger', id: [66, 247] },
   EBMLMaxIDLength: { type: 'uinteger', id: [66, 242] },
   EBMLMaxSizeLength: { type: 'uinteger', id: [66, 243] },
+  DocType: { type: 'string', id: [66, 130] },
+  DocTypeVersion: { type: 'uinteger', id: [66, 135] },
+  DocTypeReadVersion: { type: 'uinteger', id: [66, 133] },
   Segment:
  { type: 'master', id: [24, 83, 128, 103], unknownSize: true },
   SeekHead: { type: 'master', id: [17, 77, 155, 116] },
@@ -245,7 +250,9 @@ const elements = module.exports = {
   TagLanguageIETF: { type: 'string', id: [68, 123] },
   TagDefault: { type: 'uinteger', id: [68, 132] },
   TagString: { type: 'utf-8', id: [68, 135] },
-  TagBinary: { type: 'binary', id: [68, 133] } };
+  TagBinary: { type: 'binary', id: [68, 133] },
+  TimecodeScale: { type: 'uinteger', id: [42, 215, 177] },
+  Timecode: { type: 'uinteger', id: [231] } };
 
 for (const n in elements) {
   elements[n] = {

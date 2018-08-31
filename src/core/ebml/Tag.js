@@ -3,7 +3,7 @@ const VINT = require('./VINT');
 const BufferUtil = require('../../util/BufferUtil');
 
 class Tag {
-  constructor(id, value) {
+  constructor(id, value = [], options = {}) {
     if (typeof id === 'string') {
       if (!Matroska[id]) throw new Error(`'${id}' is not a valid Matroska Element`);
       this._matroska = { id, ...Matroska[id] };
@@ -13,7 +13,13 @@ class Tag {
     } else {
       throw new Error(`EBML ID '${id}' is not a Buffer!`);
     }
+    this.options = options;
     this.value = value;
+  }
+
+  add(tag) {
+    if (!Array.isArray(this.value)) this.value = [this.value];
+    this.value.push(tag);
   }
 
   encode() {
@@ -38,7 +44,7 @@ class Tag {
       }
       throw new Error(`Data '${data}' cannot be encoded into a Buffer!`);
     });
-    const size = VINT.encode(encodedValues.reduce((acc, x) => x.length, 0));
+    const size = VINT.encode(this.options.liveStream ? Infinity : encodedValues.reduce((acc, x) => acc + x.length, 0));
     return Buffer.concat([this.id, size, ...encodedValues]);
   }
 }

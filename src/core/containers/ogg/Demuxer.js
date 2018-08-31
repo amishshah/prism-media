@@ -12,7 +12,7 @@ class OggOpusDemuxer extends Transform {
    * @param {Object} [options] options that you would pass to a regular Transform stream.
    */
   constructor(options = {}) {
-    super(Object.assign({ readableObjectMode: true }, options));
+    super({ ...options, readableObjectMode: true });
     this._remainder = null;
     this._head = null;
     this._bitstream = null;
@@ -78,8 +78,11 @@ class OggOpusDemuxer extends Transform {
       const segment = chunk.slice(start, start + size);
       const header = segment.slice(0, 8);
       if (this._head) {
-        if (header.equals(OPUS_TAGS)) this.emit('tags', segment);
-        else if (this._bitstream === bitstream) this.push(segment);
+        if (header.equals(OPUS_TAGS)) {
+          this.emit('tags', segment);
+        } else if (this._bitstream === bitstream) {
+          this.push(segment);
+        }
       } else if (header.equals(OPUS_HEAD)) {
         this.emit('head', segment);
         this._head = segment;
