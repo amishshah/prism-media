@@ -1,7 +1,6 @@
-const stringToBuffer = require('../../../util/stringToBuffer');
 const { Transform } = require('stream');
 const { OPUS_HEAD } = require('../../../opus/Constants');
-const VORBIS_HEAD = stringToBuffer('vorbis');
+const VORBIS_HEAD = Buffer.from('vorbis');
 
 const TYPES = {
   opus(data) {

@@ -1,6 +1,4 @@
-const stringToBuffer = require('../util/stringToBuffer');
-
 module.exports = {
-  OPUS_HEAD: stringToBuffer('OpusHead'),
-  OPUS_TAGS: stringToBuffer('OpusTags'),
+  OPUS_HEAD: Buffer.from('OpusHead'),
+  OPUS_TAGS: Buffer.from('OpusTags'),
 };
