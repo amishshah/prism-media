@@ -1,5 +1,7 @@
 // https://github.com/Matroska-Org/matroska-specification/blob/master/ebml_matroska.xml
-const elements = module.exports = { EBMLMaxIDLength: { type: 'uinteger', id: [66, 242] },
+const elements = module.exports = {
+  EBML: { type: 'master', id: [26, 69, 223, 163] },
+  EBMLMaxIDLength: { type: 'uinteger', id: [66, 242] },
   EBMLMaxSizeLength: { type: 'uinteger', id: [66, 243] },
   Segment:
  { type: 'master', id: [24, 83, 128, 103], unknownSize: true },
