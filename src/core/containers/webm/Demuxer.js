@@ -1,13 +1,12 @@
 const { Transform } = require('stream');
 const { Matroska, VINT } = require('../../ebml');
-const { OPUS_HEAD } = require('../../../opus/Constants');
+const OpusHead = require('../../../opus/OpusHead');
 const VORBIS_HEAD = Buffer.from('vorbis');
 
 const TYPES = {
   opus(data) {
-    if (!data.slice(0, 8).equals(OPUS_HEAD)) {
-      throw Error('Audio codec is not Opus!');
-    }
+    if (!OpusHead.verify(data)) throw Error('Audio codec is not Opus!');
+    this.emit('head', OpusHead.from(data));
   },
   vorbis(data) {
     if (data.readUInt8(0) !== 2 || !data.slice(4, 10).equals(VORBIS_HEAD)) {

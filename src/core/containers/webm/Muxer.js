@@ -5,7 +5,8 @@ const OpusHead = require('../../../opus/OpusHead');
 class Muxer extends Transform {
   constructor(options) {
     options = {
-      opusHead: new OpusHead().encode(),
+      opusHead: new OpusHead(),
+      clusterSize: 100,
       ...options,
     };
     super({ ...options, writableObjectMode: true });
@@ -35,11 +36,11 @@ class Muxer extends Transform {
           new Tag('CodecID', 'A_OPUS'),
           new Tag('TrackType', 2),
           new Tag('Audio', [
-            new Tag('Channels', 2),
-            new Tag('SamplingFrequency', 48000),
+            new Tag('Channels', this.options.opusHead.outputChannelCount),
+            new Tag('SamplingFrequency', this.options.opusHead.inputSampleRate),
             new Tag('BitDepth', 16000),
           ]),
-          new Tag('CodecPrivate', this.options.opusHead),
+          new Tag('CodecPrivate', this.options.opusHead.encode()),
         ]),
       ]),
     ], { liveStream: true });
@@ -67,12 +68,12 @@ class Muxer extends Transform {
   _transform(chunk, encoding, done) {
     const buffer = Buffer.alloc(chunk.length + 4);
     buffer[0] = 0x81;
-    buffer.writeUInt16BE((this.frameCount % 100) * this.frameDuration, 1);
+    buffer.writeUInt16BE((this.frameCount % this.options.clusterSize) * this.frameDuration, 1);
     buffer[3] = 1 << 7;
     chunk.copy(buffer, 4);
     const tag = new Tag('SimpleBlock', buffer);
     this.cluster.add(tag);
-    if (this.frameCount % 100 === 0) {
+    if (this.frameCount % this.options.clusterSize === 0) {
       this._makeCluster();
     }
     this.frameCount++;

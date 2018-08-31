@@ -17,6 +17,10 @@ class OpusHead {
     this.outputGain = options.outputGain;
   }
 
+  static verify(buffer) {
+    return buffer.slice(0, 8).equals(OPUS_HEAD);
+  }
+
   encode() {
     const buffer = Buffer.alloc(19);
     OPUS_HEAD.copy(buffer);

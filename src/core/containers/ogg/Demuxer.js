@@ -1,5 +1,6 @@
 const { Transform } = require('stream');
-const { OPUS_HEAD, OPUS_TAGS } = require('../../../opus/Constants');
+const { OPUS_TAGS } = require('../../../opus/Constants');
+const OpusHead = require('../../../opus/OpusHead');
 const { OGGS_HEADER, OGG_PAGE_HEADER_SIZE, STREAM_STRUCTURE_VERSION } = require('./Constants');
 
 /**
@@ -83,8 +84,8 @@ class OggOpusDemuxer extends Transform {
         } else if (this._bitstream === bitstream) {
           this.push(segment);
         }
-      } else if (header.equals(OPUS_HEAD)) {
-        this.emit('head', segment);
+      } else if (OpusHead.verify(header)) {
+        this.emit('head', OpusHead.from(segment));
         this._head = segment;
         this._bitstream = bitstream;
       } else {
