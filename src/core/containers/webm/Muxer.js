@@ -1,9 +1,15 @@
 const { Transform } = require('stream');
 const { Tag } = require('../../ebml');
+const OpusHead = require('../../../opus/OpusHead');
 
 class Muxer extends Transform {
   constructor(options) {
-    super({ ...options, writableObjectMode: true, highWaterMark: 2 });
+    options = {
+      opusHead: new OpusHead().encode(),
+      ...options,
+    };
+    super({ ...options, writableObjectMode: true });
+    this.options = options;
     this.document = new Tag('EBML', [
       new Tag('EBMLVersion', 1),
       new Tag('EBMLReadVersion', 1),
@@ -33,9 +39,7 @@ class Muxer extends Transform {
             new Tag('SamplingFrequency', 48000),
             new Tag('BitDepth', 16000),
           ]),
-          new Tag('CodecPrivate', Buffer.from([
-            0x4F, 0x70, 0x75, 0x73, 0x48, 0x65, 0x61, 0x64, 0x01, 0x02, 0x38, 0x01, 0x80, 0xBB, 0, 0, 0, 0, 0,
-          ])),
+          new Tag('CodecPrivate', this.options.opusHead),
         ]),
       ]),
     ], { liveStream: true });
