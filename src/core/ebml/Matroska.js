@@ -247,4 +247,10 @@ const elements = module.exports = {
   TagString: { type: 'utf-8', id: [68, 135] },
   TagBinary: { type: 'binary', id: [68, 133] } };
 
-for (const n in elements) elements[n].id = Buffer.from(elements[n].id);
+for (const n in elements) {
+  elements[n] = {
+    ...elements[n],
+    id: Buffer.from(elements[n].id),
+    get idHex() { return this.id.toString('hex'); },
+  };
+}
