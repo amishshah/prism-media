@@ -33,6 +33,7 @@ class OpusHead {
   }
 
   static from(buffer) {
+    if (!OpusHead.verify(buffer)) throw new Error(`'${buffer}' is not an Opus header!`);
     return new OpusHead({
       version: buffer.readUInt8(8),
       outputChannelCount: buffer.readUInt8(9),
