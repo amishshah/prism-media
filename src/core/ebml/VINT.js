@@ -15,6 +15,7 @@ class VINT {
   }
 
   static encode(n) {
+    if (n === Infinity) return VINT.LIVE_STREAM;
     const nBits = Math.ceil(Math.log2(n || 1)) || 1;
     let nBytes = Math.ceil(nBits / 8);
     const nFreeBits = nBits % 8 ? 8 - (nBits % 8) : 0;
