@@ -54,7 +54,7 @@ const opus = require('node-opus');
 const decoder = new opus.Decoder({ rate: 48000, channels: 2, frameSize: 960 });
 
 fs.createReadStream('./audio.ogg')
-  .pipe(new prism.OggOpusDemuxer())
+  .pipe(new prism.opus.OggDemuxer())
   .pipe(decoder)
   .pipe(fs.createWriteStream('./audio.pcm'))
 ```
