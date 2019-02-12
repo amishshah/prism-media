@@ -2,6 +2,8 @@ const { Transform } = require('stream');
 
 /**
  * Base class for WebmOpusDemuxer and WebmVorbisDemuxer.
+ * @memberof core
+ * @private
  * @extends {TransformStream}
  */
 class WebmBaseDemuxer extends Transform {
@@ -143,6 +145,8 @@ class WebmBaseDemuxer extends Transform {
  * A symbol that is returned by some functions that indicates the buffer it has been provided is not large enough
  * to facilitate a request.
  * @name WebmBaseDemuxer#TOO_SHORT
+ * @memberof core
+ * @private
  * @type {Symbol}
  */
 const TOO_SHORT = WebmBaseDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
@@ -151,6 +155,8 @@ const TOO_SHORT = WebmBaseDemuxer.TOO_SHORT = Symbol('TOO_SHORT');
  * A map that takes a value of an EBML ID in hex string form, with the value being a boolean that indicates whether
  * this tag has children.
  * @name WebmBaseDemuxer#TAGS
+ * @memberof core
+ * @private
  * @type {Object}
  */
 const TAGS = WebmBaseDemuxer.TAGS = { // value is true if the element has children

@@ -2,6 +2,10 @@ const ChildProcess = require('child_process');
 const { Duplex } = require('stream');
 let FFMPEG_COMMAND = null;
 
+/**
+ * An FFmpeg transform stream that provides an interface to FFmpeg.
+ * @memberof core
+ */
 class FFmpeg extends Duplex {
   constructor(options) {
     super();

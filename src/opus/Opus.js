@@ -24,6 +24,8 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
 /**
  * Takes a stream of Opus data and outputs a stream of PCM data, or the inverse.
+ * @private
+ * @memberof opus
  */
 class OpusStream extends Transform {
   /**
@@ -94,8 +96,9 @@ class OpusStream extends Transform {
 }
 
 /**
- * Represents an Opus encoder stream.
+ * An Opus encoder stream.
  * @extends {OpusStream}
+ * @memberof opus
  * @inheritdoc
  */
 class Encoder extends OpusStream {
@@ -130,8 +133,9 @@ class Encoder extends OpusStream {
 }
 
 /**
- * Represents an Opus decoder stream.
+ * An Opus decoder stream.
  * @extends {OpusStream}
+ * @memberof opus
  */
 class Decoder extends OpusStream {
   _transform(chunk, encoding, done) {

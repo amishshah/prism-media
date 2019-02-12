@@ -11,7 +11,7 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 /**
  * Demuxes an Ogg stream (containing Opus audio) to output an Opus stream.
  * @extends {TransformStream}
- * @memberof Opus
+ * @memberof opus
  */
 class OggDemuxer extends Transform {
   /**
@@ -102,13 +102,15 @@ class OggDemuxer extends Transform {
 
 /**
  * Emitted when the demuxer encounters the opus head.
- * @event OggOpusDemuxer#head
+ * @event OggDemuxer#head
+ * @memberof opus
  * @param {Buffer} segment a buffer containing the opus head data.
  */
 
 /**
  * Emitted when the demuxer encounters opus tags.
- * @event OggOpusDemuxer#tags
+ * @event OggDemuxer#tags
+ * @memberof opus
  * @param {Buffer} segment a buffer containing the opus tags.
  */
 
