@@ -1,9 +1,7 @@
 // Based on discord.js' old volume system
 
 const { Transform } = require('stream');
-const loader = require('../util/loader');
 
-const krypton = loader.require([['krypton']]).fn;
 class VolumeTransformer extends Transform {
   constructor(options = {}) {
     super(options);
@@ -32,18 +30,12 @@ class VolumeTransformer extends Transform {
     let transformed;
     let complete;
 
-    if (krypton && krypton.pcm.simd && this._krypton) {
-      if (chunk.length < 64) return done();
-      transformed = this._krypton(chunk.slice(0, chunk.length - (chunk.length % 64)), this.volume);
-      complete = transformed.length;
-    } else {
-      transformed = Buffer.alloc(chunk.length);
-      complete = Math.floor(chunk.length / _bytes) * _bytes;
+    transformed = Buffer.alloc(chunk.length);
+    complete = Math.floor(chunk.length / _bytes) * _bytes;
 
-      for (let i = 0; i < complete; i += _bytes) {
-        const int = Math.min(_extremum, Math.max(-_extremum, Math.floor(this.volume * this._readInt(chunk, i))));
-        this._writeInt(transformed, int, i);
-      }
+    for (let i = 0; i < complete; i += _bytes) {
+      const int = Math.min(_extremum, Math.max(-_extremum, Math.floor(this.volume * this._readInt(chunk, i))));
+      this._writeInt(transformed, int, i);
     }
 
     this._chunk = chunk.slice(complete);
@@ -81,10 +73,6 @@ class VolumeTransformer16LE extends VolumeTransformer {
   constructor(options) { super({ ...options, bits: 16 }); }
   _readInt(buffer, index) { return buffer.readInt16LE(index); }
   _writeInt(buffer, int, index) { return buffer.writeInt16LE(int, index); }
-
-  _krypton(buffer, volume) {
-    return krypton.do(krypton.pcm.volume16(buffer, volume)).run(false);
-  }
 }
 
 class VolumeTransformer16BE extends VolumeTransformer {

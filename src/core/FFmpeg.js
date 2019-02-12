@@ -2,7 +2,7 @@ const ChildProcess = require('child_process');
 const { Duplex } = require('stream');
 let FFMPEG_COMMAND = null;
 
-class FFmpegTransform extends Duplex {
+class FFmpeg extends Duplex {
   constructor(options) {
     super();
     this.process = createFFmpeg(options);
@@ -45,7 +45,7 @@ class FFmpegTransform extends Duplex {
   }
 }
 
-module.exports = FFmpegTransform;
+module.exports = FFmpeg;
 
 function createFFmpeg(options) {
   let args = options.args || [];
