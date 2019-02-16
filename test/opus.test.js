@@ -24,9 +24,20 @@ test('Opus encoders/decoders available', () => {
 
 test('opus.OggDemuxer is sane', async done => {
   expect.assertions(1);
-  const output = fs.createReadStream('./test/audio/speech_orig.ogg').pipe(new prism.opus.OggDemuxer());
+  const output = fs.createReadStream('./test/audio/speech_orig.ogg')
+    .pipe(new prism.opus.OggDemuxer())
+    .pipe(new prism.opus.Decoder({ rate: 48000, channels: 1, frameSize: 960 }));
   const chunks = await streamToBuffer(output);
-  const file = await readFile('./test/audio/speech_orig.opusdump');
-  expect(roughlyEquals(file, chunks)).toEqual(true);
+  expect(chunks.length).toBeGreaterThanOrEqual(103e3);
+  done();
+});
+
+test('opus.WebmDemuxer is sane', async done => {
+  expect.assertions(1);
+  const output = fs.createReadStream('./test/audio/speech_orig.webm')
+    .pipe(new prism.opus.WebmDemuxer())
+    .pipe(new prism.opus.Decoder({ rate: 48000, channels: 1, frameSize: 960 }));
+  const chunks = await streamToBuffer(output);
+  expect(chunks.length).toBeGreaterThanOrEqual(103e3);
   done();
 });

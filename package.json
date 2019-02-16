@@ -30,5 +30,8 @@
   "devDependencies": {
     "eslint": "^4.16.0",
     "jest": "^22.1.4"
+  },
+  "jest": {
+    "testURL": "http://localhost/"
   }
 }
