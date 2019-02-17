@@ -36,7 +36,7 @@
     "dot-location": ["error", "property"],
     "dot-notation": "error",
     "eqeqeq": "error",
-    "no-empty-function": "error",
+    "no-empty-function": "off",
     "no-floating-decimal": "error",
     "no-implied-eval": "error",
     "no-invalid-this": "error",

@@ -1,6 +1,6 @@
 {
   "name": "prism-media",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Easy-to-use stream-based media transcoding",
   "main": "src/index.js",
   "types": "typings/index.d.ts",
