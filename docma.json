@@ -1,0 +1,40 @@
+{
+  "src": [
+    "./src/**/*.js",
+    "./README.md"
+  ],
+  "jsdoc": {
+    "hierarchy": "true",
+    "plugins": [
+      "plugins/markdown"
+    ]
+  },
+  "app": {
+    "title": "Prism Documentation",
+    "routing": "path",
+    "entrance": "content:readme",
+    "base": "/"
+  },
+  "template": {
+    "options": {
+      "title": {
+        "label": "Prism",
+        "href": "."
+      },
+      "navItems": [
+        {
+          "label": "Readme",
+          "href": "/"
+        },
+        {
+          "label": "Documentation",
+          "href": "api"
+        }
+      ]
+    }
+  },
+  "assets": {
+    "/static": ["./assets/logo.svg"]
+  },
+  "dest": "docs"
+}

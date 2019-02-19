@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
+    "docma": "^3.2.2",
     "eslint": "^4.16.0",
     "jest": "^22.1.4"
   },
