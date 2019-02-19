@@ -61,11 +61,11 @@ function createFFmpeg(options) {
 function selectFFmpegCommand() {
   if (FFMPEG_COMMAND) return FFMPEG_COMMAND;
   try {
-    FFMPEG_COMMAND = require('ffmpeg-binaries');
+    FFMPEG_COMMAND = require('ffmpeg-static').path;
     return FFMPEG_COMMAND;
   } catch (e) {
     try {
-      FFMPEG_COMMAND = require('ffmpeg-static').path;
+      FFMPEG_COMMAND = require('ffmpeg-binaries');
       return FFMPEG_COMMAND;
     } catch (err) {
       for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
