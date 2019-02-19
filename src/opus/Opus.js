@@ -24,12 +24,15 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
 /**
  * Takes a stream of Opus data and outputs a stream of PCM data, or the inverse.
- * @private
  * @memberof opus
+ * @extends TransformStream
+ * @protected
  */
 class OpusStream extends Transform {
   /**
    * Creates a new Opus transformer.
+   * @private
+   * @memberof opus
    * @param {Object} [options] options that you would pass to a regular Transform stream
    */
   constructor(options = {}) {
@@ -57,6 +60,9 @@ class OpusStream extends Transform {
   /**
    * Returns the Opus module being used - `opusscript` or `node-opus`.
    * @type {string}
+   * @readonly
+   * @example
+   * console.log(`Using Opus module ${prism.opus.Encoder.type}`);
    */
   static get type() {
     return Opus.name;
@@ -65,6 +71,7 @@ class OpusStream extends Transform {
   /**
    * Sets the bitrate of the stream.
    * @param {number} bitrate the bitrate to use use, e.g. 48000
+   * @public
    */
   setBitrate(bitrate) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
@@ -74,6 +81,7 @@ class OpusStream extends Transform {
   /**
    * Enables or disables forward error correction.
    * @param {boolean} enabled whether or not to enable FEC.
+   * @public
    */
   setFEC(enabled) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
@@ -97,17 +105,24 @@ class OpusStream extends Transform {
 
 /**
  * An Opus encoder stream.
- * @extends {OpusStream}
+ *
+ * Outputs opus packets in [object mode.](https://nodejs.org/api/stream.html#stream_object_mode)
+ * @extends opus.OpusStream
  * @memberof opus
- * @inheritdoc
+ * @example
+ * const encoder = new prism.opus.Encoder({ frameSize: 960, channels: 2, rate: 48000 });
+ * pcmAudio.pipe(encoder);
+ * // encoder will now output Opus-encoded audio packets
  */
 class Encoder extends OpusStream {
   /**
    * Creates a new Opus encoder stream.
+   * @memberof opus
    * @param {Object} options options that you would pass to a regular OpusStream, plus a few more:
    * @param {number} options.frameSize the frame size to use (e.g. 960 for stereo audio at 48KHz with a frame
    * duration of 20ms)
    * @param {number} options.channels the number of channels to use
+   * @param {number} options.rate the sampling rate in Hz
    */
   constructor(options) {
     super(options);
@@ -134,8 +149,15 @@ class Encoder extends OpusStream {
 
 /**
  * An Opus decoder stream.
- * @extends {OpusStream}
+ *
+ * Note that any stream you pipe into this must be in
+ * [object mode](https://nodejs.org/api/stream.html#stream_object_mode) and should be output Opus packets.
+ * @extends opus.OpusStream
  * @memberof opus
+ * @example
+ * const decoder = new prism.opus.Decoder({ frameSize: 960, channels: 2, rate: 48000 });
+ * input.pipe(decoder);
+ * // decoder will now output PCM audio
  */
 class Decoder extends OpusStream {
   _transform(chunk, encoding, done) {

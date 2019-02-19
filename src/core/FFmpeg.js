@@ -7,7 +7,12 @@ let FFMPEG_COMMAND = null;
  * @memberof core
  */
 class FFmpeg extends Duplex {
-  constructor(options) {
+  /**
+   * Creates a new FFmpeg transform stream
+   * @memberof core
+   * @param {Object} [options={}] Options you would pass to a regular Transform stream
+   */
+  constructor(options = {}) {
     super();
     this.process = createFFmpeg(options);
     const EVENTS = {
@@ -52,9 +57,8 @@ class FFmpeg extends Duplex {
 
 module.exports = FFmpeg;
 
-function createFFmpeg(options) {
-  let args = options.args || [];
-  if (!options.args.includes('-i')) args = ['-i', '-'].concat(args);
+function createFFmpeg({ args = [] } = {}) {
+  if (!args.includes('-i')) args = ['-i', '-'].concat(args);
   return ChildProcess.spawn(selectFFmpegCommand(), args.concat(['pipe:1']));
 }
 

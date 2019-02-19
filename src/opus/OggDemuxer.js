@@ -17,6 +17,7 @@ class OggDemuxer extends Transform {
   /**
    * Creates a new OggOpus demuxer.
    * @param {Object} [options] options that you would pass to a regular Transform stream.
+   * @memberof opus
    */
   constructor(options = {}) {
     super(Object.assign({ readableObjectMode: true }, options));

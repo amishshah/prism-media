@@ -5,7 +5,7 @@ const VORBIS_HEAD = Buffer.from([...'vorbis'].map(x => x.charCodeAt(0)));
 /**
  * Demuxes a Webm stream (containing Vorbis audio) to output a Vorbis stream.
  * @memberof vorbis
- * @extends {WebmBaseDemuxer}
+ * @extends core.WebmBaseDemuxer
  */
 class WebmDemuxer extends WebmBaseDemuxer {
   _checkHead(data) {

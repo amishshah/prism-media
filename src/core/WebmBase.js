@@ -3,12 +3,14 @@ const { Transform } = require('stream');
 /**
  * Base class for WebmOpusDemuxer and WebmVorbisDemuxer.
  * @memberof core
- * @private
- * @extends {TransformStream}
+ * @protected
+ * @extends TransformStream
  */
 class WebmBaseDemuxer extends Transform {
   /**
    * Creates a new Webm demuxer.
+   * @private
+   * @memberof core
    * @param {Object} [options] options that you would pass to a regular Transform stream.
    */
   constructor(options = {}) {
