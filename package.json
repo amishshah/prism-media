@@ -49,5 +49,9 @@
     "ffmpeg-binaries": {
       "optional": true
     }
-  }
+  },
+  "files": [
+    "src/",
+    "typings/"
+  ]
 }
