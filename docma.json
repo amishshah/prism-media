@@ -11,7 +11,7 @@
   },
   "app": {
     "title": "Prism Documentation",
-    "routing": "path",
+    "routing": "query",
     "entrance": "content:readme",
     "base": "/prism-media"
   },
@@ -32,9 +32,6 @@
         }
       ]
     }
-  },
-  "assets": {
-    "/static": ["./assets/logo.svg"]
   },
   "dest": "docs"
 }
