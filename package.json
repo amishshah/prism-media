@@ -6,7 +6,8 @@
   "types": "typings/index.d.ts",
   "scripts": {
     "lint": "eslint src",
-    "test": "npm run lint && jest"
+    "test": "yarn lint && jest",
+    "docs": "docma"
   },
   "repository": {
     "type": "git",
