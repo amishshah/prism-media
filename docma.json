@@ -13,7 +13,7 @@
     "title": "Prism Documentation",
     "routing": "path",
     "entrance": "content:readme",
-    "base": "/"
+    "base": "/prism-media"
   },
   "template": {
     "options": {
