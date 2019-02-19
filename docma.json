@@ -24,11 +24,11 @@
       "navItems": [
         {
           "label": "Readme",
-          "href": "/"
+          "href": "."
         },
         {
           "label": "Documentation",
-          "href": "api"
+          "href": "?api"
         }
       ]
     }
