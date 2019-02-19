@@ -21,8 +21,9 @@
 - Opus
   - [`node-opus`](https://github.com/Rantanen/node-opus) (^0.3.1)
   - [`opusscript`](https://github.com/abalabahaha/opusscript) (^0.0.6)
-- Other
+- FFmpeg
   - [`ffmpeg-binaries`](http://npmjs.com/ffmpeg-binaries) (^4.0.0)
+  - [`ffmpeg-static`](http://npmjs.com/ffmpeg-binaries) (^2.4.0)
 
 ## FFmpeg Transform
 ```js

@@ -63,13 +63,18 @@ function selectFFmpegCommand() {
   try {
     FFMPEG_COMMAND = require('ffmpeg-binaries');
     return FFMPEG_COMMAND;
-  } catch (err) {
-    for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
-      if (!ChildProcess.spawnSync(command, ['-h']).error) {
-        FFMPEG_COMMAND = command;
-        return FFMPEG_COMMAND;
+  } catch (e) {
+    try {
+      FFMPEG_COMMAND = require('ffmpeg-static').path;
+      return FFMPEG_COMMAND;
+    } catch (err) {
+      for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
+        if (!ChildProcess.spawnSync(command, ['-h']).error) {
+          FFMPEG_COMMAND = command;
+          return FFMPEG_COMMAND;
+        }
       }
+      throw new Error('FFMPEG not found');
     }
-    throw new Error('FFMPEG not found');
   }
 }

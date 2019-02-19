@@ -35,8 +35,9 @@
     "testURL": "http://localhost/"
   },
   "peerDependencies": {
-    "node-opus": "^0.3.1",
     "ffmpeg-binaries": "^4.0.0",
+    "ffmpeg-static": "^2.4.0",
+    "node-opus": "^0.3.1",
     "opusscript": "^0.0.6"
   },
   "peerDependenciesMeta": {
