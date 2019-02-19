@@ -33,5 +33,21 @@
   },
   "jest": {
     "testURL": "http://localhost/"
+  },
+  "peerDependencies": {
+    "node-opus": "^0.3.1",
+    "ffmpeg-binaries": "^4.0.0",
+    "opusscript": "^0.0.6"
+  },
+  "peerDependenciesMeta": {
+    "node-opus": {
+      "optional": true
+    },
+    "opusscript": {
+      "optional": true
+    },
+    "ffmpeg-binaries": {
+      "optional": true
+    }
   }
 }
