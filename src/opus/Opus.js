@@ -24,6 +24,7 @@ const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
 /**
  * Takes a stream of Opus data and outputs a stream of PCM data, or the inverse.
+ * **You shouldn't directly instantiate this class, see opus.Encoder and opus.Decoder instead!**
  * @memberof opus
  * @extends TransformStream
  * @protected

@@ -1,3 +1,5 @@
+![Logo](https://hydrabolt.me/prism-media/static/logo.svg)
+
 [![Build Status](https://travis-ci.org/amishshah/prism-media.svg?branch=master)](https://travis-ci.org/hydrabolt/prism-media)
 [![dependencies](https://david-dm.org/amishshah/prism-media/status.svg)](https://david-dm.org/hydrabolt/prism-media)
 [![npm](https://img.shields.io/npm/dt/prism-media.svg)](https://www.npmjs.com/package/prism-media)

@@ -2,6 +2,8 @@ const { Transform } = require('stream');
 
 /**
  * Base class for WebmOpusDemuxer and WebmVorbisDemuxer.
+ * **You shouldn't directly instantiate this class, use the opus.WebmDemuxer and vorbis.WebmDemuxer
+ * implementations instead!**
  * @memberof core
  * @protected
  * @extends TransformStream
