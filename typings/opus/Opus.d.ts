@@ -1,6 +1,10 @@
 import { Transform } from 'stream';
 
-export interface OpusOptions {}
+export interface OpusOptions {
+  frameSize: number,
+  channels: number,
+  rate: number
+}
 
 export class OpusStream extends Transform {
   public encoder: any; // TODO: type opusscript/node-opus
