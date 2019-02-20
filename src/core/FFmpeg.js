@@ -10,7 +10,21 @@ class FFmpeg extends Duplex {
   /**
    * Creates a new FFmpeg transform stream
    * @memberof core
-   * @param {Object} [options={}] Options you would pass to a regular Transform stream
+   * @param {Object} options Options you would pass to a regular Transform stream, plus an `args` option
+   * @param {Array<string>} args Arguments to pass to FFmpeg
+   * @example
+   * // By default, if you don't specify an input (`-i ...`) prism will assume you're piping a stream into it.
+   * const transcoder = new prism.FFmpeg({
+   *  args: [
+   *    '-analyzeduration', '0',
+   *    '-loglevel', '0',
+   *    '-f', 's16le',
+   *    '-ar', '48000',
+   *    '-ac', '2',
+   *  ]
+   * });
+   * const s16le = mp3File.pipe(transcoder);
+   * const opus = s16le.pipe(new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 }));
    */
   constructor(options = {}) {
     super();
