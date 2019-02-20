@@ -152,7 +152,7 @@ class Encoder extends OpusStream {
  * An Opus decoder stream.
  *
  * Note that any stream you pipe into this must be in
- * [object mode](https://nodejs.org/api/stream.html#stream_object_mode) and should be output Opus packets.
+ * [object mode](https://nodejs.org/api/stream.html#stream_object_mode) and should output Opus packets.
  * @extends opus.OpusStream
  * @memberof opus
  * @example
