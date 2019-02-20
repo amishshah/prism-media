@@ -5,7 +5,7 @@ export interface VolumeOptions {
   volume?: number
 }
 
-export class VolumeTransformer {
+export default class VolumeTransformer {
   public volume: number;
 
   constructor(options: VolumeOptions);
