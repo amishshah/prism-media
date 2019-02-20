@@ -4,5 +4,5 @@
  */
 module.exports = {
   FFmpeg: require('./FFmpeg'),
-  ...require('./PCMVolume'),
+  VolumeTransformer: require('./VolumeTransformer'),
 };

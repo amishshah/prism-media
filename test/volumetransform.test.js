@@ -3,8 +3,9 @@
 const prism = require('../');
 
 test('Volume Transformers available', () => {
-  expect(prism.VolumeTransformer16LE).toBeTruthy();
-  expect(prism.VolumeTransformer16BE).toBeTruthy();
-  expect(prism.VolumeTransformer32LE).toBeTruthy();
-  expect(prism.VolumeTransformer32BE).toBeTruthy();
+  expect(new prism.VolumeTransformer({ type: 's16le' })).toBeTruthy();
+  expect(new prism.VolumeTransformer({ type: 's16be' })).toBeTruthy();
+  expect(new prism.VolumeTransformer({ type: 's32le' })).toBeTruthy();
+  expect(new prism.VolumeTransformer({ type: 's32be' })).toBeTruthy();
+  expect(() => new prism.VolumeTransformer({ type: 'transformer boi' })).toThrow();
 });
