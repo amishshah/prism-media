@@ -29,6 +29,10 @@
         {
           "label": "Documentation",
           "href": "?api"
+        },
+        {
+          "label": "GitHub",
+          "href": "https://github.com/amishshah/prism-media"
         }
       ]
     }
