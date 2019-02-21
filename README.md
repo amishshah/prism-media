@@ -15,7 +15,7 @@ An easy-to-use stream-based toolkit that you can use for media processing. All t
 abstractions and join together coherently.
 
 ```js
-// This example will demux an Opus-containing OGG file, decode the Opus packets to PCM and then write it to a file.
+// This example will demux and decode an Opus-containing OGG file, and then write it to a file.
 const prism = require('prism-media');
 const fs = require('fs');
 
@@ -50,3 +50,20 @@ each category is preferred)
 
 - [Documentation](https://hydrabolt.me/prism-media)
 - [Examples](https://github.com/amishshah/prism-media/tree/master/examples)
+- [Patreon](https://www.patreon.com/discordjs)
+
+## License
+
+> Copyright 2019 Amish Shah
+> 
+> Licensed under the Apache License, Version 2.0 (the "License");
+> you may not use this file except in compliance with the License.
+> You may obtain a copy of the License at
+> 
+>    http://www.apache.org/licenses/LICENSE-2.0
+> 
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS,
+> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> See the License for the specific language governing permissions and
+> limitations under the License.

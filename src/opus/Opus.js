@@ -120,7 +120,7 @@ class Encoder extends OpusStream {
    * Creates a new Opus encoder stream.
    * @memberof opus
    * @param {Object} options options that you would pass to a regular OpusStream, plus a few more:
-   * @param {number} options.frameSize the frame size to use (e.g. 960 for stereo audio at 48KHz with a frame
+   * @param {number} options.frameSize the frame size in bytes to use (e.g. 960 for stereo audio at 48KHz with a frame
    * duration of 20ms)
    * @param {number} options.channels the number of channels to use
    * @param {number} options.rate the sampling rate in Hz
