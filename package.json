@@ -49,6 +49,9 @@
     "opusscript": {
       "optional": true
     },
+    "ffmpeg-static": {
+      "optional": true
+    },
     "ffmpeg-binaries": {
       "optional": true
     }

@@ -15,6 +15,9 @@
     "entrance": "content:readme",
     "base": "/prism-media"
   },
+  "markdown": {
+    "sanitize": false
+  },
   "template": {
     "options": {
       "title": {
