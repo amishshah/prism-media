@@ -115,7 +115,6 @@ async function testVolume(type) {
   let fixtures = fixturesAll.concat(type.includes('16') ? fixtures16 : fixtures32);
   expect.assertions(fixtures.length);
   for (const { test, expected, volume } of fixtures) {
-
     const output = new AudioSource({ data: writeBuffer(test, type) })
       .pipe(new prism.VolumeTransformer({ type, volume }));
 
