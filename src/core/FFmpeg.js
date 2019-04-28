@@ -84,6 +84,7 @@ function selectFFmpegCommand() {
   } catch (e) {
     try {
       FFMPEG_COMMAND = require('ffmpeg-binaries');
+      process.emitWarning('ffmpeg-binaries is not maintained, please install ffmpeg or ffmpeg-static via npm instead.');
       return FFMPEG_COMMAND;
     } catch (err) {
       for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
