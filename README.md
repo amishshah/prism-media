@@ -42,8 +42,7 @@ each category is preferred)
   - [`node-opus`](https://github.com/Rantanen/node-opus) (native, ^0.3.1)
   - [`opusscript`](https://github.com/abalabahaha/opusscript) (^0.0.6)
 - FFmpeg
-  - [`ffmpeg-static`](http://npmjs.com/ffmpeg-binaries) (^2.4.0)
-  - [`ffmpeg-binaries`](http://npmjs.com/ffmpeg-binaries) (^4.0.0)
+  - [`ffmpeg-static`](http://npmjs.com/ffmpeg-static) (^2.4.0)
   - `ffmpeg` from a [normal installation](https://www.ffmpeg.org/download.html)
 
 ## Useful Links
