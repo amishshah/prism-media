@@ -5,7 +5,14 @@ export interface FFmpegOptions {
   args?: string[];
 }
 
+export interface FFmpegInfo {
+  command: string;
+  info: string;
+  version: string;
+}
+
 export default class FFmpegTransform extends Duplex {
   public process: ChildProcess;
   constructor(options?: FFmpegOptions);
+  static load(force?: boolean): FFmpegInfo;
 }
