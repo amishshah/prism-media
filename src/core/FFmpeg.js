@@ -1,6 +1,19 @@
 const ChildProcess = require('child_process');
 const { Duplex } = require('stream');
-let FFMPEG_COMMAND = null;
+
+let FFMPEG = {
+  command: null,
+  info: null,
+};
+
+const VERSION_REGEX = /version (.+) Copyright/mi;
+
+Object.defineProperty(FFMPEG, 'version', {
+  get() {
+    return VERSION_REGEX.exec(FFMPEG.info)[1];
+  },
+  enumerable: true,
+});
 
 /**
  * An FFmpeg transform stream that provides an interface to FFmpeg.
@@ -28,7 +41,7 @@ class FFmpeg extends Duplex {
    */
   constructor(options = {}) {
     super();
-    this.process = createFFmpeg(options);
+    this.process = FFmpeg.create(options);
     const EVENTS = {
       readable: this._reader,
       data: this._reader,
@@ -67,33 +80,64 @@ class FFmpeg extends Duplex {
     this.once('error', () => {});
     this.process.kill('SIGKILL');
   }
+
+
+  /**
+   * The available FFmpeg information
+   * @typedef {Object} FFmpegInfo
+   * @property {string} command The command used to launch FFmpeg
+   * @property {string} info The output from running `ffmpeg -h`
+   * @property {string} version The version of FFmpeg being used, determined from `info`.
+   */
+
+  /**
+   * Finds a suitable FFmpeg command and obtains the debug information from it.
+   * @param {boolean} [force=false] If true, will ignore any cached results and search for the command again
+   * @returns {Object}
+   * @throws Will throw an error if FFmpeg cannot be found.
+   * @example
+   * const ffmpeg = prism.FFmpeg.load();
+   *
+   * console.log(`Using FFmpeg version ${ffmpeg.version}`);
+   *
+   * if (ffmpeg.info.includes('--enable-libopus')) {
+   *   console.log('libopus is available!');
+   * } else {
+   *   console.log('libopus is unavailable!');
+   * }
+   */
+  static load(force = false) {
+    if (FFMPEG.command && !force) return FFMPEG;
+    const sources = [() => require('ffmpeg-static').path, 'ffmpeg', 'avconv', './ffmpeg', './avconv'];
+    for (let source of sources) {
+      try {
+        if (typeof source === 'function') source = source();
+        const result = ChildProcess.spawnSync(source, ['-h']);
+        if (result.error) throw result.error;
+        Object.assign(FFMPEG, {
+          command: source,
+          info: Buffer.concat(result.output.filter(Boolean)).toString(),
+        });
+        return FFMPEG;
+      } catch (error) {
+        // Do nothing
+      }
+    }
+    throw new Error('FFmpeg not found!');
+  }
+
+  /**
+   * Creates a new FFmpeg instance. If you do not include `-i ...` it will be assumed that `-i -` should be prepended
+   * to the options and that you'll be piping data into the process.
+   * @param {String[]} [args=[]] Arguments to pass to FFmpeg
+   * @returns {ChildProcess}
+   * @private
+   * @throws Will throw an error if FFmpeg cannot be found.
+   */
+  static create({ args = [] } = {}) {
+    if (!args.includes('-i')) args.unshift('-i', '-');
+    return ChildProcess.spawn(FFmpeg.load().command, args.concat(['pipe:1']));
+  }
 }
 
 module.exports = FFmpeg;
-
-function createFFmpeg({ args = [] } = {}) {
-  if (!args.includes('-i')) args = ['-i', '-'].concat(args);
-  return ChildProcess.spawn(selectFFmpegCommand(), args.concat(['pipe:1']));
-}
-
-function selectFFmpegCommand() {
-  if (FFMPEG_COMMAND) return FFMPEG_COMMAND;
-  try {
-    FFMPEG_COMMAND = require('ffmpeg-static').path;
-    return FFMPEG_COMMAND;
-  } catch (e) {
-    try {
-      FFMPEG_COMMAND = require('ffmpeg-binaries');
-      process.emitWarning('ffmpeg-binaries is not maintained, please install ffmpeg or ffmpeg-static via npm instead.');
-      return FFMPEG_COMMAND;
-    } catch (err) {
-      for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
-        if (!ChildProcess.spawnSync(command, ['-h']).error) {
-          FFMPEG_COMMAND = command;
-          return FFMPEG_COMMAND;
-        }
-      }
-      throw new Error('FFMPEG not found');
-    }
-  }
-}
