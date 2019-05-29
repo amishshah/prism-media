@@ -93,7 +93,7 @@ class FFmpeg extends Duplex {
   /**
    * Finds a suitable FFmpeg command and obtains the debug information from it.
    * @param {boolean} [force=false] If true, will ignore any cached results and search for the command again
-   * @returns {Object}
+   * @returns {FFmpegInfo}
    * @throws Will throw an error if FFmpeg cannot be found.
    * @example
    * const ffmpeg = prism.FFmpeg.load();
