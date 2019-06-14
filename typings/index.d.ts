@@ -1,6 +1,6 @@
 export * from './core';
-import opus from './opus';
-import vorbis from './vorbis';
+import * as opus from './opus';
+import * as vorbis from './vorbis';
 
 export {
   opus,
