@@ -16,6 +16,6 @@ jobs:
         node-version: 12
     - name: Build documentation
       uses: actions/setup-node@v1
-      run: |
+    - run: |
         npm install
         npm docs
