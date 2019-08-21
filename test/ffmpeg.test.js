@@ -8,9 +8,9 @@ const { roughlyEquals, streamToBuffer } = require('./util');
 
 test('FFmpeg transcoder available', () => {
   expect(prism.FFmpeg).toBeTruthy();
-  expect(prism.FFmpeg.load().command).toBeTruthy();
-  expect(prism.FFmpeg.load().info).toBeTruthy();
-  expect(prism.FFmpeg.load().version).toBeTruthy();
+  expect(prism.FFmpeg.getInfo().command).toBeTruthy();
+  expect(prism.FFmpeg.getInfo().info).toBeTruthy();
+  expect(prism.FFmpeg.getInfo().version).toBeTruthy();
 });
 
 test('FFmpeg transcoder to PCM is sane', async done => {

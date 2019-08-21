@@ -96,7 +96,7 @@ class FFmpeg extends Duplex {
    * @returns {FFmpegInfo}
    * @throws Will throw an error if FFmpeg cannot be found.
    * @example
-   * const ffmpeg = prism.FFmpeg.load();
+   * const ffmpeg = prism.FFmpeg.getInfo();
    *
    * console.log(`Using FFmpeg version ${ffmpeg.version}`);
    *
@@ -106,7 +106,7 @@ class FFmpeg extends Duplex {
    *   console.log('libopus is unavailable!');
    * }
    */
-  static load(force = false) {
+  static getInfo(force = false) {
     if (FFMPEG.command && !force) return FFMPEG;
     const sources = [() => require('ffmpeg-static').path, 'ffmpeg', 'avconv', './ffmpeg', './avconv'];
     for (let source of sources) {
@@ -136,7 +136,7 @@ class FFmpeg extends Duplex {
    */
   static create({ args = [] } = {}) {
     if (!args.includes('-i')) args.unshift('-i', '-');
-    return ChildProcess.spawn(FFmpeg.load().command, args.concat(['pipe:1']));
+    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']));
   }
 }
 
