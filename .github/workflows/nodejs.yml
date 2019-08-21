@@ -20,5 +20,5 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install
-        npm install ffmpeg-static opusscript
+        npm install ffmpeg-static node-opus
         npm test
