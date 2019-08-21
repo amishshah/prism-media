@@ -17,6 +17,6 @@ jobs:
       with:
         node-version: 12
     - name: Build documentation
-    - run: |
+      run: |
           npm install
           npm run docs
