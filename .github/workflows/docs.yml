@@ -1,0 +1,24 @@
+name: Documentation
+on:
+  push:
+    branches:
+      - master
+      - actions
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: Build documentation
+      run: |
+          npm install
+          npm run docs
+    - name: Publish
+      uses: maxheld83/ghpages@v0.2.1
+      env:
+        GH_PAT: ${{ secrets.ACCESS_TOKEN }}
+        BUILD_DIR: docs/
