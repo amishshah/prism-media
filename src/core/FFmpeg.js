@@ -87,8 +87,8 @@ class FFmpeg extends Duplex {
    * @typedef {Object} FFmpegInfo
    * @memberof core
    * @property {string} command The command used to launch FFmpeg
-   * @property {string} info The output from running `ffmpeg -h`
-   * @property {string} version The version of FFmpeg being used, determined from `info`.
+   * @property {string} output The output from running `ffmpeg -h`
+   * @property {string} version The version of FFmpeg being used, determined from `output`.
    */
 
   /**
