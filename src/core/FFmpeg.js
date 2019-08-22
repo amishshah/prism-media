@@ -3,14 +3,14 @@ const { Duplex } = require('stream');
 
 let FFMPEG = {
   command: null,
-  info: null,
+  output: null,
 };
 
 const VERSION_REGEX = /version (.+) Copyright/mi;
 
 Object.defineProperty(FFMPEG, 'version', {
   get() {
-    return VERSION_REGEX.exec(FFMPEG.info)[1];
+    return VERSION_REGEX.exec(FFMPEG.output)[1];
   },
   enumerable: true,
 });
@@ -101,7 +101,7 @@ class FFmpeg extends Duplex {
    *
    * console.log(`Using FFmpeg version ${ffmpeg.version}`);
    *
-   * if (ffmpeg.info.includes('--enable-libopus')) {
+   * if (ffmpeg.output.includes('--enable-libopus')) {
    *   console.log('libopus is available!');
    * } else {
    *   console.log('libopus is unavailable!');
@@ -117,7 +117,7 @@ class FFmpeg extends Duplex {
         if (result.error) throw result.error;
         Object.assign(FFMPEG, {
           command: source,
-          info: Buffer.concat(result.output.filter(Boolean)).toString(),
+          output: Buffer.concat(result.output.filter(Boolean)).toString(),
         });
         return FFMPEG;
       } catch (error) {

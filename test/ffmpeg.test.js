@@ -9,7 +9,7 @@ const { roughlyEquals, streamToBuffer } = require('./util');
 test('FFmpeg transcoder available', () => {
   expect(prism.FFmpeg).toBeTruthy();
   expect(prism.FFmpeg.getInfo().command).toBeTruthy();
-  expect(prism.FFmpeg.getInfo().info).toBeTruthy();
+  expect(prism.FFmpeg.getInfo().output).toBeTruthy();
   expect(prism.FFmpeg.getInfo().version).toBeTruthy();
 });
 
