@@ -113,7 +113,7 @@ class FFmpeg extends Duplex {
     for (let source of sources) {
       try {
         if (typeof source === 'function') source = source();
-        const result = ChildProcess.spawnSync(source, ['-h']);
+        const result = ChildProcess.spawnSync(source, ['-h'], { windowsHide: true });
         if (result.error) throw result.error;
         Object.assign(FFMPEG, {
           command: source,
@@ -137,7 +137,7 @@ class FFmpeg extends Duplex {
    */
   static create({ args = [] } = {}) {
     if (!args.includes('-i')) args.unshift('-i', '-');
-    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']));
+    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']), { windowsHide: true });
   }
 }
 
