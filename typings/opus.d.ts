@@ -6,7 +6,7 @@ interface OpusOptions {
   rate: number
 }
 
-class OpusStream extends Transform {
+export class OpusStream extends Transform {
   public encoder: any; // TODO: type opusscript/node-opus
 
   constructor(options?: OpusOptions);
