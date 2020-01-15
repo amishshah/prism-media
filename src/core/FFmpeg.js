@@ -109,7 +109,10 @@ class FFmpeg extends Duplex {
    */
   static getInfo(force = false) {
     if (FFMPEG.command && !force) return FFMPEG;
-    const sources = [() => require('ffmpeg-static').path, 'ffmpeg', 'avconv', './ffmpeg', './avconv'];
+    const sources = [() => {
+      const ffmpegStatic = require('ffmpeg-static');
+      return ffmpegStatic.path || ffmpegStatic;
+    }, 'ffmpeg', 'avconv', './ffmpeg', './avconv'];
     for (let source of sources) {
       try {
         if (typeof source === 'function') source = source();
