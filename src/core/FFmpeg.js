@@ -124,7 +124,7 @@ class FFmpeg extends Duplex {
         // Do nothing
       }
     }
-    throw new Error('FFmpeg not found!');
+    throw new Error('FFmpeg/avconv not found!');
   }
 
   /**
