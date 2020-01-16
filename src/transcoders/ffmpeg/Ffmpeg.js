@@ -40,10 +40,10 @@ class FfmpegTranscoder {
     try {
       const ffmpegStatic = require('ffmpeg-static');
       return ffmpegStatic.path || ffmpegStatic;
-    } catch (err) {
+    } catch (err1) {
       try {
         return require('ffmpeg-binaries');
-      } catch (err) {
+      } catch (err2) {
         for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
           if (!ChildProcess.spawnSync(command, ['-h']).error) return command;
         }

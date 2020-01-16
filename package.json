@@ -1,10 +1,10 @@
 {
   "name": "prism-media",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Makes transcoding media easier",
   "main": "src/index.js",
   "scripts": {
-    "lint" : "eslint src && eslint test",
+    "lint": "eslint src && eslint test",
     "test": "npm run lint"
   },
   "repository": {
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
-    "eslint": "^3.12.2"
+    "eslint": "^6.8.0"
   }
 }
