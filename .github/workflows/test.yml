@@ -17,5 +17,5 @@ jobs:
     - name: Install dependencies and test
       run: |
         npm install
-        npm install ffmpeg-static opusscript
+        npm install ffmpeg-static @discordjs/opus
         npm test
