@@ -38,12 +38,17 @@ class FfmpegTranscoder {
 
   static selectFfmpegCommand() {
     try {
-      return require('ffmpeg-binaries');
+      const ffmpegStatic = require('ffmpeg-static');
+      return ffmpegStatic.path || ffmpegStatic;
     } catch (err) {
-      for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
-        if (!ChildProcess.spawnSync(command, ['-h']).error) return command;
+      try {
+        return require('ffmpeg-binaries');
+      } catch (err) {
+        for (const command of ['ffmpeg', 'avconv', './ffmpeg', './avconv']) {
+          if (!ChildProcess.spawnSync(command, ['-h']).error) return command;
+        }
+        throw new Error('FFMPEG not found');
       }
-      throw new Error('FFMPEG not found');
     }
   }
 }
