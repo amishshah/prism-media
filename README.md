@@ -39,6 +39,7 @@ The following dependencies are all optional, and you should only install one fro
 each category is preferred)
 
 - Opus
+  - [`@discordjs/opus`](https://github.com/discordjs/opus) (native, ^0.1.0)
   - [`node-opus`](https://github.com/Rantanen/node-opus) (native, ^0.3.1)
   - [`opusscript`](https://github.com/abalabahaha/opusscript) (^0.0.6)
 - FFmpeg
