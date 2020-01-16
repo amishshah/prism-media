@@ -6,7 +6,7 @@
   "types": "typings/index.d.ts",
   "scripts": {
     "lint": "eslint src",
-    "test": "yarn lint && jest && yarn docs",
+    "test": "npm run lint && jest && npm run docs",
     "docs": "docma"
   },
   "repository": {
@@ -30,18 +30,22 @@
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
     "docma": "^3.2.2",
-    "eslint": "^4.16.0",
-    "jest": "^22.1.4"
+    "eslint": "^6.8.0",
+    "jest": "^24.9.0"
   },
   "jest": {
     "testURL": "http://localhost/"
   },
   "peerDependencies": {
-    "ffmpeg-static": "^2.4.0",
+    "ffmpeg-static": "^2.4.0 || ^3.0.0",
+    "@discordjs/opus": "^0.1.0",
     "node-opus": "^0.3.1",
     "opusscript": "^0.0.6"
   },
   "peerDependenciesMeta": {
+    "@discordjs/opus": {
+      "optional": true
+    },
     "node-opus": {
       "optional": true
     },

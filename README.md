@@ -39,10 +39,11 @@ The following dependencies are all optional, and you should only install one fro
 each category is preferred)
 
 - Opus
-  - [`node-opus`](https://github.com/Rantanen/node-opus) (native, ^0.3.1)
-  - [`opusscript`](https://github.com/abalabahaha/opusscript) (^0.0.6)
+  - [`@discordjs/opus`](https://github.com/discordjs/opus)
+  - [`node-opus`](https://github.com/Rantanen/node-opus)
+  - [`opusscript`](https://github.com/abalabahaha/opusscript)
 - FFmpeg
-  - [`ffmpeg-static`](http://npmjs.com/ffmpeg-static) (^2.4.0)
+  - [`ffmpeg-static`](http://npmjs.com/ffmpeg-static)
   - `ffmpeg` from a [normal installation](https://www.ffmpeg.org/download.html)
 
 ## Useful Links

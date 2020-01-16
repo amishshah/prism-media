@@ -10,6 +10,7 @@ const CTL = {
 };
 
 const Opus = loader.require([
+  ['@discordjs/opus', o => o.OpusEncoder],
   ['node-opus', o => o.OpusEncoder],
   ['opusscript', o => o],
 ], {
@@ -38,7 +39,7 @@ class OpusStream extends Transform {
    */
   constructor(options = {}) {
     if (!Opus.Encoder) {
-      throw Error('Could not find an Opus module! Please install node-opus or opusscript.');
+      throw Error('Could not find an Opus module! Please install @discordjs/opus, node-opus or opusscript.');
     }
     super(Object.assign({ readableObjectMode: true }, options));
     if (Opus.name === 'opusscript') {
@@ -51,15 +52,15 @@ class OpusStream extends Transform {
   }
 
   _encode(buffer) {
-    return this.encoder.encode(buffer, Opus.name !== 'node-opus' ? this._options.frameSize : null);
+    return this.encoder.encode(buffer, Opus.name === 'opusscript' ? null : this._options.frameSize);
   }
 
   _decode(buffer) {
-    return this.encoder.decode(buffer, Opus.name !== 'node-opus' ? this._options.frameSize : null);
+    return this.encoder.decode(buffer, Opus.name === 'opusscript' ? null : this._options.frameSize);
   }
 
   /**
-   * Returns the Opus module being used - `opusscript` or `node-opus`.
+   * Returns the Opus module being used - `opusscript`, `node-opus`, or `@discordjs/opus`.
    * @type {string}
    * @readonly
    * @example
