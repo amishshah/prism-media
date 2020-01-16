@@ -39,7 +39,7 @@ class OpusStream extends Transform {
    */
   constructor(options = {}) {
     if (!Opus.Encoder) {
-      throw Error('Could not find an Opus module! Please install @discordjs/opus, node-opus or opusscript.');
+      throw Error('Could not find an Opus module! Please install @discordjs/opus, node-opus, or opusscript.');
     }
     super(Object.assign({ readableObjectMode: true }, options));
     if (Opus.name === 'opusscript') {
