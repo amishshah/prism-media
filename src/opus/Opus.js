@@ -96,7 +96,7 @@ class OpusStream extends Transform {
    */
   setPLP(percentage) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
-      .apply(this.encoder, [CTL.FEC, Math.min(100, Math.max(0, percentage * 100))]);
+      .apply(this.encoder, [CTL.PLP, Math.min(100, Math.max(0, percentage * 100))]);
   }
 
   _final(cb) {
