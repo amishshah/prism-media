@@ -9,13 +9,19 @@ const CTL = {
   PLP: 4014,
 };
 
-const Opus = loader.require([
-  ['@discordjs/opus', o => o.OpusEncoder],
-  ['node-opus', o => o.OpusEncoder],
-  ['opusscript', o => o],
-], {
-  fn: 'Encoder',
-});
+let Opus = {};
+
+function loadOpus(refresh = false) {
+  if (Opus.Encoder && !refresh) return Opus;
+  Opus = loader.require([
+    ['@discordjs/opus', o => o.OpusEncoder],
+    ['node-opus', o => o.OpusEncoder],
+    ['opusscript', o => o],
+  ], {
+    fn: 'Encoder',
+  });
+  return Opus;
+}
 
 const charCode = x => x.charCodeAt(0);
 const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
@@ -38,7 +44,7 @@ class OpusStream extends Transform {
    * @param {Object} [options] options that you would pass to a regular Transform stream
    */
   constructor(options = {}) {
-    if (!Opus.Encoder) {
+    if (!loadOpus().Encoder) {
       throw Error('Could not find an Opus module! Please install @discordjs/opus, node-opus, or opusscript.');
     }
     super(Object.assign({ readableObjectMode: true }, options));
