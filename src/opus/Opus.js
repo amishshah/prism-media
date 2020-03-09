@@ -13,13 +13,12 @@ let Opus = {};
 
 function loadOpus(refresh = false) {
   if (Opus.Encoder && !refresh) return Opus;
+
   Opus = loader.require([
-    ['@discordjs/opus', o => o.OpusEncoder],
-    ['node-opus', o => o.OpusEncoder],
-    ['opusscript', o => o],
-  ], {
-    fn: 'Encoder',
-  });
+    ['@discordjs/opus', opus => ({ Encoder: opus.OpusEncoder })],
+    ['node-opus', opus => ({ Encoder: opus.OpusEncoder })],
+    ['opusscript', opus => ({ Encoder: opus })],
+  ]);
   return Opus;
 }
 

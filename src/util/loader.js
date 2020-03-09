@@ -1,14 +1,13 @@
-exports.require = function loader(requireData, objMap = {}) {
-  for (const [name, reqFn] of requireData) {
+exports.require = function loader(list) {
+  const errorLog = [];
+  for (const [name, fn] of list) {
     try {
-      const dep = require(name);
-      const fn = reqFn ? reqFn(dep) : dep;
-      return {
-        [objMap.module || 'module']: dep,
-        [objMap.name || 'name']: name,
-        [objMap.fn || 'fn']: fn,
-      };
-    } catch (e) { }
+      const data = fn(require(name));
+      data.name = name;
+      return data;
+    } catch (e) {
+      errorLog.push(e);
+    }
   }
-  return {};
+  throw new Error(errorLog.join('\n'));
 };
