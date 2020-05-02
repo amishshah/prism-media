@@ -57,7 +57,7 @@ class OpusStream extends Transform {
   }
 
   _encode(buffer) {
-    return this.encoder.encode(buffer, Opus.name === 'opusscript' ? null : this._options.frameSize);
+    return this.encoder.encode(buffer, this._options.frameSize);
   }
 
   _decode(buffer) {
