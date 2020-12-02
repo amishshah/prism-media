@@ -76,9 +76,21 @@ class FFmpeg extends Duplex {
   }
 
   _destroy(err, cb) {
-    super._destroy(err, cb);
-    this.once('error', () => {});
-    this.process.kill('SIGKILL');
+    this._cleanup();
+    return cb ? cb(err) : undefined;
+  }
+
+  _final(cb) {
+    this._cleanup();
+    cb();
+  }
+
+  _cleanup() {
+    if (this.process) {
+      this.once('error', () => {});
+      this.process.kill('SIGKILL');
+      this.process = null;
+    }
   }
 
 
