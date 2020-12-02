@@ -105,8 +105,22 @@ class OpusStream extends Transform {
   }
 
   _final(cb) {
-    if (Opus.name === 'opusscript' && this.encoder) this.encoder.delete();
+    this._cleanup();
     cb();
+  }
+
+  _destroy(err, cb) {
+    this._cleanup();
+    return cb ? cb(err) : undefined;
+  }
+
+  /**
+   * Cleans up the Opus stream when it is no longer needed
+   * @private
+   */
+  _cleanup() {
+    if (Opus.name === 'opusscript' && this.encoder) this.encoder.delete();
+    this.encoder = null;
   }
 }
 
