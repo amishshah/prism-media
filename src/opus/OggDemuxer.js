@@ -99,6 +99,26 @@ class OggDemuxer extends Transform {
     }
     return chunk.slice(start);
   }
+
+  _destroy(err, cb) {
+    this._cleanup();
+    return cb ? cb(err) : undefined;
+  }
+
+  _final(cb) {
+    this._cleanup();
+    cb();
+  }
+
+  /**
+   * Cleans up the demuxer when it is no longer required.
+   * @private
+   */
+  _cleanup() {
+    this._remainder = null;
+    this._head = null;
+    this._bitstream = null;
+  }
 }
 
 /**
