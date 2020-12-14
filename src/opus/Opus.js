@@ -203,9 +203,9 @@ class Decoder extends OpusStream {
     try {
       this.push(this._decode(chunk));
     } catch (e) {
-      done(e);
+      return done(e);
     }
-    done();
+    return done();
   }
 }
 
