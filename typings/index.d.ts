@@ -14,6 +14,7 @@ export interface FFmpegInfo {
   command: string;
   info: string;
   version: string;
+  output: string;
 }
 
 export class FFmpeg extends Duplex {
