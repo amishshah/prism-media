@@ -1,7 +1,6 @@
-[![Logo](https://hydrabolt.me/assets/prism-media-logo.svg)](https://hydrabolt.me/prism-media/)
-
 <div align="center">
 
+**Originally from : https://github.com/amishshah/prism-media !**  
 [![Build Status](https://github.com/typescord/prism-media/workflows/Tests/badge.svg)](https://github.com/typescord/opus/actions?query=workflow%3ATests)
 [![Patreon discord.js](https://img.shields.io/badge/donate-patreon-F96854.svg)](https://www.patreon.com/discordjs)
 
@@ -52,7 +51,7 @@ each category is preferred)
 
 ## License
 
-> Copyright 2019 - 2021 Amish Shah
+> Copyright 2019 - 2021 Amish Shah  
 > Copyright 2021 Typescord
 > 
 > Licensed under the Apache License, Version 2.0 (the "License");
