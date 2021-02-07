@@ -39,8 +39,8 @@ The following dependencies are all optional, and you should only install one fro
 each category is preferred)
 
 - Opus
+  - [`@typescord/opus`](https://github.com/typescord/opus)
   - [`@discordjs/opus`](https://github.com/discordjs/opus)
-  - [`node-opus`](https://github.com/Rantanen/node-opus)
   - [`opusscript`](https://github.com/abalabahaha/opusscript)
 - FFmpeg
   - [`ffmpeg-static`](http://npmjs.com/ffmpeg-static)

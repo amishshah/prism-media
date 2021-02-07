@@ -15,8 +15,8 @@ function loadOpus(refresh = false) {
   if (Opus.Encoder && !refresh) return Opus;
 
   Opus = loader.require([
+    ['@typescord/opus', opus => ({ Encoder: opus.Opus })],
     ['@discordjs/opus', opus => ({ Encoder: opus.OpusEncoder })],
-    ['node-opus', opus => ({ Encoder: opus.OpusEncoder })],
     ['opusscript', opus => ({ Encoder: opus })],
   ]);
   return Opus;
