@@ -48,16 +48,16 @@
     "opusscript": "^0.0.7"
   },
   "peerDependenciesMeta": {
-    "@typescord/opus": {
-      "optional": true
-    },
     "@discordjs/opus": {
       "optional": true
     },
-    "opusscript": {
+    "@typescord/opus": {
       "optional": true
     },
     "ffmpeg-static": {
+      "optional": true
+    },
+    "opusscript": {
       "optional": true
     }
   },

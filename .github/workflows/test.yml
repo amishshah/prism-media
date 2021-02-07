@@ -18,10 +18,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install dependencies
-      run: npm install --build-from-source
+      run: npm_config_build_from_source=true yarn install --immutable
 
     - name: Lint
-      run: npm run lint
+      run: yarn lint
 
     - name: Test
-      run: npm test
+      run: yarn test
