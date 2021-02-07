@@ -52,7 +52,8 @@ each category is preferred)
 
 ## License
 
-> Copyright 2019 - 2020 Amish Shah
+> Copyright 2019 - 2021 Amish Shah
+> Copyright 2021 Typescord
 > 
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.

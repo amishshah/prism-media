@@ -1,7 +1,6 @@
 /* eslint-disable */
 
-const { createReadStream } = require('fs');
-const { readFile } = require('fs/promises');
+const { createReadStream, promises: { readFile } } = require('fs');
 const { FFmpeg } = require('../');
 const { roughlyEquals, streamToBuffer } = require('./util');
 
