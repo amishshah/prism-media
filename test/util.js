@@ -11,7 +11,7 @@ exports.roughlyEquals = function roughlyEquals(x, y) {
 
 exports.streamToBuffer = function streamToBuffer(stream) {
   return new Promise((resolve, reject) => {
-    let chunks = [];
+    const chunks = [];
     stream.on('data', chunk => chunks.push(chunk));
     stream.on('error', reject);
     stream.on('end', () => resolve(Buffer.concat(chunks)));

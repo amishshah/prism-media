@@ -1,16 +1,19 @@
 import { Transform } from 'stream';
+import { Opus } from '@typescord/opus';
+import { OpusEncoder } from '@discordjs/opus';
+import OpusScript from 'opusscript';
 
 interface OpusOptions {
-  frameSize: number,
-  channels: number,
-  rate: number
+  frameSize: number;
+  channels: number;
+  rate: number;
 }
 
 export class OpusStream extends Transform {
-  public encoder: any; // TODO: type opusscript/node-opus
+  public encoder: Opus | OpusEncoder | OpusScript;
 
-  constructor(options?: OpusOptions);
-  public static readonly type: 'opusscript' | 'node-opus' | '@discordjs/opus';
+  public constructor(options?: OpusOptions);
+  public static readonly type: '@typescord/opus' | '@discordjs/opus' | 'opusscript';
   public setBitrate(bitrate: number): void;
   public setFEC(enabled: boolean): void;
   public setPLP(percentage: number): void;
@@ -18,9 +21,9 @@ export class OpusStream extends Transform {
 
 export namespace opus {
   interface OpusOptions {
-    frameSize: number,
-    channels: number,
-    rate: number
+    frameSize: number;
+    channels: number;
+    rate: number;
   }
 
   export class Encoder extends OpusStream {}

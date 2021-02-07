@@ -128,6 +128,8 @@
     "prefer-template": "error",
     "rest-spread-spacing": "error",
     "template-curly-spacing": "error",
-    "yield-star-spacing": "error"
+    "yield-star-spacing": "error",
+    "prefer-const": "error",
+    "one-var-declaration-per-line": "error"
   }
 }

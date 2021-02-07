@@ -3,10 +3,9 @@ const { Transform } = require('stream');
 const OGG_PAGE_HEADER_SIZE = 26;
 const STREAM_STRUCTURE_VERSION = 0;
 
-const charCode = x => x.charCodeAt(0);
-const OGGS_HEADER = Buffer.from([...'OggS'].map(charCode));
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
-const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
+const OGGS_HEADER = Buffer.from('OggS');
+const OPUS_HEAD = Buffer.from('OpusHead');
+const OPUS_TAGS = Buffer.from('OpusTag');
 
 /**
  * Demuxes an Ogg stream (containing Opus audio) to output an Opus stream.
@@ -20,16 +19,16 @@ class OggDemuxer extends Transform {
    * @memberof opus
    */
   constructor(options = {}) {
-    super(Object.assign({ readableObjectMode: true }, options));
-    this._remainder = null;
-    this._head = null;
-    this._bitstream = null;
+    super({ readableObjectMode: true, ...options });
+    this._remainder = undefined;
+    this._head = undefined;
+    this._bitstream = undefined;
   }
 
   _transform(chunk, encoding, done) {
     if (this._remainder) {
       chunk = Buffer.concat([this._remainder, chunk]);
-      this._remainder = null;
+      this._remainder = undefined;
     }
 
     while (chunk) {
@@ -53,10 +52,10 @@ class OggDemuxer extends Transform {
       return false;
     }
     if (!chunk.slice(0, 4).equals(OGGS_HEADER)) {
-      throw Error(`capture_pattern is not ${OGGS_HEADER}`);
+      throw Error(`capture_pattern is not ${OGGS_HEADER}.`);
     }
     if (chunk.readUInt8(4) !== STREAM_STRUCTURE_VERSION) {
-      throw Error(`stream_structure_version is not ${STREAM_STRUCTURE_VERSION}`);
+      throw Error(`stream_structure_version is not ${STREAM_STRUCTURE_VERSION}.`);
     }
 
     if (chunk.length < 27) return false;
@@ -65,15 +64,16 @@ class OggDemuxer extends Transform {
     const table = chunk.slice(27, 27 + pageSegments);
     const bitstream = chunk.readUInt32BE(14);
 
-    let sizes = [], totalSize = 0;
+    const sizes = [];
+    let totalSize = 0;
 
     for (let i = 0; i < pageSegments;) {
-      let size = 0, x = 255;
+      let size = 0;
+      let x = 255;
       while (x === 255) {
         if (i >= table.length) return false;
-        x = table.readUInt8(i);
+        size += x = table.readUInt8(i);
         i++;
-        size += x;
       }
       sizes.push(size);
       totalSize += size;
@@ -115,9 +115,9 @@ class OggDemuxer extends Transform {
    * @private
    */
   _cleanup() {
-    this._remainder = null;
-    this._head = null;
-    this._bitstream = null;
+    this._remainder = undefined;
+    this._head = undefined;
+    this._bitstream = undefined;
   }
 }
 

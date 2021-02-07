@@ -2,6 +2,8 @@
 
 const { Transform } = require('stream');
 
+const AMPLITUDE_RATIO = 1.660964047443681;
+
 /**
  * Transforms a stream of PCM volume.
  * @memberof core
@@ -46,7 +48,7 @@ class VolumeTransformer extends Transform {
         throw new Error('VolumeTransformer type should be one of s16le, s16be, s32le, s32be');
     }
     this._bytes = this._bits / 8;
-    this._extremum = Math.pow(2, this._bits - 1);
+    this._extremum = 2 ** (this._bits - 1);
     this.volume = typeof options.volume === 'undefined' ? 1 : options.volume;
     this._chunk = Buffer.alloc(0);
   }
@@ -81,7 +83,7 @@ class VolumeTransformer extends Transform {
 
   _destroy(err, cb) {
     super._destroy(err, cb);
-    this._chunk = null;
+    this._chunk = undefined;
   }
 
   /**
@@ -94,10 +96,10 @@ class VolumeTransformer extends Transform {
 
   /**
    * Sets the volume in decibels.
-   * @param {number} db The decibels
+   * @param {number} decibels The decibels
    */
-  setVolumeDecibels(db) {
-    this.setVolume(Math.pow(10, db / 20));
+  setVolumeDecibels(decibels) {
+    this.setVolume(10 ** (decibels / 20));
   }
 
   /**
@@ -105,7 +107,7 @@ class VolumeTransformer extends Transform {
    * @param {number} value The value for the volume
    */
   setVolumeLogarithmic(value) {
-    this.setVolume(Math.pow(value, 1.660964));
+    this.setVolume(value ** AMPLITUDE_RATIO);
   }
 
   /**
@@ -122,7 +124,7 @@ class VolumeTransformer extends Transform {
    * @type {number}
    */
   get volumeLogarithmic() {
-    return Math.pow(this._volume, 1 / 1.660964);
+    return this._volume ** (1 / AMPLITUDE_RATIO);
   }
 }
 

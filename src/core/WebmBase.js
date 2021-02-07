@@ -16,12 +16,12 @@ class WebmBaseDemuxer extends Transform {
    * @param {Object} [options] options that you would pass to a regular Transform stream.
    */
   constructor(options = {}) {
-    super(Object.assign({ readableObjectMode: true }, options));
-    this._remainder = null;
+    super({ readableObjectMode: true, ...options });
+    this._remainder = undefined;
     this._length = 0;
     this._count = 0;
-    this._skipUntil = null;
-    this._track = null;
+    this._skipUntil = undefined;
+    this._track = undefined;
     this._incompleteTrack = {};
     this._ebmlFound = false;
   }
@@ -30,12 +30,12 @@ class WebmBaseDemuxer extends Transform {
     this._length += chunk.length;
     if (this._remainder) {
       chunk = Buffer.concat([this._remainder, chunk]);
-      this._remainder = null;
+      this._remainder = undefined;
     }
     let offset = 0;
     if (this._skipUntil && this._length > this._skipUntil) {
       offset = this._skipUntil - this._count;
-      this._skipUntil = null;
+      this._skipUntil = undefined;
     } else if (this._skipUntil) {
       this._count += chunk.length;
       return done();
@@ -159,7 +159,7 @@ class WebmBaseDemuxer extends Transform {
    * @private
    */
   _cleanup() {
-    this._remainder = null;
+    this._remainder = undefined;
     this._incompleteTrack = {};
   }
 }
@@ -209,7 +209,7 @@ function vintLength(buffer, index) {
 function expandVint(buffer, start, end) {
   const length = vintLength(buffer, start);
   if (end > buffer.length || length === TOO_SHORT) return TOO_SHORT;
-  let mask = (1 << (8 - length)) - 1;
+  const mask = (1 << (8 - length)) - 1;
   let value = buffer[start] & mask;
   for (let i = start + 1; i < end; i++) {
     value = (value << 8) + buffer[i];

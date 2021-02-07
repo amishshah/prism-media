@@ -1,22 +1,21 @@
 /* eslint-disable */
 
-const fs = require('fs');
-const prism = require('../');
-const { promisify } = require('util');
-const readFile = promisify(fs.readFile);
+const { createReadStream } = require('fs');
+const { readFile } = require('fs/promises');
+const { FFmpeg } = require('../');
 const { roughlyEquals, streamToBuffer } = require('./util');
 
 test('FFmpeg transcoder available', () => {
-  expect(prism.FFmpeg).toBeTruthy();
-  expect(prism.FFmpeg.getInfo().command).toBeTruthy();
-  expect(prism.FFmpeg.getInfo().output).toBeTruthy();
-  expect(prism.FFmpeg.getInfo().version).toBeTruthy();
+  expect(FFmpeg).toBeTruthy();
+  expect(FFmpeg.getInfo().command).toBeTruthy();
+  expect(FFmpeg.getInfo().output).toBeTruthy();
+  expect(FFmpeg.getInfo().version).toBeTruthy();
 });
 
 test('FFmpeg transcoder to PCM is sane', async done => {
   expect.assertions(1);
-  const output = fs.createReadStream('./test/audio/speech_orig.ogg')
-    .pipe(new prism.FFmpeg({
+  const output = createReadStream('./test/audio/speech_orig.ogg')
+    .pipe(new FFmpeg({
       args: [
         '-analyzeduration', '0',
         '-loglevel', '0',

@@ -19,7 +19,7 @@ export interface FFmpegInfo {
 
 export class FFmpeg extends Duplex {
   public process: ChildProcess;
-  constructor(options?: FFmpegOptions);
+  public constructor(options?: FFmpegOptions);
   static getInfo(force?: boolean): FFmpegInfo;
 }
 
@@ -31,9 +31,9 @@ export interface VolumeOptions {
 export class VolumeTransformer extends Transform {
   public volume: number;
 
-  constructor(options: VolumeOptions);
+  public constructor(options: VolumeOptions);
   public setVolume(volume: number): void;
-  public setVolumeDecibels(db: number): void;
+  public setVolumeDecibels(decibels: number): void;
   public setVolumeLogarithmic(value: number): void;
   public readonly volumeDecibels: number;
   public readonly volumeLogarithmic: number;

@@ -1,9 +1,9 @@
 const ChildProcess = require('child_process');
 const { Duplex } = require('stream');
 
-let FFMPEG = {
-  command: null,
-  output: null,
+const FFMPEG = {
+  command: undefined,
+  output: undefined,
 };
 
 const VERSION_REGEX = /version (.+) Copyright/mi;
@@ -89,7 +89,7 @@ class FFmpeg extends Duplex {
     if (this.process) {
       this.once('error', () => {});
       this.process.kill('SIGKILL');
-      this.process = null;
+      this.process = undefined;
     }
   }
 

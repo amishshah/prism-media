@@ -1,10 +1,10 @@
 // This example converts an MP3 file stream to an Opus packet stream
 
-const fs = require('fs');
-const prism = require('prism-media');
+const { createReadStream } = require('fs');
+const prism = require('@typescord/prism-media');
 
 // Any input that FFmpeg accepts can be used here -- you could use mp4 or wav for example.
-const input = fs.createReadStream('./file.mp3');
+const input = createReadStream('./file.mp3');
 const transcoder = new prism.FFmpeg({
   args: [
     '-analyzeduration', '0',

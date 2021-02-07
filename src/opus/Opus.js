@@ -1,7 +1,6 @@
 // Partly based on https://github.com/Rantanen/node-opus/blob/master/lib/Encoder.js
 
 const { Transform } = require('stream');
-const loader = require('../util/loader');
 
 const CTL = {
   BITRATE: 4002,
@@ -14,17 +13,26 @@ let Opus = {};
 function loadOpus(refresh = false) {
   if (Opus.Encoder && !refresh) return Opus;
 
-  Opus = loader.require([
+  const errors = [];
+  for (const [name, fn] of [
     ['@typescord/opus', opus => ({ Encoder: opus.Opus })],
     ['@discordjs/opus', opus => ({ Encoder: opus.OpusEncoder })],
     ['opusscript', opus => ({ Encoder: opus })],
-  ]);
-  return Opus;
+  ]) {
+    try {
+      const data = fn(require(name));
+      data.name = name;
+      Opus = data;
+      return data;
+    } catch (e) {
+      errors.push(e);
+    }
+  }
+  throw errors;
 }
 
-const charCode = x => x.charCodeAt(0);
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
-const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
+const OPUS_HEAD = Buffer.from('OpusHead');
+const OPUS_TAGS = Buffer.from('OpusTags');
 
 // frame size = (channels * rate * frame_duration) / 1000
 
@@ -44,9 +52,9 @@ class OpusStream extends Transform {
    */
   constructor(options = {}) {
     if (!loadOpus().Encoder) {
-      throw Error('Could not find an Opus module! Please install @discordjs/opus, node-opus, or opusscript.');
+      throw Error('Could not find an Opus module! Please install @typescord/opus, @discordjs/opus, or opusscript.');
     }
-    super(Object.assign({ readableObjectMode: true }, options));
+    super({ readableObjectMode: true, ...options });
     if (Opus.name === 'opusscript') {
       options.application = Opus.Encoder.Application[options.application];
     }
@@ -61,7 +69,7 @@ class OpusStream extends Transform {
   }
 
   _decode(buffer) {
-    return this.encoder.decode(buffer, Opus.name === 'opusscript' ? null : this._options.frameSize);
+    return this.encoder.decode(buffer, Opus.name === 'opusscript' ? undefined : this._options.frameSize);
   }
 
   /**
@@ -92,7 +100,7 @@ class OpusStream extends Transform {
    */
   setFEC(enabled) {
     (this.encoder.applyEncoderCTL || this.encoder.encoderCTL)
-      .apply(this.encoder, [CTL.FEC, enabled ? 1 : 0]);
+      .apply(this.encoder, [CTL.FEC, +enabled]);
   }
 
   /**
@@ -120,7 +128,7 @@ class OpusStream extends Transform {
    */
   _cleanup() {
     if (Opus.name === 'opusscript' && this.encoder) this.encoder.delete();
-    this.encoder = null;
+    this.encoder = undefined;
   }
 }
 
@@ -164,7 +172,7 @@ class Encoder extends OpusStream {
 
   _destroy(err, cb) {
     super._destroy(err, cb);
-    this._buffer = null;
+    this._buffer = undefined;
   }
 }
 

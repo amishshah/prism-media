@@ -1,6 +1,6 @@
 const WebmBaseDemuxer = require('../core/WebmBase');
 
-const VORBIS_HEAD = Buffer.from([...'vorbis'].map(x => x.charCodeAt(0)));
+const VORBIS_HEAD = Buffer.from('vorbis');
 
 /**
  * Demuxes a Webm stream (containing Vorbis audio) to output a Vorbis stream.

@@ -2,10 +2,8 @@
 
 <div align="center">
 
-[![Build Status](https://travis-ci.org/amishshah/prism-media.svg?branch=master)](https://travis-ci.org/hydrabolt/prism-media)
-[![dependencies](https://david-dm.org/amishshah/prism-media/status.svg)](https://david-dm.org/hydrabolt/prism-media)
-[![npm](https://img.shields.io/npm/dt/prism-media.svg)](https://www.npmjs.com/package/prism-media)
-[![Patreon](https://img.shields.io/badge/donate-patreon-F96854.svg)](https://www.patreon.com/discordjs)
+[![Build Status](https://github.com/typescord/prism-media/workflows/Tests/badge.svg)](https://github.com/typescord/opus/actions?query=workflow%3ATests)
+[![Patreon discord.js](https://img.shields.io/badge/donate-patreon-F96854.svg)](https://www.patreon.com/discordjs)
 
 </div>
 
@@ -16,13 +14,13 @@ abstractions and join together coherently.
 
 ```js
 // This example will demux and decode an Opus-containing OGG file, and then write it to a file.
-const prism = require('prism-media');
-const fs = require('fs');
+const prism = require('@typescord/prism-media');
+const { createReadStream, createWriteStream } = require('fs');
 
-fs.createReadStream('./audio.ogg')
+createReadStream('./audio.ogg')
   .pipe(new prism.opus.OggDemuxer())
   .pipe(new prism.opus.Decoder({ rate: 48000, channels: 2, frameSize: 960 }))
-  .pipe(fs.createWriteStream('./audio.pcm'));
+  .pipe(createWriteStream('./audio.pcm'));
 ```
 
 The example above can work with either a native or pure JavaScript Opus decoder - you don't need to worry about changing
