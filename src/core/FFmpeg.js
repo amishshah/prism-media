@@ -128,7 +128,7 @@ class FFmpeg extends Duplex {
     for (let source of sources) {
       try {
         if (typeof source === 'function') source = source();
-        const result = ChildProcess.spawnSync(source, ['-h'], { windowsHide: true });
+        const result = ChildProcess.spawnSync(source, ['-h'], { windowsHide: true, shell: true });
         if (result.error) throw result.error;
         Object.assign(FFMPEG, {
           command: source,
