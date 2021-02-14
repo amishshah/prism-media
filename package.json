@@ -2,8 +2,7 @@
   "name": "prism-media",
   "version": "2.0.0-alpha",
   "description": "Easy-to-use stream-based media transcoding",
-  "main": "src/index.js",
-  "types": "typings/index.d.ts",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src --ext .ts",
@@ -14,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hydrabolt/prism-media.git"
+    "url": "git+https://github.com/amishshah/prism-media.git"
   },
   "keywords": [
     "audio",
@@ -28,9 +27,9 @@
   "author": "Amish Shah <amishshah.2k@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hydrabolt/prism-media/issues"
+    "url": "https://github.com/amishshah/prism-media/issues"
   },
-  "homepage": "https://github.com/hydrabolt/prism-media#readme",
+  "homepage": "https://github.com/amishshah/prism-media#readme",
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-angular": "^11.0.0",
@@ -47,9 +46,6 @@
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "typescript": "^4.1.5"
-  },
-  "jest": {
-    "testURL": "http://localhost/"
   },
   "peerDependencies": {
     "@discordjs/opus": "^0.4.0",
@@ -72,8 +68,7 @@
     }
   },
   "files": [
-    "src/",
-    "typings/"
+    "dist/"
   ],
   "husky": {
     "hooks": {
