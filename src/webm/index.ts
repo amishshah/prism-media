@@ -1,2 +1,2 @@
-export { createWebmOpusDemuxer } from './WebmOpusDemuxer';
-export { createWebmVorbisDemuxer } from './WebmVorbisDemuxer';
+export * from './WebmOpusDemuxer';
+export * from './WebmVorbisDemuxer';

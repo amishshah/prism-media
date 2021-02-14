@@ -1,13 +1,13 @@
 import { Transform, TransformCallback, TransformOptions } from 'stream';
 
-enum VolumeTransformerType {
+export enum VolumeTransformerType {
 	S16LE = 's16le',
 	S16BE = 's16be',
 	S32LE = 's32le',
 	S32BE = 's32be',
 }
 
-interface VolumeTransformerConfig {
+export interface VolumeTransformerConfig {
 	type: VolumeTransformerType;
 	volume: number;
 	streamOptions?: TransformOptions;
