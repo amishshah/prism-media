@@ -75,7 +75,7 @@ export class VolumeTransformer extends Transform {
 		const { bytes } = this;
 		const chunk = Buffer.concat([this.buffer, newChunk]);
 
-		const readableLength = Math.floor(chunk.length / bytes);
+		const readableLength = Math.floor(chunk.length / bytes) * bytes;
 
 		let i = 0;
 		while (i < readableLength) {

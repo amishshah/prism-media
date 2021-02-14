@@ -15,6 +15,7 @@ export class OpusDecoderStream extends OpusStream {
 			streamOptions: {
 				...options.streamOptions,
 				writableObjectMode: true,
+				readableObjectMode: true,
 			},
 		});
 	}
@@ -37,6 +38,7 @@ export class OpusDecoderStream extends OpusStream {
 			}
 			this.push(frame);
 		}
+		done();
 	}
 }
 
