@@ -37,7 +37,7 @@ export class OggOpusDemuxer extends Transform {
 		if (chunk.length < OGG_PAGE_HEADER_SIZE) {
 			return false;
 		}
-		if (!chunk.slice(0, 4).equals(OGGS_HEADER)) {
+		if (chunk.compare(OGGS_HEADER, 0, 4, 0, 4) !== 0) {
 			throw Error(`capture_pattern is not OGGS_HEADER`);
 		}
 		if (chunk.readUInt8(4) !== STREAM_STRUCTURE_VERSION) {
