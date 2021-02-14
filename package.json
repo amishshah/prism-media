@@ -122,7 +122,6 @@
     }
   },
   "dependencies": {
-    "@discordjs/opus": "github:discordjs/opus",
     "duplex-child-process": "^1.0.1"
   }
 }
