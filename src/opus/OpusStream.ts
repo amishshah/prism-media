@@ -1,5 +1,6 @@
-import { OpusEncoder } from '@discordjs/opus';
+import type { OpusEncoderOptions } from './adapters/OpusEncoder';
 import { Transform, TransformOptions } from 'stream';
+import { createOpusEncoder } from './loader';
 
 export enum OpusApplication {
 	VoIP = 2048,
@@ -7,10 +8,7 @@ export enum OpusApplication {
 	RestrictedLowDelay = 2051,
 }
 
-export interface OpusStreamConfig {
-	rate: 8000 | 12000 | 16000 | 24000 | 48000;
-	channels: 1 | 2;
-	frameSize: number;
+export interface OpusStreamConfig extends OpusEncoderOptions {
 	streamOptions?: TransformOptions;
 }
 
@@ -20,7 +18,11 @@ export class OpusStream extends Transform {
 
 	public constructor(config: OpusStreamConfig) {
 		super(config.streamOptions);
-		this.encoder = new OpusEncoder(config.rate, config.channels);
+		this.encoder = createOpusEncoder({
+			channels: config.channels,
+			frameSize: config.frameSize,
+			rate: config.rate,
+		});
 		// *2 because each sample is 2 bytes
 		this.pcmLength = config.frameSize * config.channels * 2;
 	}
@@ -44,6 +46,6 @@ export class OpusStream extends Transform {
 	}
 
 	private cleanup() {
-		// todo;
+		this.encoder.delete();
 	}
 }

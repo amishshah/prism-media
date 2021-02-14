@@ -1,7 +1,7 @@
 import type { TransformCallback } from 'stream';
 import { OpusStream, OpusStreamConfig } from './OpusStream';
 
-export class OpusEncoder extends OpusStream {
+export class OpusEncoderStream extends OpusStream {
 	private buffer: Buffer;
 
 	public constructor(options: OpusStreamConfig) {
@@ -35,4 +35,8 @@ export class OpusEncoder extends OpusStream {
 		if (i > 0) this.buffer = chunk.slice(i);
 		done();
 	}
+}
+
+export function createOpusEncoderStream(options: OpusStreamConfig) {
+	return new OpusEncoderStream(options);
 }

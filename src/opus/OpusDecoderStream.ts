@@ -5,7 +5,7 @@ const charCode = (x: string) => x.charCodeAt(0);
 const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
 const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
 
-export class OpusDecoder extends OpusStream {
+export class OpusDecoderStream extends OpusStream {
 	public opusHead?: Buffer;
 	public opusTags?: Buffer;
 
@@ -38,4 +38,8 @@ export class OpusDecoder extends OpusStream {
 			this.push(frame);
 		}
 	}
+}
+
+export function createOpusDecoderStream(options: OpusStreamConfig) {
+	return new OpusDecoderStream(options);
 }
