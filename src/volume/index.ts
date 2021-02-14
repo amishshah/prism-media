@@ -14,7 +14,7 @@ interface VolumeTransformerConfig {
 }
 
 export class VolumeTransformer extends Transform {
-	private buffer = Buffer.alloc(0);
+	private buffer: Buffer;
 	private readonly bytes: number;
 	private readonly extrema: [number, number];
 
@@ -23,6 +23,7 @@ export class VolumeTransformer extends Transform {
 	public constructor(config: VolumeTransformerConfig) {
 		super(config.streamOptions);
 		this.volume = config.volume;
+		this.buffer = Buffer.allocUnsafe(0);
 
 		switch (config.type) {
 			case VolumeTransformerType.S16LE:
