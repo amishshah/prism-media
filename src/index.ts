@@ -1,2 +1,2 @@
-export { createVolumeTransformer } from './core/volume';
-export { createFFmpeg } from './core/ffmpeg';
+export { createVolumeTransformer } from './volume';
+export { createFFmpeg } from './ffmpeg';
