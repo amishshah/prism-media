@@ -74,7 +74,7 @@ export class OggOpusDemuxer extends Transform {
 			if (this._head) {
 				if (segment.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) this.emit('tags', segment);
 				else if (this._bitstream === bitstream) this.push(segment);
-			} else if (segment.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) {
+			} else if (segment.compare(OPUS_HEAD, 0, 8, 0, 8) === 0) {
 				this.emit('head', segment);
 				this._head = segment;
 				this._bitstream = bitstream;
