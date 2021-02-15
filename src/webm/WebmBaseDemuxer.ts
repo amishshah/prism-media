@@ -49,7 +49,7 @@ export abstract class WebmBaseDemuxer extends Transform {
 		return done();
 	}
 
-	public _readEBMLId(chunk: Buffer, offset: number) {
+	private _readEBMLId(chunk: Buffer, offset: number) {
 		const idLength = vintLength(chunk, offset);
 		if (typeof idLength === 'symbol') return TOO_SHORT;
 		return {
@@ -58,14 +58,14 @@ export abstract class WebmBaseDemuxer extends Transform {
 		};
 	}
 
-	public _readTagDataSize(chunk: Buffer, offset: number) {
+	private _readTagDataSize(chunk: Buffer, offset: number) {
 		const sizeLength = vintLength(chunk, offset);
 		if (typeof sizeLength === 'symbol') return TOO_SHORT;
 		const dataLength = expandVint(chunk, offset, offset + sizeLength);
 		return { offset: offset + sizeLength, dataLength, sizeLength };
 	}
 
-	public _readTag(chunk: Buffer, offset: number) {
+	private _readTag(chunk: Buffer, offset: number) {
 		const idData = this._readEBMLId(chunk, offset);
 		if (typeof idData === 'symbol') return TOO_SHORT;
 		const ebmlID = idData.id.toString('hex');
@@ -133,7 +133,7 @@ export abstract class WebmBaseDemuxer extends Transform {
 		this._track = undefined;
 	}
 
-	public abstract _checkHead(buffer: Buffer): void;
+	protected abstract _checkHead(buffer: Buffer): void;
 }
 
 const TOO_SHORT = Symbol('TOO_SHORT');

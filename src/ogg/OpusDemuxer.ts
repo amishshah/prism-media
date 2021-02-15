@@ -33,7 +33,7 @@ export class OggOpusDemuxer extends Transform {
 		done();
 	}
 
-	public _readPage(chunk: Buffer) {
+	private _readPage(chunk: Buffer) {
 		if (chunk.length < OGG_PAGE_HEADER_SIZE) {
 			return false;
 		}
