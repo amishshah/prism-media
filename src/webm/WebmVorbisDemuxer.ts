@@ -9,9 +9,12 @@ export class WebmVorbisDemuxer extends WebmBaseDemuxer {
 			throw Error('Audio codec is not Vorbis!');
 		}
 
-		this.push(data.slice(3, 3 + data.readUInt8(1)));
-		this.push(data.slice(3 + data.readUInt8(1), 3 + data.readUInt8(1) + data.readUInt8(2)));
-		this.push(data.slice(3 + data.readUInt8(1) + data.readUInt8(2)));
+		const b1 = data.readUInt8(1);
+		const b2 = data.readUInt8(2);
+
+		this.push(data.slice(3, 3 + b1));
+		this.push(data.slice(3 + b1, 3 + b1 + b2));
+		this.push(data.slice(3 + b1 + b2));
 	}
 }
 
