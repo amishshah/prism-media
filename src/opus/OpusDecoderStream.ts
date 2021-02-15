@@ -21,11 +21,10 @@ export class OpusDecoderStream extends OpusStream {
 	}
 
 	public _transform(chunk: Buffer, encoding: BufferEncoding, done: TransformCallback): void {
-		const signature = chunk.slice(0, 8);
-		if (signature.equals(OPUS_HEAD)) {
+		if (chunk.compare(OPUS_HEAD, 0, 8, 0, 8) === 0) {
 			this.opusHead = chunk;
 			this.emit('opusHead', chunk);
-		} else if (signature.equals(OPUS_TAGS)) {
+		} else if (chunk.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) {
 			this.opusTags = chunk;
 			this.emit('opusTags', chunk);
 		} else {

@@ -5,7 +5,7 @@ const VORBIS_HEAD = Buffer.from([...'vorbis'].map((x) => x.charCodeAt(0)));
 
 export class WebmVorbisDemuxer extends WebmBaseDemuxer {
 	public _checkHead(data: Buffer) {
-		if (data.readUInt8(0) !== 2 || !data.slice(4, 10).equals(VORBIS_HEAD)) {
+		if (data.readUInt8(0) !== 2 || data.compare(VORBIS_HEAD, 0, 6, 4, 10) !== 0) {
 			throw Error('Audio codec is not Vorbis!');
 		}
 
