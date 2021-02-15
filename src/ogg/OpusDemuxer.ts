@@ -71,11 +71,10 @@ export class OggOpusDemuxer extends Transform {
 		let start = 27 + pageSegments;
 		for (const size of sizes) {
 			const segment = chunk.slice(start, start + size);
-			const header = segment.slice(0, 8);
 			if (this._head) {
-				if (header.equals(OPUS_TAGS)) this.emit('tags', segment);
+				if (segment.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) this.emit('tags', segment);
 				else if (this._bitstream === bitstream) this.push(segment);
-			} else if (header.equals(OPUS_HEAD)) {
+			} else if (segment.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) {
 				this.emit('head', segment);
 				this._head = segment;
 				this._bitstream = bitstream;
