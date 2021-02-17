@@ -152,7 +152,7 @@ class FFmpeg extends Duplex {
    */
   static create({ args = [] } = {}) {
     if (!args.includes('-i')) args.unshift('-i', '-');
-    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']), { windowsHide: true });
+    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']), { windowsHide: true, shell: true });
   }
 }
 
