@@ -1,17 +1,20 @@
 {
   "name": "prism-media",
-  "version": "1.2.6",
+  "version": "2.0.0-alpha",
   "description": "Easy-to-use stream-based media transcoding",
-  "main": "src/index.js",
-  "types": "typings/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "lint": "eslint src",
-    "test": "npm run lint && jest && npm run docs",
-    "docs": "docma"
+    "test": "jest test/",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "prettier": "prettier --write **/*.{ts,js,json,yml,yaml}",
+    "build": "tsc",
+    "build:check": "tsc --noEmit --incremental false"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hydrabolt/prism-media.git"
+    "url": "git+https://github.com/amishshah/prism-media.git"
   },
   "keywords": [
     "audio",
@@ -25,16 +28,27 @@
   "author": "Amish Shah <amishshah.2k@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/hydrabolt/prism-media/issues"
+    "url": "https://github.com/amishshah/prism-media/issues"
   },
-  "homepage": "https://github.com/hydrabolt/prism-media#readme",
+  "homepage": "https://github.com/amishshah/prism-media#readme",
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-angular": "^11.0.0",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.27",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
     "docma": "^3.2.2",
-    "eslint": "^7.14.0",
-    "jest": "^26.6.3"
-  },
-  "jest": {
-    "testURL": "http://localhost/"
+    "eslint": "^7.20.0",
+    "eslint-config-marine": "^8.1.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^5.0.9",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.5.1",
+    "typescript": "^4.1.5"
   },
   "peerDependencies": {
     "@discordjs/opus": "^0.4.0",
@@ -57,7 +71,58 @@
     }
   },
   "files": [
-    "src/",
-    "typings/"
-  ]
+    "dist/"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "lint-staged": {
+    "*.{mjs,js,ts}": [
+      "eslint --ext .ts --fix"
+    ],
+    "*.{json,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-angular"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "chore",
+          "build",
+          "ci",
+          "docs",
+          "feat",
+          "fix",
+          "perf",
+          "refactor",
+          "revert",
+          "style",
+          "test",
+          "types",
+          "wip"
+        ]
+      ],
+      "scope-case": [
+        1,
+        "always",
+        "pascal-case"
+      ]
+    }
+  },
+  "dependencies": {
+    "duplex-child-process": "^1.0.1"
+  }
 }
