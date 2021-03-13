@@ -25,6 +25,7 @@ class FFmpeg extends Duplex {
    * @memberof core
    * @param {Object} options Options you would pass to a regular Transform stream, plus an `args` option
    * @param {Array<string>} options.args Arguments to pass to FFmpeg
+   * @param {boolean} [options.shell=true] Whether FFmpeg should be spawned inside a shell
    * @example
    * // By default, if you don't specify an input (`-i ...`) prism will assume you're piping a stream into it.
    * const transcoder = new prism.FFmpeg({
@@ -41,7 +42,7 @@ class FFmpeg extends Duplex {
    */
   constructor(options = {}) {
     super();
-    this.process = FFmpeg.create(options);
+    this.process = FFmpeg.create({ shell: true, ...options });
     const EVENTS = {
       readable: this._reader,
       data: this._reader,
@@ -128,7 +129,7 @@ class FFmpeg extends Duplex {
     for (let source of sources) {
       try {
         if (typeof source === 'function') source = source();
-        const result = ChildProcess.spawnSync(source, ['-h'], { windowsHide: true, shell: true });
+        const result = ChildProcess.spawnSync(source, ['-h'], { windowsHide: true });
         if (result.error) throw result.error;
         Object.assign(FFMPEG, {
           command: source,
@@ -150,9 +151,9 @@ class FFmpeg extends Duplex {
    * @private
    * @throws Will throw an error if FFmpeg cannot be found.
    */
-  static create({ args = [] } = {}) {
+  static create({ args = [], shell = true } = {}) {
     if (!args.includes('-i')) args.unshift('-i', '-');
-    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']), { windowsHide: true, shell: true });
+    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']), { windowsHide: true, shell });
   }
 }
 
