@@ -1,7 +1,7 @@
 import { TransformOptions } from 'stream';
 import { WebmBaseDemuxer } from './WebmBaseDemuxer';
 
-const VORBIS_HEAD = Buffer.from([...'vorbis'].map((x) => x.charCodeAt(0)));
+const VORBIS_HEAD = Buffer.from('vorbis');
 
 export class WebmVorbisDemuxer extends WebmBaseDemuxer {
 	protected _checkHead(data: Buffer) {

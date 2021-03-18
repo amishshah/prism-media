@@ -3,10 +3,9 @@ import { Transform, TransformCallback, TransformOptions } from 'stream';
 const OGG_PAGE_HEADER_SIZE = 26;
 const STREAM_STRUCTURE_VERSION = 0;
 
-const charCode = (x: string) => x.charCodeAt(0);
-const OGGS_HEADER = Buffer.from([...'OggS'].map(charCode));
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
-const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
+const OGGS_HEADER = Buffer.from('OggS');
+const OPUS_HEAD = Buffer.from('OpusHead');
+const OPUS_TAGS = Buffer.from('OpusTags');
 
 export class OggOpusDemuxer extends Transform {
 	private _remainder?: Buffer;

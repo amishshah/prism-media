@@ -9,9 +9,9 @@ interface FFmpegInfo {
 	version: string;
 }
 
-let cached: FFmpegInfo | undefined = undefined;
+let cached: FFmpegInfo | undefined;
 
-const VERSION_REGEX = new RegExp(/version (.+) Copyright/im);
+const VERSION_REGEX = /version (.+) Copyright/im;
 
 const SOURCES: (() => string)[] = [
 	() => {

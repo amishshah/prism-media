@@ -1,9 +1,8 @@
 import type { TransformCallback } from 'stream';
 import { OpusStream, OpusStreamConfig } from './OpusStream';
 
-const charCode = (x: string) => x.charCodeAt(0);
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map(charCode));
-const OPUS_TAGS = Buffer.from([...'OpusTags'].map(charCode));
+const OPUS_HEAD = Buffer.from('OpusHead');
+const OPUS_TAGS = Buffer.from('OpusTags');
 
 export class OpusDecoderStream extends OpusStream {
 	public opusHead?: Buffer;
