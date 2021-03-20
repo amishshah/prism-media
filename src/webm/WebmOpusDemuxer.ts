@@ -1,7 +1,7 @@
 import { TransformOptions } from 'stream';
 import { WebmBaseDemuxer } from './WebmBaseDemuxer';
 
-const OPUS_HEAD = Buffer.from([...'OpusHead'].map((x) => x.charCodeAt(0)));
+const OPUS_HEAD = Buffer.from('OpusHead');
 
 export class WebmOpusDemuxer extends WebmBaseDemuxer {
 	protected _checkHead(data: Buffer) {

@@ -8,13 +8,22 @@ const LOADERS: [string, (options: OpusEncoderOptions) => OpusEncoder][] = [
 	['opusscript', (options: OpusEncoderOptions) => new OpusScriptEncoder(options)],
 ];
 
-export function loadOpusLibrary() {
+let cached: ((options: OpusEncoderOptions) => OpusEncoder) | undefined;
+
+export function loadOpusLibrary(
+	extraLoaders: typeof LOADERS = [],
+	forceRefresh = false,
+): (options: OpusEncoderOptions) => OpusEncoder {
+	if (!forceRefresh && cached) {
+		return cached;
+	}
+
 	const errorLog: string[] = [];
 
-	for (const [modName, fn] of LOADERS) {
+	for (const [modName, fn] of extraLoaders.concat(LOADERS)) {
 		try {
 			require(modName);
-			return fn;
+			return (cached = fn);
 		} catch (error: unknown) {
 			errorLog.push(`- Load failure:\n  ${error instanceof Error ? error.message : 'unknown'}`);
 		}
@@ -23,9 +32,10 @@ export function loadOpusLibrary() {
 	throw new Error(`Could not find an Opus engine:\n${errorLog.join('\n')}`);
 }
 
-let createOpusEncoder: (options: OpusEncoderOptions) => OpusEncoder = (options: OpusEncoderOptions) => {
-	createOpusEncoder = loadOpusLibrary();
-	return createOpusEncoder(options);
-};
-
-export { createOpusEncoder };
+export function createOpusEncoder(
+	options: OpusEncoderOptions,
+	extraLoaders?: typeof LOADERS,
+	forceRefresh?: boolean,
+): OpusEncoder {
+	return loadOpusLibrary(extraLoaders, forceRefresh)(options);
+}
