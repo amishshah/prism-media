@@ -25,7 +25,7 @@ export function loadOpusLibrary(
 			require(modName);
 			return (cached = fn);
 		} catch (error: unknown) {
-			errorLog.push(`- Load failure:\n  ${error instanceof Error ? error.message : 'unknown'}`);
+			errorLog.push(`- Load failure ${modName}:\n  ${((error as any)?.message as string | undefined) ?? 'unknown'}`);
 		}
 	}
 
