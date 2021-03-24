@@ -97,7 +97,7 @@ export abstract class OggMuxer extends Transform {
 		if (lacingValues.length > 255) {
 			throw new Error('OggMuxer does not support continued pages');
 		}
-		if (this.pageRateController(packet, lacingValues)) {
+		if (this.pageRateController(packet, lacingValues) || lacingValues.length + this.lacingValues.length > 255) {
 			this.writePage();
 		}
 		this.packets.push(packet);
