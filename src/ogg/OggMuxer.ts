@@ -84,7 +84,7 @@ export abstract class OggMuxer extends Transform {
 	public calculateCRC(buffer: Buffer): number {
 		const value = crc(32, false, 0x04c11db7, 0, 0, 0, 0, 0, buffer);
 		if (typeof value === 'boolean') {
-			throw new Error('Failed to computer CRC for buffer');
+			throw new Error('Failed to compute CRC for buffer');
 		}
 		return value.readUInt32BE(0);
 	}
