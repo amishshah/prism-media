@@ -34,7 +34,7 @@ export interface MuxerOptions extends TransformOptions {
 export abstract class OggMuxer extends Transform {
 	protected packets: Buffer[];
 	protected lacingValues: number[];
-	protected readonly bitstream = 1; // this can be anything i think
+	protected readonly bitstream = 1;
 	protected granulePosition = 0;
 	protected pageSequence = 0;
 	protected muxerOptions: MuxerOptions;
@@ -68,7 +68,6 @@ export abstract class OggMuxer extends Transform {
 				this.writePacket(packet); // this assumes that writePacket will NOT call writePage
 			}
 			this.writePage(false, true);
-			this.granulePosition = 0;
 		}
 	}
 
