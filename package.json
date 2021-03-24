@@ -123,6 +123,7 @@
     }
   },
   "dependencies": {
-    "duplex-child-process": "^1.0.1"
+    "duplex-child-process": "^1.0.1",
+    "node-crc": "^1.3.0"
   }
 }
