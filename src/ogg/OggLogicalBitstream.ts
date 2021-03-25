@@ -39,9 +39,9 @@ const OggS = Buffer.from('OggS');
 export type PageSizeControl = { maxPackets: number } | { maxSegments: number };
 
 /**
- * Options used to configure an Ogg muxer
+ * Options used to configure an Ogg logical bitstream
  */
-export interface MuxerOptions extends TransformOptions {
+export interface LogicalBitstreamOptions extends TransformOptions {
 	crc: boolean;
 	pageSizeControl: PageSizeControl;
 }
@@ -49,33 +49,33 @@ export interface MuxerOptions extends TransformOptions {
 /**
  * Transforms an input stream of data into a logical Ogg bitstream.
  */
-export abstract class OggMuxer extends Transform {
+export abstract class OggLogicalBitstream extends Transform {
 	protected packets: Buffer[];
 	protected lacingValues: number[];
 	protected readonly bitstream = 1;
 	protected granulePosition = 0;
 	protected pageSequence = 0;
-	protected muxerOptions: MuxerOptions;
+	protected options: LogicalBitstreamOptions;
 	protected pageSizeController: (packet: Buffer, lacingValues: number[]) => boolean;
 
-	public constructor(options?: Partial<MuxerOptions>) {
+	public constructor(options?: Partial<LogicalBitstreamOptions>) {
 		super({ writableObjectMode: true, ...options });
-		this.muxerOptions = {
+		this.options = {
 			crc: true,
 			pageSizeControl: { maxSegments: 255 },
 			...options,
 		};
 		this.packets = [];
 		this.lacingValues = [];
-		if (!this.muxerOptions.crc) {
+		if (!this.options.crc) {
 			this.calculateCRC = () => 0;
 		}
-		if (Reflect.has(this.muxerOptions.pageSizeControl, 'maxSegments')) {
-			const { maxSegments } = this.muxerOptions.pageSizeControl as { maxSegments: number };
+		if (Reflect.has(this.options.pageSizeControl, 'maxSegments')) {
+			const { maxSegments } = this.options.pageSizeControl as { maxSegments: number };
 			this.pageSizeController = (packet: Buffer, lacingValues: number[]) =>
 				lacingValues.length + this.lacingValues.length > maxSegments;
 		} else {
-			const { maxPackets } = this.muxerOptions.pageSizeControl as { maxPackets: number };
+			const { maxPackets } = this.options.pageSizeControl as { maxPackets: number };
 			this.pageSizeController = () => this.packets.length + 1 > maxPackets;
 		}
 	}
@@ -134,7 +134,7 @@ export abstract class OggMuxer extends Transform {
 	protected writePacket(packet: Buffer) {
 		const lacingValues = createLacingValues(packet);
 		if (lacingValues.length > 255) {
-			throw new Error('OggMuxer does not support continued pages');
+			throw new Error('OggLogicalBitstream does not support continued pages');
 		}
 		if (this.pageSizeController(packet, lacingValues) || lacingValues.length + this.lacingValues.length > 255) {
 			this.writePage();

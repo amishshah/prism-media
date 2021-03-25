@@ -1,16 +1,16 @@
-import { MuxerOptions, OggMuxer } from './OggMuxer';
+import { LogicalBitstreamOptions, OggLogicalBitstream } from './OggLogicalBitstream';
 import { OpusHead, OpusTags, FRAME_SIZE_MAP } from '../opus/utils';
 
-export interface OggOpusMuxerOptions extends Partial<MuxerOptions> {
+export interface OggOpusLogicalBitstreamOptions extends Partial<LogicalBitstreamOptions> {
 	opusHead: OpusHead;
 	opusTags: OpusTags;
 }
 
-export class OggOpusMuxer extends OggMuxer {
+export class OggOpusLogicalBitstream extends OggLogicalBitstream {
 	public readonly opusHead: OpusHead;
 	public readonly opusTags: OpusTags;
 
-	public constructor(options: OggOpusMuxerOptions) {
+	public constructor(options: OggOpusLogicalBitstreamOptions) {
 		super(options);
 		this.opusHead = options.opusHead;
 		this.opusTags = options.opusTags;
