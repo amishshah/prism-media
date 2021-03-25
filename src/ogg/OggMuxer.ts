@@ -108,8 +108,13 @@ export abstract class OggMuxer extends Transform {
 		if (!logicalHeader) {
 			this.granulePosition = this.calculateGranulePosition(this.packets);
 		}
-		OggS.copy(header, 0, 0); // capture_pattern
-		header.writeUInt8(0, 4); // stream_structure_version
+		// capture_pattern
+		OggS.copy(header, 0, 0);
+
+		// stream_structure_version
+		header.writeUInt8(0, 4);
+
+		// header_type_flag
 		header.writeUInt8(
 			serialiseHeaderTypeFlag({
 				continuedPacket: false,
@@ -117,23 +122,33 @@ export abstract class OggMuxer extends Transform {
 				lastPage: final,
 			}),
 			5,
-		); // header_type_flags
+		);
+
+		// absolute granule position (64 bit value)
 		header.writeUInt32LE(this.granulePosition, 6);
 		header.writeUInt32LE(0, 10);
-		header.writeUInt32LE(this.bitstream, 14); // stream_serial_number
-		header.writeUInt32LE(this.pageSequence++, 18); // page_sequence_no
-		header.writeUInt32LE(0, 22); // page checksum
 
-		const data = Buffer.concat(this.packets);
+		// stream serial number
+		header.writeUInt32LE(this.bitstream, 14);
 
+		// page sequence no
+		header.writeUInt32LE(this.pageSequence++, 18);
+
+		// page checksum - initially 0
+		header.writeUInt32LE(0, 22);
+
+		// page_segments
 		header.writeUInt8(this.lacingValues.length, 26);
 
-		const total = Buffer.concat([header, Buffer.from(this.lacingValues), data]);
-		total.writeUInt32LE(this.calculateCRC(total), 22);
+		const page = Buffer.concat([header, Buffer.from(this.lacingValues), ...this.packets]);
 
+		// page checksum - calculate CRC checksum
+		page.writeUInt32LE(this.calculateCRC(page), 22);
+
+		// reset the buffered packets and their associated lacingValues
 		this.packets = [];
 		this.lacingValues = [];
 
-		this.push(total);
+		this.push(page);
 	}
 }
