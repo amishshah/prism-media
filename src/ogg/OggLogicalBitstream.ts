@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { Transform, TransformCallback, TransformOptions } from 'stream';
-import { crc } from 'node-crc';
 
 interface HeaderTypeFlag {
 	continuedPacket: boolean;
@@ -46,6 +47,19 @@ export interface LogicalBitstreamOptions extends TransformOptions {
 	pageSizeControl: PageSizeControl;
 }
 
+// Lazy loaded from node-crc
+let crc: (
+	bits: number,
+	reflection: boolean,
+	expL: number,
+	expH: number,
+	iniL: number,
+	iniH: number,
+	fixL: number,
+	fixH: number,
+	data: Buffer,
+) => Buffer | boolean;
+
 /**
  * Transforms an input stream of data into a logical Ogg bitstream that is compliant with the
  * Ogg framing specification {@link https://www.xiph.org/ogg/doc/framing.html}
@@ -68,9 +82,13 @@ export abstract class OggLogicalBitstream extends Transform {
 		};
 		this.packets = [];
 		this.lacingValues = [];
-		if (!this.options.crc) {
+
+		if (this.options.crc) {
+			crc = require('node-crc').crc;
+		} else {
 			this.calculateCRC = () => 0;
 		}
+
 		if (Reflect.has(this.options.pageSizeControl, 'maxSegments')) {
 			const { maxSegments } = this.options.pageSizeControl as { maxSegments: number };
 			this.pageSizeController = (packet: Buffer, lacingValues: number[]) =>

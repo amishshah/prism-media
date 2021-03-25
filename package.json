@@ -1,6 +1,6 @@
 {
   "name": "prism-media",
-  "version": "2.0.0-alpha",
+  "version": "2.0.0",
   "description": "Easy-to-use stream-based media transcoding",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -54,7 +54,8 @@
     "@discordjs/opus": "^0.5.0",
     "ffmpeg-static": "^4.2.7 || ^3.0.0 || ^2.4.0",
     "node-opus": "^0.3.3",
-    "opusscript": "^0.0.8"
+    "opusscript": "^0.0.8",
+    "node-crc": "^1.3.0"
   },
   "peerDependenciesMeta": {
     "@discordjs/opus": {
@@ -123,7 +124,6 @@
     }
   },
   "dependencies": {
-    "duplex-child-process": "^1.0.1",
-    "node-crc": "^1.3.0"
+    "duplex-child-process": "^1.0.1"
   }
 }
