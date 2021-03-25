@@ -7,10 +7,19 @@ interface HeaderTypeFlag {
 	lastPage: boolean;
 }
 
+/**
+ * Serialises a HeaderTypeFlag
+ */
 function serialiseHeaderTypeFlag(flags: HeaderTypeFlag): number {
 	return (flags.continuedPacket ? 0x01 : 0) + (flags.firstPage ? 0x02 : 0) + (flags.lastPage ? 0x04 : 0);
 }
 
+/**
+ * Creates valid Ogg lacing values for a given Buffer.
+ *
+ * @param buffer The buffer to create lacing values for
+ * @returns The lacing values
+ */
 function createLacingValues(buffer: Buffer): number[] {
 	const lacingValues = [];
 	let i = buffer.length;
@@ -24,13 +33,22 @@ function createLacingValues(buffer: Buffer): number[] {
 
 const OggS = Buffer.from('OggS');
 
-export type PageRateControl = { maxPackets: number } | { maxSegments: number };
+/**
+ * Used to control the size of generated created pages
+ */
+export type PageSizeControl = { maxPackets: number } | { maxSegments: number };
 
+/**
+ * Options used to configure an Ogg muxer
+ */
 export interface MuxerOptions extends TransformOptions {
 	crc: boolean;
-	pageRateControl: PageRateControl;
+	pageSizeControl: PageSizeControl;
 }
 
+/**
+ * Transforms an input stream of data into a logical Ogg bitstream.
+ */
 export abstract class OggMuxer extends Transform {
 	protected packets: Buffer[];
 	protected lacingValues: number[];
@@ -38,13 +56,13 @@ export abstract class OggMuxer extends Transform {
 	protected granulePosition = 0;
 	protected pageSequence = 0;
 	protected muxerOptions: MuxerOptions;
-	protected pageRateController: (packet: Buffer, lacingValues: number[]) => boolean;
+	protected pageSizeController: (packet: Buffer, lacingValues: number[]) => boolean;
 
 	public constructor(options?: Partial<MuxerOptions>) {
 		super({ writableObjectMode: true, ...options });
 		this.muxerOptions = {
 			crc: true,
-			pageRateControl: { maxSegments: 255 },
+			pageSizeControl: { maxSegments: 255 },
 			...options,
 		};
 		this.packets = [];
@@ -52,16 +70,21 @@ export abstract class OggMuxer extends Transform {
 		if (!this.muxerOptions.crc) {
 			this.calculateCRC = () => 0;
 		}
-		if (Reflect.has(this.muxerOptions.pageRateControl, 'maxSegments')) {
-			const { maxSegments } = this.muxerOptions.pageRateControl as { maxSegments: number };
-			this.pageRateController = (packet: Buffer, lacingValues: number[]) =>
+		if (Reflect.has(this.muxerOptions.pageSizeControl, 'maxSegments')) {
+			const { maxSegments } = this.muxerOptions.pageSizeControl as { maxSegments: number };
+			this.pageSizeController = (packet: Buffer, lacingValues: number[]) =>
 				lacingValues.length + this.lacingValues.length > maxSegments;
 		} else {
-			const { maxPackets } = this.muxerOptions.pageRateControl as { maxPackets: number };
-			this.pageRateController = () => this.packets.length + 1 > maxPackets;
+			const { maxPackets } = this.muxerOptions.pageSizeControl as { maxPackets: number };
+			this.pageSizeController = () => this.packets.length + 1 > maxPackets;
 		}
 	}
 
+	/**
+	 * Writes pages containing logical headers once the stream is created.
+	 *
+	 * @param pages The list of pages that should be written
+	 */
 	protected writeLogicalHeaderPages(pages: Buffer[][]): void {
 		for (const page of pages) {
 			for (const packet of page) {
@@ -81,6 +104,12 @@ export abstract class OggMuxer extends Transform {
 		callback();
 	}
 
+	/**
+	 * Calculates a valid CRC32 checksum for an Ogg page
+	 *
+	 * @param buffer The data
+	 * @returns The checksum
+	 */
 	public calculateCRC(buffer: Buffer): number {
 		const value = crc(32, false, 0x04c11db7, 0, 0, 0, 0, 0, buffer);
 		if (typeof value === 'boolean') {
@@ -89,21 +118,39 @@ export abstract class OggMuxer extends Transform {
 		return value.readUInt32BE(0);
 	}
 
+	/**
+	 * Calculates the granule position of a page in the logical bitstream given the new packets of the page.
+	 *
+	 * @param packets The packets in the new page
+	 */
 	protected abstract calculateGranulePosition(packets: Buffer[]): number;
 
-	public writePacket(packet: Buffer) {
+	/**
+	 * Attempts to buffer a data packet. If there is already too much data buffered, the existing data is first
+	 * flushed by collecting it into a page and pushing it.
+	 *
+	 * @param packet The data packet to write
+	 */
+	protected writePacket(packet: Buffer) {
 		const lacingValues = createLacingValues(packet);
 		if (lacingValues.length > 255) {
 			throw new Error('OggMuxer does not support continued pages');
 		}
-		if (this.pageRateController(packet, lacingValues) || lacingValues.length + this.lacingValues.length > 255) {
+		if (this.pageSizeController(packet, lacingValues) || lacingValues.length + this.lacingValues.length > 255) {
 			this.writePage();
 		}
 		this.packets.push(packet);
 		this.lacingValues.push(...lacingValues);
 	}
 
-	public writePage(final = false, logicalHeader = false) {
+	/**
+	 * Collects the buffered data packets into an Ogg page.
+	 *
+	 * @param final Whether this is the final page to be written
+	 * @param logicalHeader Whether this page contains only a header for a logical stream, to avoid
+	 * incrementing the granule position.
+	 */
+	protected writePage(final = false, logicalHeader = false) {
 		const header = Buffer.allocUnsafe(27);
 		if (!logicalHeader) {
 			this.granulePosition = this.calculateGranulePosition(this.packets);
