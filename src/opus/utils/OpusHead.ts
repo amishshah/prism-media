@@ -5,12 +5,18 @@ export interface OpusHeadData {
 	outputGain: number;
 }
 
+export type PartialOpusHeadData = Pick<OpusHeadData, 'channelCount' | 'sampleRate'> & Partial<OpusHeadData>;
+
 const OPUSHEAD = Buffer.from('OpusHead');
 
 export class OpusHead {
 	public readonly data: OpusHeadData;
-	public constructor(data: OpusHeadData) {
-		this.data = data;
+	public constructor(data: PartialOpusHeadData) {
+		this.data = {
+			preskip: data.sampleRate * (80 / 1000), // 80ms of samples is a good default
+			outputGain: 0,
+			...data,
+		};
 	}
 
 	public toBuffer(): Buffer {

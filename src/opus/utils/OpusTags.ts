@@ -3,12 +3,17 @@ export interface OpusTagsData {
 	tags?: Record<string, string>;
 }
 
+export type PartialOpusTagsData = Partial<OpusTagsData>;
+
 const OPUSTAGS = Buffer.from('OpusTags');
 
 export class OpusTags {
 	public readonly data: OpusTagsData;
-	public constructor(data: OpusTagsData) {
-		this.data = data;
+	public constructor(data: PartialOpusTagsData = {}) {
+		this.data = {
+			vendor: 'prism-media',
+			...data,
+		};
 	}
 
 	public toBuffer(): Buffer {

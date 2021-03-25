@@ -6,15 +6,18 @@ export interface OggOpusLogicalBitstreamOptions extends Partial<LogicalBitstream
 	opusTags: OpusTags;
 }
 
+export type PartialOggOpusLogicalBitstreamOptions = Pick<OggOpusLogicalBitstreamOptions, 'opusHead'> &
+	Partial<OggOpusLogicalBitstreamOptions>;
+
 export class OggOpusLogicalBitstream extends OggLogicalBitstream {
 	public readonly opusHead: OpusHead;
 	public readonly opusTags: OpusTags;
 
-	public constructor(options: OggOpusLogicalBitstreamOptions) {
+	public constructor(options: PartialOggOpusLogicalBitstreamOptions) {
 		super(options);
 		this.opusHead = options.opusHead;
-		this.opusTags = options.opusTags;
-		this.writeLogicalHeaderPages([[options.opusHead.toBuffer()], [options.opusTags.toBuffer()]]);
+		this.opusTags = options.opusTags ?? new OpusTags();
+		this.writeLogicalHeaderPages([[options.opusHead.toBuffer()], [this.opusTags.toBuffer()]]);
 	}
 
 	protected calculateGranulePosition(packets: Buffer[]): number {
