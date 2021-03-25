@@ -45,6 +45,8 @@ each category is preferred)
 - FFmpeg
   - [`ffmpeg-static`](http://npmjs.com/ffmpeg-static)
   - `ffmpeg` from a [normal installation](https://www.ffmpeg.org/download.html)
+- CRC
+  - [`node-crc`](https://github.com/magiclen/node-crc)
 
 ## Useful Links
 
