@@ -81,11 +81,11 @@ export abstract class OggLogicalBitstream extends Transform {
 	}
 
 	/**
-	 * Writes pages containing logical headers once the stream is created.
+	 * Writes pages containing header data once the stream is created.
 	 *
 	 * @param pages The list of pages that should be written
 	 */
-	protected writeLogicalHeaderPages(pages: Buffer[][]): void {
+	protected writeHeaderPages(pages: Buffer[][]): void {
 		for (const page of pages) {
 			for (const packet of page) {
 				this.writePacket(packet); // this assumes that writePacket will NOT call writePage

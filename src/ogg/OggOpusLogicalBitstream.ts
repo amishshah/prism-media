@@ -17,7 +17,7 @@ export class OggOpusLogicalBitstream extends OggLogicalBitstream {
 		super(options);
 		this.opusHead = options.opusHead;
 		this.opusTags = options.opusTags ?? new OpusTags();
-		this.writeLogicalHeaderPages([[options.opusHead.toBuffer()], [this.opusTags.toBuffer()]]);
+		this.writeHeaderPages([[options.opusHead.toBuffer()], [this.opusTags.toBuffer()]]);
 	}
 
 	protected calculateGranulePosition(packets: Buffer[]): number {
