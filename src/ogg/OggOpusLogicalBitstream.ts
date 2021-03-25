@@ -1,7 +1,5 @@
 import { LogicalBitstreamOptions, OggLogicalBitstream } from './OggLogicalBitstream';
 import { OpusHead, OpusTags, FRAME_SIZE_MAP } from '../opus/utils';
-import { createReadStream, createWriteStream } from 'fs';
-import { createOggOpusDemuxer } from '.';
 
 export interface OggOpusLogicalBitstreamOptions extends Partial<LogicalBitstreamOptions> {
 	opusHead: OpusHead;
@@ -11,6 +9,10 @@ export interface OggOpusLogicalBitstreamOptions extends Partial<LogicalBitstream
 export type PartialOggOpusLogicalBitstreamOptions = Pick<OggOpusLogicalBitstreamOptions, 'opusHead'> &
 	Partial<OggOpusLogicalBitstreamOptions>;
 
+/**
+ * Transforms an object stream of Opus objects into a logical Ogg Opus stream that is compliant
+ * with RFC7845 {@link https://tools.ietf.org/html/rfc7845}
+ */
 export class OggOpusLogicalBitstream extends OggLogicalBitstream {
 	public readonly opusHead: OpusHead;
 	public readonly opusTags: OpusTags;

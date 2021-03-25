@@ -47,7 +47,8 @@ export interface LogicalBitstreamOptions extends TransformOptions {
 }
 
 /**
- * Transforms an input stream of data into a logical Ogg bitstream.
+ * Transforms an input stream of data into a logical Ogg bitstream that is compliant with the
+ * Ogg framing specification {@link https://www.xiph.org/ogg/doc/framing.html}
  */
 export abstract class OggLogicalBitstream extends Transform {
 	protected packets: Buffer[];
