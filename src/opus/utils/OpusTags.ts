@@ -1,30 +1,30 @@
 export interface OpusTagsData {
 	vendor: string;
-	tags?: Record<string, string>;
+	tags: Record<string, string>;
 }
 
 export type PartialOpusTagsData = Partial<OpusTagsData>;
 
 const OPUSTAGS = Buffer.from('OpusTags');
 
-export class OpusTags {
-	public readonly data: OpusTagsData;
+export class OpusTags implements Required<OpusTagsData> {
+	public readonly vendor: string;
+	public readonly tags: Record<string, string>;
+
 	public constructor(data: PartialOpusTagsData = {}) {
-		this.data = {
-			vendor: 'prism-media',
-			...data,
-		};
+		this.vendor = data.vendor ?? 'prism-media';
+		this.tags = data.tags ?? {};
 	}
 
 	public toBuffer(): Buffer {
-		const head = Buffer.alloc(8 + (4 + this.data.vendor.length) + 4); // magic signature, vendor, string count
+		const head = Buffer.alloc(8 + (4 + this.vendor.length) + 4); // magic signature, vendor, string count
 		OPUSTAGS.copy(head, 0, 0);
-		head.writeUInt32LE(this.data.vendor.length, 8);
-		Buffer.from(this.data.vendor).copy(head, 12);
-		head.writeUInt32LE(Object.keys(this.data.tags ?? {}).length, 12 + this.data.vendor.length);
+		head.writeUInt32LE(this.vendor.length, 8);
+		Buffer.from(this.vendor).copy(head, 12);
+		head.writeUInt32LE(Object.keys(this.tags).length, 12 + this.vendor.length);
 		return Buffer.concat([
 			head,
-			...Object.entries(this.data.tags ?? {}).flatMap(([key, value]) => {
+			...Object.entries(this.tags).flatMap(([key, value]) => {
 				const size = Buffer.allocUnsafe(4);
 				size.writeUInt32LE(key.length + value.length + 1, 0);
 				return [size, Buffer.from(`${key}=${value}`)];
