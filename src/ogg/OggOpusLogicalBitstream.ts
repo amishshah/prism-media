@@ -28,15 +28,3 @@ export class OggOpusLogicalBitstream extends OggLogicalBitstream {
 		return this.granulePosition + newCount;
 	}
 }
-
-createReadStream('/home/amish/Downloads/evermore/12.ogg')
-	.pipe(createOggOpusDemuxer())
-	.pipe(
-		new OggOpusLogicalBitstream({
-			opusHead: new OpusHead({
-				channelCount: 2,
-				sampleRate: 48000,
-			}),
-		}),
-	)
-	.pipe(createWriteStream('out3.ogg'));
