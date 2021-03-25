@@ -69,6 +69,9 @@
     },
     "ffmpeg-static": {
       "optional": true
+    },
+    "node-crc": {
+      "optional": true
     }
   },
   "files": [
