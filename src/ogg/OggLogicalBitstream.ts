@@ -190,7 +190,7 @@ export abstract class OggLogicalBitstream extends Transform {
 			5,
 		);
 
-		// absolute granule position (64 bit value)
+		// absolute granule position
 		header.writeUInt32LE(this.granulePosition, 6);
 		header.writeUInt32LE(0, 10);
 
