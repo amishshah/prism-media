@@ -129,7 +129,7 @@ export abstract class OggLogicalBitstream extends Transform {
 	 * @param buffer The data
 	 * @returns The checksum
 	 */
-	public calculateCRC(buffer: Buffer): number {
+	protected calculateCRC(buffer: Buffer): number {
 		const value = crc(32, false, 0x04c11db7, 0, 0, 0, 0, 0, buffer);
 		if (typeof value === 'boolean') {
 			throw new Error('Failed to compute CRC for buffer');
