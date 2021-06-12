@@ -32,10 +32,15 @@ class OggDemuxer extends Transform {
       this._remainder = null;
     }
 
-    while (chunk) {
-      const result = this._readPage(chunk);
-      if (result) chunk = result;
-      else break;
+    try {
+      while (chunk) {
+        const result = this._readPage(chunk);
+        if (result) chunk = result;
+        else break;
+      }
+    } catch (error) {
+      this.emit('error', error);
+      return;
     }
     this._remainder = chunk;
     done();

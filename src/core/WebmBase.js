@@ -38,11 +38,17 @@ class WebmBaseDemuxer extends Transform {
       this._skipUntil = null;
     } else if (this._skipUntil) {
       this._count += chunk.length;
-      return done();
+      done();
+      return;
     }
     let result;
     while (result !== TOO_SHORT) {
-      result = this._readTag(chunk, offset);
+      try {
+        result = this._readTag(chunk, offset);
+      } catch (error) {
+        this.emit('error', error);
+        return;
+      }
       if (result === TOO_SHORT) break;
       if (result._skipUntil) {
         this._skipUntil = result._skipUntil;
@@ -53,7 +59,8 @@ class WebmBaseDemuxer extends Transform {
     }
     this._count += offset;
     this._remainder = chunk.slice(offset);
-    return done();
+    done();
+    return;
   }
 
   /**
