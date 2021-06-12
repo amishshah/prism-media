@@ -39,7 +39,7 @@ class OggDemuxer extends Transform {
         else break;
       }
     } catch (error) {
-      this.emit('error', error);
+      done(error);
       return;
     }
     this._remainder = chunk;

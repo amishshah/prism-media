@@ -46,7 +46,7 @@ class WebmBaseDemuxer extends Transform {
       try {
         result = this._readTag(chunk, offset);
       } catch (error) {
-        this.emit('error', error);
+        done(error);
         return;
       }
       if (result === TOO_SHORT) break;
