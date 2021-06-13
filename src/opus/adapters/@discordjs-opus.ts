@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { OpusEncoder as AbstractOpusEncoder, OpusEncoderOptions } from '../../OpusEncoder';
+import { OpusEncoder as AbstractOpusEncoder, OpusEncoderOptions } from './OpusEncoder';
 
 export class DiscordJSOpusEncoder extends AbstractOpusEncoder {
 	private readonly encoder: any;
