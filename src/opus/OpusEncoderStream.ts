@@ -35,6 +35,10 @@ export class OpusEncoderStream extends OpusStream {
 		if (i > 0) this.buffer = chunk.slice(i);
 		done();
 	}
+
+	public applyCTL(ctl: number, value: number): void {
+		this.encoder.applyEncoderCTL(ctl, value);
+	}
 }
 
 export function createOpusEncoderStream(options: OpusStreamConfig) {

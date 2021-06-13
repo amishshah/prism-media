@@ -38,6 +38,10 @@ export class OpusDecoderStream extends OpusStream {
 		}
 		done();
 	}
+
+	public applyCTL(ctl: number, value: number): void {
+		this.encoder.applyDecoderCTL(ctl, value);
+	}
 }
 
 export function createOpusDecoderStream(options: OpusStreamConfig) {

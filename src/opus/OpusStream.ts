@@ -1,4 +1,4 @@
-import type { OpusEncoderOptions } from './adapters/OpusEncoder';
+import type { OpusEncoder, OpusEncoderOptions } from './adapters/OpusEncoder';
 import { Transform, TransformOptions } from 'stream';
 import { createOpusEncoder } from './loader';
 
@@ -8,13 +8,19 @@ export enum OpusApplication {
 	RestrictedLowDelay = 2051,
 }
 
+export enum OpusCTL {
+	SetBitrate = 4002,
+	SetFEC = 4012,
+	SetPLP = 4014,
+}
+
 export interface OpusStreamConfig extends OpusEncoderOptions {
 	streamOptions?: TransformOptions;
 }
 
-export class OpusStream extends Transform {
-	protected readonly encoder;
-	protected readonly pcmLength;
+export abstract class OpusStream extends Transform {
+	protected readonly encoder: OpusEncoder;
+	protected readonly pcmLength: number;
 
 	public constructor(config: OpusStreamConfig) {
 		super(config.streamOptions);
@@ -43,6 +49,20 @@ export class OpusStream extends Transform {
 	public _final(callback: (error?: Error | null) => void): void {
 		this.cleanup();
 		callback();
+	}
+
+	public abstract applyCTL(ctl: number, value: number): void;
+
+	public setBitrate(bitrate: number) {
+		return this.applyCTL(OpusCTL.SetBitrate, bitrate);
+	}
+
+	public setFEC(enabled: boolean) {
+		return this.applyCTL(OpusCTL.SetFEC, enabled ? 1 : 0);
+	}
+
+	public setPLP(percentage: number) {
+		return this.applyCTL(OpusCTL.SetPLP, Math.min(100, Math.max(0, percentage * 100)));
 	}
 
 	private cleanup() {

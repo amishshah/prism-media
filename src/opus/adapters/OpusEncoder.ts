@@ -13,5 +13,7 @@ export abstract class OpusEncoder {
 
 	public abstract encode(buffer: Buffer): Buffer;
 	public abstract decode(buffer: Buffer): Buffer;
+	public abstract applyEncoderCTL(ctl: number, value: number): void;
+	public abstract applyDecoderCTL(ctl: number, value: number): void;
 	public abstract delete(): void;
 }

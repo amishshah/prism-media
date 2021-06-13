@@ -19,6 +19,14 @@ export class OpusScriptEncoder extends AbstractOpusEncoder {
 		return this.encoder.decode(buffer);
 	}
 
+	public applyEncoderCTL(ctl: number, value: number): void {
+		this.encoder.encoderCTL(ctl, value);
+	}
+
+	public applyDecoderCTL(ctl: number, value: number): void {
+		this.encoder.decoderCTL(ctl, value);
+	}
+
 	public delete(): void {
 		this.encoder.delete();
 	}

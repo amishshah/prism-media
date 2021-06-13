@@ -19,6 +19,14 @@ export class DiscordJSOpusEncoder extends AbstractOpusEncoder {
 		return this.encoder.decode(buffer);
 	}
 
+	public applyEncoderCTL(ctl: number, value: number): void {
+		this.encoder.applyEncoderCTL(ctl, value);
+	}
+
+	public applyDecoderCTL(ctl: number, value: number): void {
+		this.encoder.applyDecoderCTL(ctl, value);
+	}
+
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	public delete(): void {}
 }
