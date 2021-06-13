@@ -113,7 +113,7 @@ class VolumeTransformer extends Transform {
    * @type {number}
    */
   get volumeDecibels() {
-    return Math.log10(this._volume) * 20;
+    return Math.log10(this.volume) * 20;
   }
   /**
    * The current volume of the stream from a logarithmic scale
@@ -121,7 +121,7 @@ class VolumeTransformer extends Transform {
    * @type {number}
    */
   get volumeLogarithmic() {
-    return Math.pow(this._volume, 1 / 1.660964);
+    return Math.pow(this.volume, 1 / 1.660964);
   }
 }
 
