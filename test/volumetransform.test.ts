@@ -1,6 +1,6 @@
 import { streamToBuffer } from './util';
 import { Readable } from 'stream';
-import { createVolumeTransformer, VolumeTransformerType } from '../src';
+import { VolumeTransformer, VolumeTransformerType } from '../src';
 
 const fixturesAll = [
 	{
@@ -93,7 +93,7 @@ async function testVolume(type: VolumeTransformerType) {
 	const fixtures = fixturesAll.concat(type.includes('16') ? fixtures16 : fixtures32);
 	expect.assertions(fixtures.length);
 	for (const { test, expected, volume } of fixtures) {
-		const output = Readable.from(writeBuffer(test, type)).pipe(createVolumeTransformer({ type, volume }));
+		const output = Readable.from(writeBuffer(test, type)).pipe(new VolumeTransformer({ type, volume }));
 
 		const buffer = await streamToBuffer(output);
 		expect(buffer).toEqual(writeBuffer(expected, type));

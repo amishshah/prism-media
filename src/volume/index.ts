@@ -7,10 +7,9 @@ export enum VolumeTransformerType {
 	S32BE = 's32be',
 }
 
-export interface VolumeTransformerConfig {
+export interface VolumeTransformerConfig extends TransformOptions {
 	type: VolumeTransformerType;
-	volume: number;
-	streamOptions?: TransformOptions;
+	volume?: number;
 }
 
 export class VolumeTransformer extends Transform {
@@ -21,8 +20,8 @@ export class VolumeTransformer extends Transform {
 	public readonly volume: number;
 
 	public constructor(config: VolumeTransformerConfig) {
-		super(config.streamOptions);
-		this.volume = config.volume;
+		super(config);
+		this.volume = config.volume ?? 1;
 		this.buffer = Buffer.allocUnsafe(0);
 
 		switch (config.type) {
@@ -87,12 +86,4 @@ export class VolumeTransformer extends Transform {
 		this.push(chunk.slice(0, readableLength));
 		done();
 	}
-}
-
-export function createVolumeTransformer(config: Partial<VolumeTransformerConfig>) {
-	return new VolumeTransformer({
-		type: VolumeTransformerType.S16LE,
-		volume: 1,
-		...config,
-	});
 }

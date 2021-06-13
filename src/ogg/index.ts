@@ -1,1 +1,1 @@
-export * from './OpusDemuxer';
+export * from './OggLogicalBitstream';

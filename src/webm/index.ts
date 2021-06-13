@@ -1,2 +1,2 @@
-export * from './WebmOpusDemuxer';
+export * from './WebmBaseDemuxer';
 export * from './WebmVorbisDemuxer';

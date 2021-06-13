@@ -4,7 +4,7 @@ import { OpusStream, OpusStreamConfig } from './OpusStream';
 const OPUS_HEAD = Buffer.from('OpusHead');
 const OPUS_TAGS = Buffer.from('OpusTags');
 
-export class OpusDecoderStream extends OpusStream {
+export class Decoder extends OpusStream {
 	public opusHead?: Buffer;
 	public opusTags?: Buffer;
 
@@ -42,8 +42,4 @@ export class OpusDecoderStream extends OpusStream {
 	public applyCTL(ctl: number, value: number): void {
 		this.encoder.applyDecoderCTL(ctl, value);
 	}
-}
-
-export function createOpusDecoderStream(options: OpusStreamConfig) {
-	return new OpusDecoderStream(options);
 }

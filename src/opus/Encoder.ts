@@ -1,7 +1,7 @@
 import type { TransformCallback } from 'stream';
 import { OpusStream, OpusStreamConfig } from './OpusStream';
 
-export class OpusEncoderStream extends OpusStream {
+export class Encoder extends OpusStream {
 	private buffer: Buffer;
 
 	public constructor(options: OpusStreamConfig) {
@@ -39,8 +39,4 @@ export class OpusEncoderStream extends OpusStream {
 	public applyCTL(ctl: number, value: number): void {
 		this.encoder.applyEncoderCTL(ctl, value);
 	}
-}
-
-export function createOpusEncoderStream(options: OpusStreamConfig) {
-	return new OpusEncoderStream(options);
 }

@@ -1,5 +1,5 @@
-export * from './volume';
 export * from './ffmpeg';
-export * from './opus';
+export * from './volume';
+export * as opus from './opus';
 export * from './webm';
 export * from './ogg';

@@ -7,7 +7,7 @@ const OGGS_HEADER = Buffer.from('OggS');
 const OPUS_HEAD = Buffer.from('OpusHead');
 const OPUS_TAGS = Buffer.from('OpusTags');
 
-export class OggOpusDemuxer extends Transform {
+export class OggDemuxer extends Transform {
 	private _remainder?: Buffer;
 	private _bitstream?: number;
 	private _head?: Buffer;
@@ -100,8 +100,4 @@ export class OggOpusDemuxer extends Transform {
 		this._head = undefined;
 		this._bitstream = undefined;
 	}
-}
-
-export function createOggOpusDemuxer(options?: TransformOptions) {
-	return new OggOpusDemuxer(options);
 }
