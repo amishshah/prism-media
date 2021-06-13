@@ -1,4 +1,4 @@
-[![Logo](https://hydrabolt.me/assets/prism-media-logo.svg)](https://hydrabolt.me/prism-media/)
+[![Logo](https://hydrabolt.me/assets/prism-media-logo.svg)](https://amishshah.github.io/prism-media/)
 
 <div align="center">
 
@@ -48,7 +48,7 @@ each category is preferred)
 
 ## Useful Links
 
-- [Documentation](https://hydrabolt.me/prism-media)
+- [Documentation](https://amishshah.github.io/prism-media)
 - [Examples](https://github.com/amishshah/prism-media/tree/master/examples)
 - [Patreon](https://www.patreon.com/discordjs)
 
