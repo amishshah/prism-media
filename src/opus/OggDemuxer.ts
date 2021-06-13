@@ -7,6 +7,8 @@ const OGGS_HEADER = Buffer.from('OggS');
 const OPUS_HEAD = Buffer.from('OpusHead');
 const OPUS_TAGS = Buffer.from('OpusTags');
 
+type ParseResult = false | [Error] | [undefined, Buffer];
+
 export class OggDemuxer extends Transform {
 	private _remainder?: Buffer;
 	private _bitstream?: number;
@@ -25,22 +27,27 @@ export class OggDemuxer extends Transform {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		while (true) {
 			const result = this._readPage(chunk);
-			if (result) chunk = result;
-			else break;
+			if (result) {
+				const [error, buffer] = result;
+				if (error) {
+					return done(error);
+				}
+				chunk = buffer!;
+			} else break;
 		}
 		this._remainder = chunk;
 		done();
 	}
 
-	private _readPage(chunk: Buffer) {
+	private _readPage(chunk: Buffer): ParseResult {
 		if (chunk.length < OGG_PAGE_HEADER_SIZE) {
 			return false;
 		}
 		if (chunk.compare(OGGS_HEADER, 0, 4, 0, 4) !== 0) {
-			throw Error(`capture_pattern is not OGGS_HEADER`);
+			return [new Error(`capture_pattern is not OGGS_HEADER`)];
 		}
 		if (chunk.readUInt8(4) !== STREAM_STRUCTURE_VERSION) {
-			throw Error(`stream_structure_version is not ${STREAM_STRUCTURE_VERSION}`);
+			return [new Error(`stream_structure_version is not ${STREAM_STRUCTURE_VERSION}`)];
 		}
 
 		if (chunk.length < 27) return false;
@@ -82,7 +89,7 @@ export class OggDemuxer extends Transform {
 			}
 			start += size;
 		}
-		return chunk.slice(start);
+		return [undefined, chunk.slice(start)];
 	}
 
 	public _destroy(err: Error | null, cb: (error: Error | null) => void): void {

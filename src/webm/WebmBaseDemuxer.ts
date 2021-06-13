@@ -5,6 +5,17 @@ interface Track {
 	number: number;
 }
 
+export type ParseResult =
+	| typeof TOO_SHORT
+	| [
+			undefined,
+			{
+				offset: number;
+				_skipUntil?: number;
+			},
+	  ]
+	| [Error];
+
 export abstract class WebmBaseDemuxer extends Transform {
 	private _remainder?: Buffer;
 	private _length = 0;
@@ -37,11 +48,14 @@ export abstract class WebmBaseDemuxer extends Transform {
 		while (typeof result !== 'symbol') {
 			result = this._readTag(chunk, offset);
 			if (typeof result === 'symbol') break;
-			if (result._skipUntil) {
-				this._skipUntil = result._skipUntil;
+			const [error, info] = result;
+			if (error) return done(error);
+			const { offset: newOffset, _skipUntil: skipUntil } = info!;
+			if (skipUntil) {
+				this._skipUntil = skipUntil;
 				break;
 			}
-			if (result.offset) offset = result.offset;
+			if (newOffset) offset = newOffset;
 			else break;
 		}
 		this._count += offset;
@@ -65,13 +79,13 @@ export abstract class WebmBaseDemuxer extends Transform {
 		return { offset: offset + sizeLength, dataLength, sizeLength };
 	}
 
-	private _readTag(chunk: Buffer, offset: number) {
+	private _readTag(chunk: Buffer, offset: number): ParseResult {
 		const idData = this._readEBMLId(chunk, offset);
 		if (typeof idData === 'symbol') return TOO_SHORT;
 		const ebmlID = idData.id.toString('hex');
 		if (!this._ebmlFound) {
 			if (ebmlID === '1a45dfa3') this._ebmlFound = true;
-			else throw Error('Did not find the EBML tag at the start of the stream');
+			else return [new Error('Did not find the EBML tag at the start of the stream')];
 		}
 		offset = idData.offset;
 		const sizeData = this._readTagDataSize(chunk, offset);
@@ -82,14 +96,14 @@ export abstract class WebmBaseDemuxer extends Transform {
 		// If this tag isn't useful, tell the stream to stop processing data until the tag ends
 		if (!TAGS.hasOwnProperty(ebmlID)) {
 			if (chunk.length > offset + dataLength) {
-				return { offset: offset + dataLength };
+				return [undefined, { offset: offset + dataLength }];
 			}
-			return { offset, _skipUntil: this._count + offset + dataLength };
+			return [undefined, { offset, _skipUntil: this._count + offset + dataLength }];
 		}
 
 		const tagHasChildren = (TAGS as any)[ebmlID] as boolean;
 		if (tagHasChildren) {
-			return { offset };
+			return [undefined, { offset }];
 		}
 
 		if (offset + dataLength > chunk.length) return TOO_SHORT;
@@ -103,14 +117,15 @@ export abstract class WebmBaseDemuxer extends Transform {
 			}
 		}
 		if (ebmlID === '63a2') {
-			this._checkHead(data);
+			const error = this._checkHead(data);
+			if (error) return [error];
 		} else if (ebmlID === 'a3') {
-			if (!this._track) throw Error('No audio track in this webm!');
+			if (!this._track) return [new Error('No audio track in this webm!')];
 			if ((data[0] & 0xf) === this._track.number) {
 				this.push(data.slice(4));
 			}
 		}
-		return { offset: offset + dataLength };
+		return [undefined, { offset: offset + dataLength }];
 	}
 
 	public _destroy(err: Error | null, cb: (error: Error | null) => void): void {
@@ -133,7 +148,7 @@ export abstract class WebmBaseDemuxer extends Transform {
 		this._track = undefined;
 	}
 
-	protected abstract _checkHead(buffer: Buffer): void;
+	protected abstract _checkHead(buffer: Buffer): Error | undefined;
 }
 
 const TOO_SHORT = Symbol('TOO_SHORT');
