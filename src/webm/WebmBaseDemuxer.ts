@@ -119,6 +119,7 @@ export abstract class WebmBaseDemuxer extends Transform {
 		if (ebmlID === '63a2') {
 			const error = this._checkHead(data);
 			if (error) return [error];
+			this.emit('head', data);
 		} else if (ebmlID === 'a3') {
 			if (!this._track) return [new Error('No audio track in this webm!')];
 			if ((data[0] & 0xf) === this._track.number) {
