@@ -49,30 +49,6 @@
     "ts-jest": "^27.0.3",
     "typescript": "^4.2.3"
   },
-  "peerDependencies": {
-    "@discordjs/opus": "^0.5.0",
-    "ffmpeg-static": "^4.2.7 || ^3.0.0 || ^2.4.0",
-    "node-opus": "^0.3.3",
-    "opusscript": "^0.0.8",
-    "node-crc": "^1.3.0"
-  },
-  "peerDependenciesMeta": {
-    "@discordjs/opus": {
-      "optional": true
-    },
-    "node-opus": {
-      "optional": true
-    },
-    "opusscript": {
-      "optional": true
-    },
-    "ffmpeg-static": {
-      "optional": true
-    },
-    "node-crc": {
-      "optional": true
-    }
-  },
   "files": [
     "dist/"
   ],

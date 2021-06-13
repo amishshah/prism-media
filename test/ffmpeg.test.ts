@@ -4,7 +4,7 @@ const readFile = promisify(fs.readFile);
 import { roughlyEquals, streamToBuffer } from './util';
 import { createFFmpeg } from '../src';
 
-test('FFmpeg transcoder to PCM is sane', async (done) => {
+test('FFmpeg transcoder to PCM is sane', async () => {
 	expect.assertions(1);
 	const output = fs
 		.createReadStream('./test/audio/speech_orig.ogg')
@@ -14,5 +14,4 @@ test('FFmpeg transcoder to PCM is sane', async (done) => {
 	const chunks = await streamToBuffer(output);
 	const file = await readFile('./test/audio/speech_orig.pcm');
 	expect(roughlyEquals(file, chunks)).toEqual(true);
-	done();
 });
