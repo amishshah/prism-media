@@ -205,6 +205,9 @@ const TAGS = WebmBaseDemuxer.TAGS = { // value is true if the element has childr
 module.exports = WebmBaseDemuxer;
 
 function vintLength(buffer, index) {
+  if (index < 0 || index > buffer.length - 1) {
+    return TOO_SHORT;
+  }
   let i = 0;
   for (; i < 8; i++) if ((1 << (7 - i)) & buffer[index]) break;
   i++;
