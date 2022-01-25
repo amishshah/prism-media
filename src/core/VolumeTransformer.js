@@ -49,7 +49,7 @@ class VolumeTransformer extends Transform {
 		this._bytes = this._bits / 8;
 		this._extremum = Math.pow(2, this._bits - 1);
 		this.volume = typeof options.volume === 'undefined' ? 1 : options.volume;
-		this._newVolume = this._oldVolume = this.volume;
+		this._newVolume = this.volume;
 		this._chunk = Buffer.alloc(0);
 		this._smoothing = options.smoothness || 0;
 	}
@@ -98,7 +98,6 @@ class VolumeTransformer extends Transform {
 	 * @param {number} volume The volume that you want to set
 	 */
 	setVolume(volume) {
-		this._oldVolume = this.volume;
 		this._newVolume = volume;
 		if (this._smoothing <= 0) this.volume = volume;
 	}
