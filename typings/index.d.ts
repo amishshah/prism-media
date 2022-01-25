@@ -26,7 +26,8 @@ export class FFmpeg extends Duplex {
 
 export interface VolumeOptions {
   type: 's16le' | 's16be' | 's32le' | 's32be',
-  volume?: number
+  volume?: number,
+  smoothness?: number
 }
 
 export class VolumeTransformer extends Transform {
