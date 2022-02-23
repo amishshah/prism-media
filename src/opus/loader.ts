@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { OpusEncoder, OpusEncoderOptions } from './adapters/OpusEncoder';
 import { DiscordJSOpusEncoder } from './adapters/@discordjs-opus';
+import { EvanOpusEncoder } from './adapters/@evan-opus';
 import { OpusScriptEncoder } from './adapters/opusscript';
 
 const LOADERS: [string, (options: OpusEncoderOptions) => OpusEncoder][] = [
 	['@discordjs/opus', (options: OpusEncoderOptions) => new DiscordJSOpusEncoder(options)],
+	['@evan/opus', (options: OpusEncoderOptions) => new EvanOpusEncoder(options)],
 	['opusscript', (options: OpusEncoderOptions) => new OpusScriptEncoder(options)],
 ];
 
