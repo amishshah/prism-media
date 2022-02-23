@@ -38,12 +38,16 @@
   },
   "peerDependencies": {
     "@discordjs/opus": "^0.5.0",
+    "@evan/opus": "^1.0.1",
     "ffmpeg-static": "^4.2.7 || ^3.0.0 || ^2.4.0",
     "node-opus": "^0.3.3",
     "opusscript": "^0.0.8"
   },
   "peerDependenciesMeta": {
     "@discordjs/opus": {
+      "optional": true
+    },
+    "@evan/opus": {
       "optional": true
     },
     "node-opus": {
