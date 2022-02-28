@@ -40,6 +40,7 @@ each category is preferred)
 
 - Opus
   - [`@discordjs/opus`](https://github.com/discordjs/opus)
+  - [`@evan/opus`](https://github.com/evanwashere/opus)
   - [`node-opus`](https://github.com/Rantanen/node-opus)
   - [`opusscript`](https://github.com/abalabahaha/opusscript)
 - FFmpeg
