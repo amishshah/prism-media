@@ -2,7 +2,7 @@ name: Documentation
 on:
   push:
     branches:
-      - master
+      - main
       - actions
 jobs:
   docs:
@@ -18,7 +18,6 @@ jobs:
           npm install
           npm run docs
     - name: Publish
-      uses: maxheld83/ghpages@v0.2.1
-      env:
-        GH_PAT: ${{ secrets.ACCESS_TOKEN }}
-        BUILD_DIR: docs/
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: docs
