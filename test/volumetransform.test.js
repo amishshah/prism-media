@@ -2,7 +2,7 @@
 
 const prism = require('../');
 const { streamToBuffer } = require('./util');
-const { Readable } = require('stream');
+const { Readable } = require('node:stream');
 
 class AudioSource extends Readable {
   constructor(options) {

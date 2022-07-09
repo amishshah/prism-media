@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint src",
     "test": "npm run lint && jest && npm run docs",
-    "docs": "docma"
+    "docs": "jsdoc src/** -d docs -R README.md"
   },
   "repository": {
     "type": "git",
@@ -29,12 +29,14 @@
   },
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
-    "docma": "^3.2.2",
     "eslint": "^8.19.0",
-    "jest": "^28.1.2"
+    "jest": "^28.1.2",
+    "jsdoc": "^3.6.10"
   },
   "jest": {
-    "testURL": "http://localhost/"
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    }
   },
   "peerDependencies": {
     "@discordjs/opus": "^0.8.0",
