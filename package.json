@@ -30,15 +30,15 @@
   "homepage": "https://github.com/hydrabolt/prism-media#readme",
   "devDependencies": {
     "docma": "^3.2.2",
-    "eslint": "^7.32.0",
-    "jest": "^27.0.6"
+    "eslint": "^8.19.0",
+    "jest": "^28.1.2"
   },
   "jest": {
     "testURL": "http://localhost/"
   },
   "peerDependencies": {
-    "@discordjs/opus": "^0.5.0",
-    "ffmpeg-static": "^4.2.7 || ^3.0.0 || ^2.4.0",
+    "@discordjs/opus": "^0.8.0",
+    "ffmpeg-static": "^5.0.2 || ^4.2.7 || ^3.0.0 || ^2.4.0",
     "node-opus": "^0.3.3",
     "opusscript": "^0.0.8"
   },
