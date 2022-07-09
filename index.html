@@ -1,28 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Prism Documentation</title>
-    <base href="/prism-media/">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="generator" content="Docma - https://onury.io/docma">
+    <title>JSDoc: Home</title>
 
-    <link rel="stylesheet" type="text/css" href="css/docma.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-
-    <script src="//use.fontawesome.com/releases/v5.5.0/js/all.js" defer=""></script>
-    <script src="js/docma-web.js"></script>
-    <script src="//code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script src="js/highlight.pack.js"></script>
-    <script src="js/tippy.all.min.js"></script>
-    <script src="js/app.min.js"></script>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
 <body>
-    <div id="docma-main"></div>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
 
 
 
 
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><p><a href="https://amishshah.github.io/prism-media/"><img src="https://hydrabolt.me/assets/prism-media-logo.svg" alt="Logo"></a></p>
+<div align="center">
+<p><a href="https://travis-ci.org/hydrabolt/prism-media"><img src="https://travis-ci.org/amishshah/prism-media.svg?branch=master" alt="Build Status"></a>
+<a href="https://david-dm.org/hydrabolt/prism-media"><img src="https://david-dm.org/amishshah/prism-media/status.svg" alt="dependencies"></a>
+<a href="https://www.npmjs.com/package/prism-media"><img src="https://img.shields.io/npm/dt/prism-media.svg" alt="npm"></a>
+<a href="https://www.patreon.com/discordjs"><img src="https://img.shields.io/badge/donate-patreon-F96854.svg" alt="Patreon"></a></p>
+</div>
+<h2>What is it?</h2>
+<p>An easy-to-use stream-based toolkit that you can use for media processing. All the features provided have predictable
+abstractions and join together coherently.</p>
+<pre class="prettyprint source lang-js"><code>// This example will demux and decode an Opus-containing OGG file, and then write it to a file.
+const prism = require('prism-media');
+const fs = require('fs');
+
+fs.createReadStream('./audio.ogg')
+  .pipe(new prism.opus.OggDemuxer())
+  .pipe(new prism.opus.Decoder({ rate: 48000, channels: 2, frameSize: 960 }))
+  .pipe(fs.createWriteStream('./audio.pcm'));
+</code></pre>
+<p>The example above can work with either a native or pure JavaScript Opus decoder - you don't need to worry about changing
+your code for whichever you install.</p>
+<ul>
+<li>FFmpeg support (either through npm modules or a normal installation)</li>
+<li>Opus support (native or pure JavaScript)</li>
+<li>Demuxing for WebM/OGG files (no modules required!)</li>
+<li>Volume Altering (no modules required!)</li>
+</ul>
+<h2>Dependencies</h2>
+<p>The following dependencies are all optional, and you should only install one from each category (the first listed in
+each category is preferred)</p>
+<ul>
+<li>Opus
+<ul>
+<li><a href="https://github.com/discordjs/opus"><code>@discordjs/opus</code></a></li>
+<li><a href="https://github.com/Rantanen/node-opus"><code>node-opus</code></a></li>
+<li><a href="https://github.com/abalabahaha/opusscript"><code>opusscript</code></a></li>
+</ul>
+</li>
+<li>FFmpeg
+<ul>
+<li><a href="http://npmjs.com/ffmpeg-static"><code>ffmpeg-static</code></a></li>
+<li><code>ffmpeg</code> from a <a href="https://www.ffmpeg.org/download.html">normal installation</a></li>
+</ul>
+</li>
+</ul>
+<h2>Useful Links</h2>
+<ul>
+<li><a href="https://amishshah.github.io/prism-media">Documentation</a></li>
+<li><a href="https://github.com/amishshah/prism-media/tree/master/examples">Examples</a></li>
+<li><a href="https://www.patreon.com/discordjs">Patreon</a></li>
+</ul>
+<h2>License</h2>
+<blockquote>
+<p>Copyright 2019 - 2022 Amish Shah</p>
+<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<p>http://www.apache.org/licenses/LICENSE-2.0</p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+</blockquote></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="core.html">core</a></li><li><a href="opus.html">opus</a></li><li><a href="vorbis.html">vorbis</a></li></ul><h3>Classes</h3><ul><li><a href="core.FFmpeg.html">FFmpeg</a></li><li><a href="core.VolumeTransformer.html">VolumeTransformer</a></li><li><a href="core.WebmBaseDemuxer.html">WebmBaseDemuxer</a></li><li><a href="opus.Decoder.html">Decoder</a></li><li><a href="opus.Encoder.html">Encoder</a></li><li><a href="opus.OggDemuxer.html">OggDemuxer</a></li><li><a href="opus.OpusStream.html">OpusStream</a></li><li><a href="opus.WebmDemuxer.html">WebmDemuxer</a></li><li><a href="vorbis.WebmDemuxer.html">WebmDemuxer</a></li></ul><h3>Events</h3><ul><li><a href="opus.OggDemuxer.html#event:head">head</a></li><li><a href="opus.OggDemuxer.html#event:tags">tags</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Jul 09 2022 11:01:54 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
 </body>
 </html>
