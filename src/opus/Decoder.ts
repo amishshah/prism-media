@@ -20,10 +20,10 @@ export class Decoder extends OpusStream {
 	}
 
 	public _transform(chunk: Buffer, encoding: BufferEncoding, done: TransformCallback): void {
-		if (chunk.compare(OPUS_HEAD, 0, 8, 0, 8) === 0) {
+		if (chunk.length >= 8 && chunk.compare(OPUS_HEAD, 0, 8, 0, 8) === 0) {
 			this.opusHead = chunk;
 			this.emit('opusHead', chunk);
-		} else if (chunk.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) {
+		} else if (chunk.length >= 8 && chunk.compare(OPUS_TAGS, 0, 8, 0, 8) === 0) {
 			this.opusTags = chunk;
 			this.emit('opusTags', chunk);
 		} else {
