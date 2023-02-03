@@ -39,7 +39,7 @@
     }
   },
   "peerDependencies": {
-    "@discordjs/opus": "^0.8.0",
+    "@discordjs/opus": ">=0.8.0 <1.0.0",
     "ffmpeg-static": "^5.0.2 || ^4.2.7 || ^3.0.0 || ^2.4.0",
     "node-opus": "^0.3.3",
     "opusscript": "^0.0.8"
