@@ -183,7 +183,7 @@ class Encoder extends OpusStream {
 class Decoder extends OpusStream {
   _transform(chunk, encoding, done) {
     const signature = chunk.slice(0, 8);
-    if (signature.equals(OPUS_HEAD)) {
+    if (chunk.length >= 8 && signature.equals(OPUS_HEAD)) {
       this.emit('format', {
         channels: this._options.channels,
         sampleRate: this._options.rate,
@@ -196,7 +196,7 @@ class Decoder extends OpusStream {
       });
       return done();
     }
-    if (signature.equals(OPUS_TAGS)) {
+    if (chunk.length >= 8 && signature.equals(OPUS_TAGS)) {
       this.emit('tags', chunk);
       return done();
     }
