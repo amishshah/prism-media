@@ -8,6 +8,7 @@ import { vorbis } from './vorbis';
 
 export interface FFmpegOptions {
   args?: string[];
+  output?: string;
   shell?: boolean;
 }
 
