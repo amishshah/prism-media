@@ -42,7 +42,7 @@ class FFmpeg extends Duplex {
    */
   constructor(options = {}) {
     super();
-    this.process = FFmpeg.create({ shell: false, ...options });
+    this.process = FFmpeg.create({ shell: false, output: "pipe:1", ...options });
     const EVENTS = {
       readable: this._reader,
       data: this._reader,
@@ -151,9 +151,9 @@ class FFmpeg extends Duplex {
    * @private
    * @throws Will throw an error if FFmpeg cannot be found.
    */
-  static create({ args = [], shell = false } = {}) {
+  static create({ args = [], shell = false, output = "pipe:1" } = {}) {
     if (!args.includes('-i')) args.unshift('-i', '-');
-    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat(['pipe:1']), { windowsHide: true, shell });
+    return ChildProcess.spawn(FFmpeg.getInfo().command, args.concat([output]), { windowsHide: true, shell });
   }
 }
 
