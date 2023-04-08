@@ -58,8 +58,8 @@ class FFmpeg extends Duplex {
     this._copy(['write', 'end'], this._writer);
     this._copy(['read', 'setEncoding', 'pipe', 'unpipe'], this._reader);
 
-    for (const method of ['on', 'once', 'removeListener', 'removeListeners', 'listeners']) {
-      this[method] = (ev, fn) => EVENTS[ev] ? EVENTS[ev][method](ev, fn) : Duplex.prototype[method].call(this, ev, fn);
+    for (const method of ['on', 'once', 'removeListener', 'removeListeners', 'listeners', 'emit') {
+      this[method] = (ev, ...fn) => EVENTS[ev] ? EVENTS[ev][method](ev, ...fn) : Duplex.prototype[method].call(this, ev, ...fn);
     }
 
     const processError = error => this.emit('error', error);
